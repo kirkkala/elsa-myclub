@@ -10,9 +10,9 @@ nvm use
 Install dependencies and run the server.
 ```
 npm install
-node app.js
+npm run start
 ```
-
+See output in console for the local server URL.
 ### Project structure:
 ```
 elsa-myclub/

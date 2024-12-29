@@ -14,7 +14,7 @@ const isVercel = process.env.VERCEL === '1';
 const PORT = process.env.PORT || 3000;
 
 // Use the public directory to serve static files (frontend form)
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static('public')); // Simplified path for local development
 
 // Set up Multer for file uploads
 const upload = multer({
@@ -27,8 +27,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Endpoint to handle file upload and conversion
-app.post('/upload', upload.single('file'), async (req, res) => {
+// Add root redirect to index.html for convenience
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// Create the upload handler function
+async function handleUpload(req, res) {
   try {
     console.log('Starting file processing');
 
@@ -78,7 +83,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     console.error('Error processing file:', err);
     res.status(500).send(`Error processing the file: ${err.message}`);
   }
-});
+}
+
+// Use the handler for both endpoints
+app.post('/api/upload', upload.single('file'), handleUpload);
+app.post('/upload', upload.single('file'), handleUpload);
 
 // Dummy transformation function (Replace with your logic)
 function transformData(data) {
