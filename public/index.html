@@ -127,13 +127,22 @@
   <h1>ELSA -> MyClub Excel muunnin</h1>
   <p>Muuunna ELSA:n excel tiedosto MyClubiin sopivaksi tuontitiedostoksi.</p>
   <div class="credits">
-    <h2>Disclaimer / what it is</h2>
+    <h2>Disclaimer / creadits</h2>
     <p>
       Tämä on Namikan jojoilijan Timo Kirkkalan (<a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
     </p>
-    <p>Sovellus on vielä ihan vaiheessa ja varmasti buginen. Mikäli ELSA:an ei tule kunnollista export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
+    <p>Sovellus on vielä ihan vaiheessa ja varmasti buginen eikä sitä ole juurikaan testattu. Mikäli ELSA:an ei tule kunnollista export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
     <p>
-      Lähdekoodi on saatavilla <a href="https://github.com/kirkkala/elsa-myclub" target="_blank">GitHubissa</a>.
+      Jotta sovelluksesta saadaan käyttökelpoinen, tarvitsee lisätä ainakin seuraavanlaisia valintoja:
+    </p>
+    <ul>
+      <li>MyClub ryhmän nimi (valinta tai vapaateksti?)</li>
+      <li>MyClub ilmoittautumisasetukset (pudotusvalikko)</li>
+      <li>MyClub näkyvyysasetukset (pudotusvalikko)</li>
+      <li>Ties mitä muuta? Laita toiveet kehittäjälle.</li>
+    </ul>
+    <p>
+      Sovelluksen lähdekoodi on saatavilla <a href="https://github.com/kirkkala/elsa-myclub" target="_blank" title="github.com/kirkkala/elsa-myclub">GitHubissa</a>.
     </p>
   </div>
 
@@ -170,12 +179,13 @@
       </div>
       <div class="form-group">
         <p class="field-description">
-          Valitse ELSA:n excel tiedosto jonka haluat muuntaa MyClubiin sopivaksi tuontitiedostoksi.
+          Valitse ELSA:n excel tiedosto jonka haluat muuntaa MyClubiin sopivaksi tuontitiedostoksi.<br />
+          <strong>Huom!</strong> Elsan pitkä tiedostonimi saattaa aiheuttaa ongelmia, anna tiedostolle lyhyempi nimi ja ilman erikoismerkkejä ennen kuin lisäät sen tästä.
         </p>
         <input type="file" name="file" accept=".xlsx,.xls" required>
       </div>
       <p class="field-description">
-        Paina nappulaa muuntaaksesi tiedoston.
+        Paina nappulaa muuntaaksesi tiedoston (avaa tiedoston tallennusikkunan) 🪄
       </p>
       <button type="submit" id="submitBtn">Muunna</button>
     </form>
