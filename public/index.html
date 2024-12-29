@@ -66,6 +66,36 @@
       background: #93c5fd;
       cursor: not-allowed;
     }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input[type="text"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .form-group input[type="file"] {
+      margin-bottom: 1rem;
+    }
+
+    .form-group select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 300px;
+      background-color: white;
+    }
   </style>
 </head>
 
@@ -75,7 +105,32 @@
 
   <div class="form-container">
     <form id="uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" accept=".xlsx,.xls" required>
+      <div class="form-group">
+        <label for="year">Vuosi:</label>
+        <select id="year" name="year" required>
+          <option value="">Valitse vuosi</option>
+          <script>
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year <= 2030; year++) {
+              document.write(`<option value="${year}">${year}</option>`);
+            }
+          </script>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="duration">Pelin kesto:</label>
+        <select id="duration" name="duration" required>
+          <option value="">Valitse kesto</option>
+          <option value="60">1 tunti</option>
+          <option value="75" selected>1 tunti 15 minuuttia</option>
+          <option value="90">1 tunti 30 minuuttia</option>
+          <option value="105">1 tunti 45 minuuttia</option>
+          <option value="120">2 tuntia</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="file" name="file" accept=".xlsx,.xls" required>
+      </div>
       <button type="submit" id="submitBtn">Muunna</button>
     </form>
 
