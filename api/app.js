@@ -3,19 +3,22 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 const path = require('path');
 const fs = require('fs');
-const serverless = require('serverless-http'); // Required for Vercel
+const serverless = require('serverless-http');
 
 const app = express();
+
+// Better detection of Vercel environment
+const isVercel = process.env.VERCEL === '1';
 
 // Set up port for local use or use Vercel's port
 const PORT = process.env.PORT || 3000;
 
 // Use the public directory to serve static files (frontend form)
-app.use(express.static(path.join(__dirname, '../public'))); // Adjusted for public folder location
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Set up Multer for file uploads
 const upload = multer({
-  storage: multer.memoryStorage() // Use memory storage instead of file system
+  storage: multer.memoryStorage() // Always use memory storage
 });
 
 // Endpoint to handle file upload and conversion
@@ -61,18 +64,22 @@ function transformData(data) {
   });
 }
 
-// Check if running locally or in Vercel
-if (!process.env.IS_VERCEL) {
-  // Ensure downloads folder exists locally
-  if (!fs.existsSync(path.join(__dirname, '../downloads'))) {
-    fs.mkdirSync(path.join(__dirname, '../downloads'));
-  }
+// Check if running locally
+if (!isVercel) {
+  // Create directories only in local environment
+  const uploadsDir = path.join(__dirname, '../uploads');
+  const downloadsDir = path.join(__dirname, '../downloads');
 
-  // Start the server locally
+  [uploadsDir, downloadsDir].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  });
+
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }
 
 // Export the app as a serverless function for Vercel
-module.exports = process.env.IS_VERCEL ? serverless(app) : app;
+module.exports = isVercel ? serverless(app) : app;
