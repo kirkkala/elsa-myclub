@@ -1,4 +1,3 @@
 // Main entry point for both Vercel and local development
-const path = require('path');
-const app = require(path.join(__dirname, 'app.js'));
+const app = require('./app');
 module.exports = app;
