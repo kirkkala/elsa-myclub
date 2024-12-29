@@ -2,7 +2,6 @@ import * as XLSX from 'xlsx/xlsx.mjs';
 
 export const config = {
   runtime: 'edge',
-  regions: ['fra1'],
 };
 
 async function handleUpload(formData) {
