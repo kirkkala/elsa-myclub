@@ -8,10 +8,8 @@
 <body>
   <h1>ELSA -> MyClub Excel Converter</h1>
   <form action="/api/upload" method="post" enctype="multipart/form-data">
-    <label for="file">Choose Excel file:</label>
-    <!-- @TODO: Add fields / dropdowns for MyClub information -->
-    <input type="file" id="file" name="file" accept=".xls, .xlsx" required>
-    <button type="submit">Convert and download</button>
+    <input type="file" name="file" accept=".xlsx,.xls" required>
+    <button type="submit">Convert</button>
   </form>
 </body>
 

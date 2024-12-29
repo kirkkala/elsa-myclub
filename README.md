@@ -1,26 +1,39 @@
 # Elsa > MyClub Basketball Schedule Converter
 
-### Local development
-Use node version defined in `.nvmrc`.
+A tool to convert ELSA basketball schedule Excel files to MyClub format.
 
-```
-nvm use
-```
+### Prerequisites
+- Node.js version defined in `.nvmrc`
+- Vercel CLI (`npm i -g vercel`)
 
-Install dependencies and run the server.
-```
-npm install
-npm run start
-```
-See output in console for the local server URL.
 ### Project structure:
 ```
 elsa-myclub/
+├── api/
+│   └── index.js          (Edge API handler for file conversion)
 ├── public/
-│   └── index.html         (frontend form for file upload)
-├── uploads/
-│   └── (temporary storage of uploaded files, gitignored)
-├── downloads/
-│   └── (output folder for processed files, gitignored)
-├── package.json           (project metadata and dependencies)
+│   └── index.html        (frontend form for file upload)
+├── package.json          (project metadata and dependencies)
+├── vercel.json           (Vercel configuration)
+└── .nvmrc               (Node.js version specification)
+```
+
+### Development
+Use node version defined in `.nvmrc`:
+```bash
+nvm use
+```
+
+Install dependencies and start the development server:
+```bash
+npm install
+npm run dev
+```
+
+The app will be available at http://localhost:3000
+
+### Deployment
+Deploy to Vercel (practically git push to main should do the same):
+```bash
+npm run deploy
 ```
