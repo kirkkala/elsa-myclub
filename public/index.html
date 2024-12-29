@@ -11,6 +11,23 @@
       padding: 0 1rem;
     }
 
+    .credits {
+      margin: 2rem 0;
+      padding: .5rem 1rem;
+      background-color: #f3f4f6;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+
+    .credits a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .credits a:hover {
+      text-decoration: underline;
+    }
+
     .form-container {
       margin: 2rem 0;
     }
@@ -108,7 +125,17 @@
 
 <body>
   <h1>ELSA -> MyClub Excel muunnin</h1>
-  <p>Tämän lomakkeen avulla voit muuntaa ELSA:n excel tiedoston MyClubiin sopivaksi tuontitiedostoksi.</p>
+  <p>Muuunna ELSA:n excel tiedosto MyClubiin sopivaksi tuontitiedostoksi.</p>
+  <div class="credits">
+    <h2>Disclaimer / what it is</h2>
+    <p>
+      Tämä on Namikan jojoilijan Timo Kirkkalan (<a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
+    </p>
+    <p>Sovellus on vielä ihan vaiheessa ja varmasti buginen. Mikäli ELSA:an ei tule kunnollista export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
+    <p>
+      Lähdekoodi on saatavilla <a href="https://github.com/kirkkala/elsa-myclub" target="_blank">GitHubissa</a>.
+    </p>
+  </div>
 
   <div class="form-container">
     <form id="uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
