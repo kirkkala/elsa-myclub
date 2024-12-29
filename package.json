@@ -1,10 +1,11 @@
 {
   "name": "elsa-myclub",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=3001 node server.js"
+    "start": "node server.js",
+    "build": "echo 'No build step needed'"
   },
   "keywords": [],
   "author": "",
