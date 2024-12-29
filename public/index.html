@@ -68,12 +68,19 @@
     }
 
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
     }
 
     .form-group label {
       display: block;
+      font-weight: bold;
       margin-bottom: 0.5rem;
+    }
+
+    .field-description {
+      font-size: 0.75rem;
+      color: #666;
+      margin: 0 0 0.5rem 0;
     }
 
     .form-group input[type="text"] {
@@ -101,12 +108,15 @@
 
 <body>
   <h1>ELSA -> MyClub Excel muunnin</h1>
-  <p>Lataa ELSA:sta hakemasi excel lomakkeelle ja paina "Muunna" muuntaaksesi se MyClubiin sopivaksi tuontitiedostoksi.</p>
+  <p>Tämän lomakkeen avulla voit muuntaa ELSA:n excel tiedoston MyClubiin sopivaksi tuontitiedostoksi.</p>
 
   <div class="form-container">
     <form id="uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
       <div class="form-group">
-        <label for="year">Vuosi:</label>
+        <label for="year">Vuosi</label>
+        <p class="field-description">
+          ELSA:n tiedostossa ei ole vuotta, joten se pitää valita erikseen. Valitse vuosi jolloin pelit pelataan.
+        </p>
         <select id="year" name="year" required>
           <option value="">Valitse vuosi</option>
           <script>
@@ -118,7 +128,10 @@
         </select>
       </div>
       <div class="form-group">
-        <label for="duration">Pelin kesto:</label>
+        <label for="duration">Pelin kesto</label>
+        <p class="field-description">
+          Valitse pelin kesto, tämän arvon perusteella lasketaan pelin päättymisaika.
+        </p>
         <select id="duration" name="duration" required>
           <option value="">Valitse kesto</option>
           <option value="60">1 tunti</option>
@@ -129,8 +142,14 @@
         </select>
       </div>
       <div class="form-group">
+        <p class="field-description">
+          Valitse ELSA:n excel tiedosto jonka haluat muuntaa MyClubiin sopivaksi tuontitiedostoksi.
+        </p>
         <input type="file" name="file" accept=".xlsx,.xls" required>
       </div>
+      <p class="field-description">
+        Paina nappulaa muuntaaksesi tiedoston.
+      </p>
       <button type="submit" id="submitBtn">Muunna</button>
     </form>
 

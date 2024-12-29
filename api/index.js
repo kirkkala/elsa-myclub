@@ -22,10 +22,12 @@ function createEventName(row) {
  *
  * @param {*} row
  *   The row from the elsa sheet
+ * @param {string} year
+ *   The year selected in the form
  * @returns
  *   Date object representing the event time
  */
-function getDateTime(row) {
+function getDateTime(row, year) {
   try {
     if (!row['Pvm'] || !row['Klo']) {
       throw new Error(`Missing date or time: Pvm=${row['Pvm']}, Klo=${row['Klo']}`);
@@ -45,7 +47,7 @@ function getDateTime(row) {
     const month = dateParts[1].padStart(2, '0');
 
     // Construct the date string with correct order: YYYY.MM.DD
-    const date = `2025.${month}.${day} ${timeStr}`;
+    const date = `${year}.${month}.${day} ${timeStr}`;
 
     const dateObj = new Date(date);
     if (isNaN(dateObj.getTime())) {
@@ -64,28 +66,32 @@ function getDateTime(row) {
  * Formats the start time from the elsa sheet by combining date and time.
  * @param {*} row
  *   The row from the elsa sheet
+ * @param {string} year
+ *   The year selected in the form
  * @returns
  *   The formatted start time
  */
-function createStartTime(row) {
-  const startDateTime = getDateTime(row);
+function createStartTime(row, year) {
+  const startDateTime = getDateTime(row, year);
   const date = startDateTime.toLocaleDateString('fi-FI');
   const time = startDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   return `${date} ${time}`;
 }
 
 /**
- * Formats the end time from the elsa sheet by adding 75 minutes to the start time.
+ * Formats the end time from the elsa sheet by adding duration minutes to the start time.
  * @param {*} row
  *   The row from the elsa sheet
  * @param {number} duration
  *   Duration in minutes from the form
+ * @param {string} year
+ *   The year selected in the form
  * @returns
  *   The formatted end time
  */
-function createEndTime(row, duration) {
-  const startDateTime = getDateTime(row);
-  const endDateTime = new Date(startDateTime.getTime() + duration * 60000); // Add selected duration in milliseconds
+function createEndTime(row, duration, year) {
+  const startDateTime = getDateTime(row, year);
+  const endDateTime = new Date(startDateTime.getTime() + duration * 60000);
 
   const endDate = endDateTime.toLocaleDateString('fi-FI');
   const endTime = endDateTime.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -101,6 +107,7 @@ async function handleUpload(formData) {
   try {
     const file = formData.get('file');
     const duration = parseInt(formData.get('duration'), 10);
+    const year = formData.get('year');
 
     if (!file) {
       throw new Error('No file uploaded');
@@ -108,21 +115,22 @@ async function handleUpload(formData) {
     if (!duration) {
       throw new Error('Pelin kesto on pakollinen');
     }
+    if (!year) {
+      throw new Error('Vuosi on pakollinen');
+    }
 
     const buffer = await file.arrayBuffer();
-    console.log(`Processing file: ${file.name}`);
 
     // Process Excel file
     const workbook = XLSX.read(new Uint8Array(buffer), { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    console.log(`Parsed ${data.length} rows from Excel`);
 
     // Transform data
     const transformedData = data.map(row => ({
       'Nimi': createEventName(row),
-      'Alkaa': createStartTime(row),
-      'Päättyy': createEndTime(row, duration),
+      'Alkaa': createStartTime(row, year),
+      'Päättyy': createEndTime(row, duration, year),
       'Tapahtumapaikka': row['Kenttä'],
     }));
 
