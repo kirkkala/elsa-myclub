@@ -15,39 +15,34 @@ app.use(express.static(path.join(__dirname, '../public'))); // Adjusted for publ
 
 // Set up Multer for file uploads
 const upload = multer({
-  dest: process.env.IS_VERCEL ? '/tmp/' : 'uploads/' // Use /tmp/ for Vercel, uploads/ locally
+  storage: multer.memoryStorage() // Use memory storage instead of file system
 });
 
 // Endpoint to handle file upload and conversion
 app.post('/upload', upload.single('file'), async (req, res) => {
-  const filePath = req.file.path; // Path to the uploaded file
-  const fileName = req.file.originalname; // Original file name
-  const outputFileName = `MyClub_${fileName}`;
-  const outputFilePath = process.env.IS_VERCEL
-    ? path.join('/tmp/', outputFileName) // Use /tmp/ on Vercel
-    : path.join(__dirname, '../downloads', outputFileName); // Use 'downloads/' locally
-
   try {
-    // Step 1: Read the uploaded ELSA Excel file
-    const workbook = XLSX.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // Process the first sheet
+    // Step 1: Read the uploaded ELSA Excel file from buffer
+    const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
     const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
     // Step 2: Transform the data to a MyClub-compatible format
-    const transformedData = transformData(data); // Replace with your transformation function
+    const transformedData = transformData(data);
 
-    // Step 3: Write transformed data to a new Excel file
+    // Step 3: Create the new workbook and write to buffer
     const newWorkbook = XLSX.utils.book_new();
     const newWorksheet = XLSX.utils.json_to_sheet(transformedData);
     XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, 'Schedule');
-    XLSX.writeFile(newWorkbook, outputFilePath);
 
-    // Send the file as a response to the client
-    res.download(outputFilePath, outputFileName, () => {
-      // Clean up temporary files after response
-      fs.unlinkSync(filePath); // Delete the uploaded file
-      fs.unlinkSync(outputFilePath); // Delete the generated file
-    });
+    // Write to buffer instead of file
+    const buffer = XLSX.write(newWorkbook, { type: 'buffer', bookType: 'xlsx' });
+
+    // Set headers for file download
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=MyClub_${req.file.originalname}`);
+
+    // Send the buffer directly
+    res.send(buffer);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error processing the file.');
