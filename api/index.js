@@ -9,8 +9,9 @@ import * as XLSX from 'xlsx/xlsx.mjs';
  */
 function createEventName(row) {
   const division = row['Sarja']
-    .replace(/.*(I divisioona|II divisioona|III divisioona).*/, '$1')
-    .replace('divisioona', 'div');
+    .replace(/.*(III divisioona).*/, 'III div')
+    .replace(/.*(II divisioona).*/, 'II div')
+    .replace(/.*(I divisioona).*/, 'I div');
 
   return `${division}. ${row['Koti']} - ${row['Vieras']}`;
 }
