@@ -21,34 +21,62 @@ const upload = multer({
   storage: multer.memoryStorage() // Always use memory storage
 });
 
+// Add logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 // Endpoint to handle file upload and conversion
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
+    console.log('Starting file processing');
+
+    if (!req.file) {
+      console.error('No file received');
+      return res.status(400).send('No file uploaded.');
+    }
+
+    console.log(`File received: ${req.file.originalname}, size: ${req.file.size} bytes`);
+
     // Step 1: Read the uploaded ELSA Excel file from buffer
+    console.log('Reading Excel file');
     const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    console.log(`Parsed ${data.length} rows from Excel`);
 
     // Step 2: Transform the data to a MyClub-compatible format
+    console.log('Transforming data');
     const transformedData = transformData(data);
+    console.log(`Transformed ${transformedData.length} rows`);
 
     // Step 3: Create the new workbook and write to buffer
+    console.log('Creating new workbook');
     const newWorkbook = XLSX.utils.book_new();
     const newWorksheet = XLSX.utils.json_to_sheet(transformedData);
     XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, 'Schedule');
 
     // Write to buffer instead of file
-    const buffer = XLSX.write(newWorkbook, { type: 'buffer', bookType: 'xlsx' });
+    console.log('Writing to buffer');
+    const buffer = XLSX.write(newWorkbook, {
+      type: 'buffer',
+      bookType: 'xlsx',
+      compression: true // Add compression to reduce size
+    });
 
+    console.log('Setting response headers');
     // Set headers for file download
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', `attachment; filename=MyClub_${req.file.originalname}`);
 
+    console.log('Sending response');
     // Send the buffer directly
     res.send(buffer);
+    console.log('Response sent successfully');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Error processing the file.');
+    console.error('Error processing file:', err);
+    res.status(500).send(`Error processing the file: ${err.message}`);
   }
 });
 
