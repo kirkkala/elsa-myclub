@@ -24,12 +24,6 @@
       "dest": "public/$1"
     }
   ],
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
   "env": {
     "VERCEL": "1"
   }
