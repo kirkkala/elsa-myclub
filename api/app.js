@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, '../public'))); // Adjusted for publ
 
 // Set up Multer for file uploads
 const upload = multer({
-  dest: process.env.IS_VERCEL ? '/tmp/' : 'uploads/' // Use /tmp/ on Vercel, 'uploads/' locally
+  dest: process.env.IS_VERCEL ? '/tmp/' : 'uploads/' // Use /tmp/ for Vercel, uploads/ locally
 });
 
 // Endpoint to handle file upload and conversion
