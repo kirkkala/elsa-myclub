@@ -22,6 +22,5 @@ elsa-myclub/
 │   └── (temporary storage of uploaded files, gitignored)
 ├── downloads/
 │   └── (output folder for processed files, gitignored)
-├── app.js                 (main server file)
 ├── package.json           (project metadata and dependencies)
 ```

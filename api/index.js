@@ -95,5 +95,11 @@ function transformData(data) {
   });
 }
 
-// Export the serverless handler
-module.exports = serverless(app);
+// Export differently based on environment
+if (isVercel) {
+  // For Vercel, export the serverless handler
+  module.exports = serverless(app);
+} else {
+  // For local development, export the Express app
+  module.exports = app;
+}
