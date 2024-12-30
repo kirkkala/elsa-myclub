@@ -81,7 +81,7 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>ELSA {'->'} MyClub Excel muunnin <span className={styles.version}>v{APP_VERSION}</span></h1>
+      <h1>ELSA → MyClub Excel muunnin <span className={styles.version}>v{APP_VERSION}</span></h1>
       <p>Muunna <a className={styles.link}
       href="https://elsa.basket.fi/"
       target="_blank"
@@ -102,7 +102,7 @@ export default function Home() {
             Tämä on Namikan jojoilijan Timo Kirkkalan (<a className={styles.link} href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä
             avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
           </p>
-          <p>Sovellus on vielä ihan vaiheessa ja varmasti buginen eikä sitä ole juurikaan testattu. Mikäli ELSA:an ei tule kunnollista
+          <p>Sovellus on vielä aika vaiheessa ja ehkä buginenkin. Mikäli ELSA:an ei tule kunnollista
             export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
           <p>
             Jotta sovelluksesta saadaan käyttökelpoinen, tarvitsee lisätä ainakin seuraavanlaisia valintoja:
@@ -195,7 +195,7 @@ export default function Home() {
           </div>
 
           <div className={styles.formGroup}>
-          <label htmlFor="file">
+          <label>
             <LuWandSparkles /> Muunna tiedosto
           </label>
 

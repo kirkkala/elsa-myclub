@@ -13,11 +13,20 @@ body {
 }
 
 a {
-  color: v.$color-primary;
-  text-decoration: underline;
+  color: v.$color-primary-dark;
+  text-decoration: none;
+  border-bottom: 1px solid v.$color-primary-dark;
+  transition: all 0.2s ease;
 
     &:hover {
-      text-decoration: none;
+      border-bottom-color: transparent;
+      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+    }
+
+    &:focus {
+      outline: none;
+      border-bottom-color: transparent;
+      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
     }
 }
 

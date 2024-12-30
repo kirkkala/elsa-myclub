@@ -217,3 +217,21 @@
   font-size: 0.875rem;
   color: v.$color-text-light;
 }
+
+.link {
+  color: v.$color-primary-dark;
+  text-decoration: none;
+  border-bottom: 1px solid v.$color-primary-dark;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-bottom-color: transparent;
+    color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: transparent;
+    color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+  }
+}
