@@ -1,24 +1,38 @@
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+interface ApiErrorResponse {
+  message: string
+}
 
-  const handleSubmit = async (e) => {
+interface FormElements extends HTMLFormControlsCollection {
+  year: HTMLSelectElement
+  duration: HTMLSelectElement
+  file: HTMLInputElement
+}
+
+interface ConversionForm extends HTMLFormElement {
+  readonly elements: FormElements
+}
+
+export default function Home() {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
+
+  const handleSubmit = async (e: FormEvent<ConversionForm>) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
     try {
-      const formData = new FormData(e.target)
+      const formData = new FormData(e.currentTarget)
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response.json() as ApiErrorResponse
         throw new Error(errorData.message || 'Failed to convert file')
       }
 
@@ -38,7 +52,7 @@ export default function Home() {
       a.remove()
 
     } catch (err) {
-      setError(err.message)
+      setError(err instanceof Error ? err.message : 'An unknown error occurred')
     } finally {
       setLoading(false)
     }
@@ -46,7 +60,7 @@ export default function Home() {
 
   const currentYear = new Date().getFullYear()
   const years = Array.from(
-    {length: 2030 - currentYear + 1},
+    { length: 2030 - currentYear + 1 },
     (_, i) => currentYear + i
   )
 
@@ -62,7 +76,6 @@ export default function Home() {
           tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää
           ELSA:sta pelejä MyClubiin.
         </p>
-        {/* Rest of the credits content */}
       </div>
 
       <div className={styles.formContainer}>
@@ -85,7 +98,12 @@ export default function Home() {
             <p className={styles.fieldDescription}>
               Valitse pelin kesto, tämän arvon perusteella lasketaan pelin päättymisaika.
             </p>
-            <select id="duration" name="duration" required defaultValue="75">
+            <select
+              id="duration"
+              name="duration"
+              required
+              defaultValue="75"
+            >
               <option value="">Valitse kesto</option>
               <option value="60">1 tunti</option>
               <option value="75">1 tunti 15 minuuttia</option>
@@ -102,14 +120,23 @@ export default function Home() {
               <strong>Huom!</strong> Elsan pitkä tiedostonimi saattaa aiheuttaa ongelmia,
               anna tiedostolle lyhyempi nimi ja ilman erikoismerkkejä ennen kuin lisäät sen tästä.
             </p>
-            <input type="file" name="file" accept=".xlsx,.xls" required />
+            <input
+              type="file"
+              name="file"
+              accept=".xlsx,.xls"
+              required
+            />
           </div>
 
           <p className={styles.fieldDescription}>
             Paina nappulaa muuntaaksesi tiedoston (avaa tiedoston tallennusikkunan) 🪄
           </p>
 
-          <button type="submit" className={styles.button} disabled={loading}>
+          <button
+            type="submit"
+            className={styles.button}
+            disabled={loading}
+          >
             Muunna
           </button>
         </form>

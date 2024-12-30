@@ -9,24 +9,34 @@ export const config = {
   },
 }
 
-function normalizeDate(date: any): string {
-  // If it's a number, convert to string with fixed decimal places
-  // This handles Excel's number format (e.g., 22.09 as number)
+interface ProcessedRow {
+  Tapahtuma: string
+  Alkaa: string
+  Päättyy: string
+  Paikka: string
+}
+
+interface ExcelRow {
+  Pvm: string | number
+  Klo: string
+  Kenttä: string
+  Koti: string
+  Vieras: string
+  Sarja: string
+}
+
+function normalizeDate(date: string | number): string {
   const dateStr = typeof date === 'number'
-    ? date.toFixed(2)  // Ensures we get "22.09" instead of "22.9"
+    ? date.toFixed(2)
     : String(date)
 
-  // Replace any commas with periods
   const cleanDate = dateStr.replace(',', '.')
-
-  // Split by period and handle cases like "27.1"
   const parts = cleanDate.split('.')
 
   if (parts.length !== 2) {
     throw new Error(`Invalid date format: ${date}`)
   }
 
-  // Pad both day and month with leading zeros
   const day = parts[0].padStart(2, '0')
   const month = parts[1].padStart(2, '0')
 
@@ -46,12 +56,8 @@ function calculateEndTime(startTime: string, durationMinutes: number): string {
 }
 
 function formatSeriesName(fullSeries: string): string {
-  // Extract division from the full series name
   const divMatch = fullSeries.match(/(I+)\s*divisioona/i)
-  if (divMatch) {
-    return `${divMatch[1]} div.`
-  }
-  return '' // Return empty string if no division found
+  return divMatch ? `${divMatch[1]} div.` : ''
 }
 
 function formatEventName(series: string, homeTeam: string, awayTeam: string): string {
@@ -78,49 +84,43 @@ export default async function handler(
       })
     })
 
-    const file = Array.isArray(files.file) ? files.file[0] : files.file
-    if (!file) {
+    const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
+    if (!uploadedFile) {
       return res.status(400).json({ message: 'No file uploaded' })
     }
 
-    const fileData = await fs.readFile(file.filepath)
+    const fileData = await fs.readFile(uploadedFile.filepath)
     const workbook = xlsx.read(fileData)
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-    const jsonData = xlsx.utils.sheet_to_json(firstSheet)
+    const jsonData = xlsx.utils.sheet_to_json<ExcelRow>(firstSheet)
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
 
-    const processedData = jsonData.map((row: any, index: number) => {
-      const rawDate = row['Pvm']
-      const time = row['Klo']
-      const location = row['Kenttä']
-      const homeTeam = row['Koti']
-      const awayTeam = row['Vieras']
-      const series = row['Sarja']
-
-      if (!time || !rawDate) {
-        console.warn(`Warning: Missing data in row ${index}`, row)
-        return null
-      }
-
-      try {
-        const normalizedDate = normalizeDate(rawDate)
-        const startDateTime = formatDateTime(normalizedDate, time, year)
-        const endTime = calculateEndTime(time, duration)
-        const endDateTime = formatDateTime(normalizedDate, endTime, year)
-
-        return {
-          'Tapahtuma': formatEventName(series, homeTeam, awayTeam),
-          'Alkaa': startDateTime,
-          'Päättyy': endDateTime,
-          'Paikka': location,
+    const processedData: ProcessedRow[] = jsonData
+      .map((row: ExcelRow) => {
+        if (!row.Klo || !row.Pvm) {
+          return null
         }
-      } catch (err) {
-        console.warn(`Warning: Error processing row ${index}:`, err.message)
-        return null
-      }
-    }).filter(row => row !== null)
+
+        try {
+          const normalizedDate = normalizeDate(row.Pvm)
+          const startDateTime = formatDateTime(normalizedDate, row.Klo, year)
+          const endTime = calculateEndTime(row.Klo, duration)
+          const endDateTime = formatDateTime(normalizedDate, endTime, year)
+
+          return {
+            'Tapahtuma': formatEventName(row.Sarja, row.Koti, row.Vieras),
+            'Alkaa': startDateTime,
+            'Päättyy': endDateTime,
+            'Paikka': row.Kenttä,
+          }
+        } catch (err) {
+          console.warn(`Warning: Error processing row:`, err instanceof Error ? err.message : String(err))
+          return null
+        }
+      })
+      .filter((row): row is ProcessedRow => row !== null)
 
     if (processedData.length === 0) {
       return res.status(400).json({
@@ -147,6 +147,8 @@ export default async function handler(
 
   } catch (error) {
     console.error('Detailed error:', error)
-    res.status(500).json({ message: `Error processing file: ${error.message}` })
+    res.status(500).json({
+      message: `Error processing file: ${error instanceof Error ? error.message : String(error)}`
+    })
   }
 }
