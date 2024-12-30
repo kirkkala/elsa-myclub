@@ -19,6 +19,12 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
 
+  const currentYear = new Date().getFullYear()
+
+  const githubTextAndLink = (
+    <>Sovelluksen lähdekoodi on saatavilla <a href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer" title="github.com/kirkkala/elsa-myclub">GitHubissa</a>.</>
+  )
+
   const handleSubmit = async (e: FormEvent<ConversionForm>) => {
     e.preventDefault()
     setError('')
@@ -58,7 +64,6 @@ export default function Home() {
     }
   }
 
-  const currentYear = new Date().getFullYear()
   const years = Array.from(
     { length: 2030 - currentYear + 1 },
     (_, i) => currentYear + i
@@ -69,14 +74,27 @@ export default function Home() {
       <h1>ELSA {'->'} MyClub Excel muunnin</h1>
       <p>Muunna ELSA:n excel tiedosto MyClubiin sopivaksi tuontitiedostoksi.</p>
 
-      <div className={styles.credits}>
-        <h2>Disclaimer / credits</h2>
-        <p>
-          Tämä on Namikan jojoilijan Timo Kirkkalan (<a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>)
-          tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää
-          ELSA:sta pelejä MyClubiin.
-        </p>
-      </div>
+      <details className={styles.credits}>
+        <summary>Tietoja sovelluksesta</summary>
+        <div className={styles.creditsContent}>
+          <p>
+            Tämä on Namikan jojoilijan Timo Kirkkalan (<a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
+          </p>
+          <p>Sovellus on vielä ihan vaiheessa ja varmasti buginen eikä sitä ole juurikaan testattu. Mikäli ELSA:an ei tule kunnollista export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
+          <p>
+            Jotta sovelluksesta saadaan käyttökelpoinen, tarvitsee lisätä ainakin seuraavanlaisia valintoja:
+          </p>
+          <ul>
+            <li>MyClub ryhmän nimi (valinta tai vapaateksti?)</li>
+            <li>MyClub ilmoittautumisasetukset (pudotusvalikko)</li>
+            <li>MyClub näkyvyysasetukset (pudotusvalikko)</li>
+            <li>Ties mitä muuta? Laita toiveet kehittäjälle.</li>
+          </ul>
+          <p style={{ marginTop: '2rem' }}>
+            {githubTextAndLink}
+          </p>
+        </div>
+      </details>
 
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
@@ -152,6 +170,13 @@ export default function Home() {
           <div className={styles.error}>{error}</div>
         )}
       </div>
+
+      <footer className={styles.footer}>
+        <div className={styles.footerText}>
+          <p>&copy; Timo Kirkkala {currentYear}</p>
+          <p>{githubTextAndLink}</p>
+        </div>
+      </footer>
     </div>
   )
 }

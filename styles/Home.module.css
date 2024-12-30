@@ -6,15 +6,49 @@
 }
 
 .credits {
-  margin: 2rem 0;
-  padding: .5rem 1rem;
-  background-color: #f3f4f6;
-  border-radius: 4px;
+  margin: 0;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #fafafa;
   font-size: 0.875rem;
 }
 
+.credits summary {
+  cursor: pointer;
+  padding: 0.5rem;
+  font-weight: 600;
+  user-select: none;
+  color: #666;
+}
+
+.credits summary:hover {
+  color: #0070f3;
+}
+
+.creditsContent {
+  padding: 1rem;
+  border-top: 1px solid #eaeaea;
+  margin-top: 0.5rem;
+}
+
+.creditsContent h2 {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.creditsContent ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.creditsContent li {
+  margin: 0.25rem 0;
+}
+
 .credits a {
-  color: #2563eb;
+  color: #0070f3;
   text-decoration: none;
 }
 
@@ -103,4 +137,26 @@
 .button:disabled {
   background: #93c5fd;
   cursor: not-allowed;
+}
+
+.footer {
+  margin: 4rem 0 8rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eaeaea;
+}
+
+.footerText {
+  text-align: center;
+  color: #666;
+  font-size: 0.875rem;
+  align-items: center;
+}
+
+.footerText a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.footerText a:hover {
+  text-decoration: underline;
 }

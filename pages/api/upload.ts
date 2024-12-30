@@ -94,6 +94,7 @@ export default async function handler(
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = xlsx.utils.sheet_to_json<ExcelRow>(firstSheet)
 
+
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
 
