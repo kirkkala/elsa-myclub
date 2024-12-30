@@ -183,8 +183,8 @@ export default function Home() {
             <p className={styles.fieldDescription}>
               Tarvitaan koska ELSA:n exportissa ei ole vuotta päivämäärien yhteydessä.
             </p>
-            <select id="year" name="year" required>
-              <option value="">Valitse vuosi</option>
+            <select id="year" name="year" required defaultValue={currentYear}>
+              <option value="">- Valitse -</option>
               {years.map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
@@ -192,19 +192,39 @@ export default function Home() {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="duration">
-              <LuClock className={styles.icon} /> Pelin kesto
+            <label htmlFor="startAdjustment">
+              <LuClock className={styles.icon} /> Kokoontumisaika
             </label>
             <p className={styles.fieldDescription}>
-              Valitse pelin kesto, tämän arvon perusteella lasketaan pelin päättymisaika.
+              Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen tulee olla paikalla esim lämppää varten.
+              Valinta aikaistaa tapahtuman alkuaikaa valitun minuuttimäärän verran.
+            </p>
+            <select
+              id="startAdjustment"
+              name="startAdjustment"
+              defaultValue="0"
+            >
+              <option value="0">Ei aikaistusta</option>
+              <option value="15">15 minuuttia ennen</option>
+              <option value="30">30 minuuttia ennen</option>
+              <option value="45">45 minuuttia ennen</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="duration">
+              <LuClock className={styles.icon} /> Tapahtuman kesto
+            </label>
+            <p className={styles.fieldDescription}>
+              Valinnan perusteella lasketaan tapahtuman päättymisaika.
             </p>
             <select
               id="duration"
               name="duration"
               required
-              defaultValue="75"
+              defaultValue="60"
             >
-              <option value="">Valitse kesto</option>
+              <option value="">- Valitse -</option>
               <option value="60">1 tunti</option>
               <option value="75">1 tunti 15 minuuttia</option>
               <option value="90">1 tunti 30 minuuttia</option>
@@ -226,7 +246,7 @@ export default function Home() {
               defaultValue="Ottelu"
             >
               <option value="">- Valitse -</option>
-              <option value="Ottelu" selected>Ottelu</option>
+              <option value="Ottelu">Ottelu</option>
               <option value="Muu">Muu</option>
             </select>
           </div>
@@ -241,10 +261,9 @@ export default function Home() {
             <select
               id="registration"
               name="registration"
-              defaultValue="Valituille henkilöille"
             >
               <option value="">- Valitse -</option>
-              <option value="Valituille henkilöille" selected>Valituille henkilöille</option>
+              <option value="Valituille henkilöille">Valituille henkilöille</option>
               <option value="Ryhmän jäsenille">Ryhmän jäsenille</option>
               <option value="Seuralle">Seuralle</option>
             </select>
@@ -257,7 +276,7 @@ export default function Home() {
 
           <p className={styles.fieldDescription}>
               Paina taikanappia ja applikaatio muotoilee ELSA:sta tuomasi excel-tiedoston MyClub-yhteensopivaksi
-              tuontitiedostoksi yllä annettujen asetusten mukaisesti <LuWandSparkles />.
+              tuontitiedostoksi yllä asetettujen valintojen mukaisesti <LuWandSparkles />.
           </p>
 
           <button

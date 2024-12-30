@@ -88,6 +88,14 @@ function getMyclubRegistration(fields: Fields): string {
     : 'Valituille henkilöille'
 }
 
+function adjustStartTime(time: string, adjustMinutes: number): string {
+  const [hours, minutes] = time.split(':').map(Number)
+  const startDate = new Date(2000, 0, 1, hours, minutes)
+  const adjustedDate = new Date(startDate.getTime() - adjustMinutes * 60000)
+
+  return `${adjustedDate.getHours().toString().padStart(2, '0')}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -118,6 +126,7 @@ export default async function handler(
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
+    const startAdjustment = parseInt(fields.startAdjustment?.[0] || '0', 10)
 
     const processedData: ProcessedRow[] = jsonData
       .map((row: ExcelRow) => {
@@ -127,7 +136,8 @@ export default async function handler(
 
         try {
           const normalizedDate = normalizeDate(row.Pvm)
-          const startDateTime = formatDateTime(normalizedDate, row.Klo, year)
+          const adjustedStartTime = adjustStartTime(row.Klo, startAdjustment)
+          const startDateTime = formatDateTime(normalizedDate, adjustedStartTime, year)
           const endTime = calculateEndTime(row.Klo, duration)
           const endDateTime = formatDateTime(normalizedDate, endTime, year)
 
