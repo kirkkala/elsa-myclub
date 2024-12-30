@@ -33,7 +33,7 @@ function normalizeDate(date: any): string {
   return `${day}.${month}.`
 }
 
-function formatDateTime(date: string, time: string, year: string): string {
+function formatDateTime(date: string, time: string, year: string | number): string {
   return `${date}${year} ${time}:00`
 }
 
@@ -88,7 +88,7 @@ export default async function handler(
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = xlsx.utils.sheet_to_json(firstSheet)
 
-    const year = fields.year?.[0] || new Date().getFullYear()
+    const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
 
     const processedData = jsonData.map((row: any, index: number) => {
