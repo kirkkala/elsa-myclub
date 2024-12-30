@@ -1,5 +1,5 @@
 import { useState, FormEvent } from 'react'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.scss'
 
 interface ApiErrorResponse {
   message: string

@@ -12,48 +12,48 @@
   padding: 0.5rem;
   background: #fafafa;
   font-size: 0.875rem;
-}
 
-.credits summary {
-  cursor: pointer;
-  padding: 0.5rem;
-  font-weight: 600;
-  user-select: none;
-  color: #666;
-}
+  summary {
+    cursor: pointer;
+    padding: 0.5rem;
+    font-weight: 600;
+    user-select: none;
+    color: #666;
 
-.credits summary:hover {
-  color: #0070f3;
+    &:hover {
+      color: #0070f3;
+    }
+  }
+
+  a {
+    color: #0070f3;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 .creditsContent {
   padding: 1rem;
   border-top: 1px solid #eaeaea;
   margin-top: 0.5rem;
-}
 
-.creditsContent h2 {
-  font-size: 1rem;
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
+  h2 {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
 
-.creditsContent ul {
-  margin: 0.5rem 0;
-  padding-left: 1.5rem;
-}
+  ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+  }
 
-.creditsContent li {
-  margin: 0.25rem 0;
-}
-
-.credits a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.credits a:hover {
-  text-decoration: underline;
+  li {
+    margin: 0.25rem 0;
+  }
 }
 
 .formContainer {
@@ -90,35 +90,35 @@
 
 .formGroup {
   margin-bottom: 2rem;
-}
 
-.formGroup label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="text"],
+  select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  select {
+    background-color: white;
+  }
+
+  input[type="file"] {
+    margin-bottom: 1rem;
+  }
 }
 
 .fieldDescription {
   font-size: 0.75rem;
   color: #666;
   margin: 0 0 0.5rem 0;
-}
-
-.formGroup input[type="text"],
-.formGroup select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 300px;
-}
-
-.formGroup select {
-  background-color: white;
-}
-
-.formGroup input[type="file"] {
-  margin-bottom: 1rem;
 }
 
 .button {
@@ -128,15 +128,15 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
 
-.button:hover {
-  background: #1d4ed8;
-}
+  &:hover {
+    background: #1d4ed8;
+  }
 
-.button:disabled {
-  background: #93c5fd;
-  cursor: not-allowed;
+  &:disabled {
+    background: #93c5fd;
+    cursor: not-allowed;
+  }
 }
 
 .footer {
@@ -150,13 +150,13 @@
   color: #666;
   font-size: 0.875rem;
   align-items: center;
-}
 
-.footerText a {
-  color: #0070f3;
-  text-decoration: none;
-}
+  a {
+    color: #0070f3;
+    text-decoration: none;
 
-.footerText a:hover {
-  text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
