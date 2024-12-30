@@ -1,0 +1,28 @@
+@use "sass:color";
+@use "./variables.scss" as v;
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: v.$color-primary;
+  text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+}
+
+hr {
+  border: none;
+  border-top: 1px solid v.$color-border-light;
+  margin: 1.5rem 0;
+}

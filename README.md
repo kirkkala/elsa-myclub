@@ -9,6 +9,7 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 - [TypeScript](https://www.typescriptlang.org/) 5.x (strict mode)
 - [formidable](https://www.npmjs.com/package/formidable) 3.x (file upload handling)
 - [xlsx](https://sheetjs.com) 0.20.3 (Excel file processing from SheetJS CDN)
+- [React Icons](https://react-icons.github.io/react-icons/) 5.x (Icon components)
 
 ### Prerequisites
 - Node.js version defined in `.nvmrc`
