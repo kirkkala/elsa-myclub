@@ -10,10 +10,14 @@ export const config = {
 }
 
 interface ProcessedRow {
-  Tapahtuma: string
+  Nimi: string
+  Ryhmä: string
+  Tapahtumatyyppi: string
+  Tapahtumapaikka: string
   Alkaa: string
   Päättyy: string
-  Paikka: string
+  Ilmoittautuminen: string
+  Näkyvyys: string
 }
 
 interface ExcelRow {
@@ -67,6 +71,31 @@ function formatEventName(series: string, homeTeam: string, awayTeam: string): st
     : `${homeTeam} - ${awayTeam}`
 }
 
+function getMyclubGroupValue(fields: Fields): string {
+  return String(fields.group?.[0] || 'Edustus') // Default to "Edustus" if not specified
+}
+
+function getMyclubEventType(fields: Fields): string {
+  const eventType = fields.eventType?.[0]
+  return eventType === 'Muu' ? 'Muu' : 'Ottelu' // Default to "Ottelu"
+}
+
+function getMyclubRegistration(fields: Fields): string {
+  const registration = fields.registration?.[0]
+  const validOptions = ['Ryhmän jäsenille', 'Seuralle', 'Valituille henkilöille']
+  return validOptions.includes(String(registration))
+    ? String(registration)
+    : 'Valituille henkilöille'
+}
+
+function adjustStartTime(time: string, adjustMinutes: number): string {
+  const [hours, minutes] = time.split(':').map(Number)
+  const startDate = new Date(2000, 0, 1, hours, minutes)
+  const adjustedDate = new Date(startDate.getTime() - adjustMinutes * 60000)
+
+  return `${adjustedDate.getHours().toString().padStart(2, '0')}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -97,6 +126,7 @@ export default async function handler(
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
+    const startAdjustment = parseInt(fields.startAdjustment?.[0] || '0', 10)
 
     const processedData: ProcessedRow[] = jsonData
       .map((row: ExcelRow) => {
@@ -106,15 +136,20 @@ export default async function handler(
 
         try {
           const normalizedDate = normalizeDate(row.Pvm)
-          const startDateTime = formatDateTime(normalizedDate, row.Klo, year)
+          const adjustedStartTime = adjustStartTime(row.Klo, startAdjustment)
+          const startDateTime = formatDateTime(normalizedDate, adjustedStartTime, year)
           const endTime = calculateEndTime(row.Klo, duration)
           const endDateTime = formatDateTime(normalizedDate, endTime, year)
 
           return {
-            'Tapahtuma': formatEventName(row.Sarja, row.Koti, row.Vieras),
+            'Nimi': formatEventName(row.Sarja, row.Koti, row.Vieras),
+            'Ryhmä': getMyclubGroupValue(fields),
+            'Tapahtumatyyppi': getMyclubEventType(fields),
+            'Tapahtumapaikka': row.Kenttä,
             'Alkaa': startDateTime,
             'Päättyy': endDateTime,
-            'Paikka': row.Kenttä,
+            'Ilmoittautuminen': getMyclubRegistration(fields),
+            'Näkyvyys': 'Näkyy ryhmälle',
           }
         } catch (err) {
           console.warn(`Warning: Error processing row:`, err instanceof Error ? err.message : String(err))

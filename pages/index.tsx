@@ -1,6 +1,17 @@
 import { useState, FormEvent } from 'react'
 import styles from '../styles/Home.module.scss'
-import { LuCalendar, LuClock, LuCopyright, LuInfo, LuUpload, LuWandSparkles, LuX } from "react-icons/lu";
+import {
+  LuCalendar,
+  LuCalendarClock,
+  LuClipboardCheck,
+  LuClock,
+  LuCopyright,
+  LuInfo,
+  LuSend,
+  LuUsers,
+  LuWandSparkles,
+  LuX
+} from "react-icons/lu";
 import { RiFileExcel2Line } from "react-icons/ri";
 
 const APP_VERSION = '0.1.0-beta' // Single source of truth for version
@@ -27,7 +38,7 @@ export default function Home() {
   const currentYear = new Date().getFullYear()
 
   const githubTextAndLink = (
-    <>Sovelluksen lähdekoodi löytyy <a className={styles.link} href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer" title="github.com/kirkkala/elsa-myclub">GitHubissa</a>.</>
+    <>Sovelluksen lähdekoodi löytyy <a className={styles.link} href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer" title="github.com/kirkkala/elsa-myclub">GitHubista</a>.</>
   )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,30 +110,21 @@ export default function Home() {
         <div className={styles.infoContent}>
           <h2>Tietoja sovelluksesta</h2>
           <p>
-            Tämä on Namikan jojoilijan Timo Kirkkalan (<a className={styles.link} href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä
+            Tämä on Namikan Stadi 2014 tyttöjen jojon Timo Kirkkalan (<a className={styles.link} href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä
             avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
           </p>
-          <p>Sovellus on vielä aika vaiheessa ja ehkä buginenkin. Mikäli ELSA:an ei tule kunnollista
-            export-ominaisuutta syksylle 2025, kehitetään tästä toimiva häkkyrä.</p>
-          <p>
-            Jotta sovelluksesta saadaan käyttökelpoinen, tarvitsee lisätä ainakin seuraavanlaisia valintoja:
-          </p>
-          <ul>
-            <li>MyClub ryhmän nimi (valinta tai vapaateksti?)</li>
-            <li>MyClub ilmoittautumisasetukset (pudotusvalikko)</li>
-            <li>MyClub näkyvyysasetukset (pudotusvalikko)</li>
-            <li>Ties mitä muuta? Laita toiveet kehittäjälle.</li>
-          </ul>
+          <p>Sovellus on vielä betaversiossa ja mahdollisesti buginenkin. Tavoitteena on tehdä tästä &ldquo;bulletproof&rdquo;
+            syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.</p>
           <hr className={styles.divider} />
           <h3>Muutosloki</h3>
           <div className={styles.changelog}>
-            <h4>v0.1.0-beta (2024-12-30)</h4>
+            <h4>v0.1.0-beta (2024-12-31)</h4>
             <ul>
-              <li>Ensimmäinen beta-versio</li>
-              <li>Perustoiminnallisuus ELSA excel tiedostojen muuntamiseen</li>
-              <li>Automaattinen divisioonanimen lisäys tapahtuman nimeen</li>
-              <li>Tuki pelin keston määrittämiselle</li>
-              <li>Tuki eri päivämääräformaateille</li>
+              <li>Ensimmäinen beta-versio 🎉</li>
+              <li>Perustoiminnallisuus ELSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla</li>
+              <li>Automaattinen divisioonanimen lisäys tapahtuman nimeen (Divisioona + koti/vierasjoukkue)</li>
+              <li>Tuki eri päivämääräformaateille ELSA:n epästandeista päivämääräkentistä</li>
+              <li>Tuki pelin keston määrittämiselle = Tapahtuman loppuaika</li>
             </ul>
           </div>
           <hr className={styles.divider} />
@@ -135,51 +137,15 @@ export default function Home() {
 
       <div className={styles.formContainer}>
         <form onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label htmlFor="year">
-              <LuCalendar /> Vuosi
-            </label>
-            <p className={styles.fieldDescription}>
-              ELSA:n tiedostossa ei ole vuotta, joten sinun tulee asettaa se erikseen.
-            </p>
-            <select id="year" name="year" required>
-              <option value="">Valitse vuosi</option>
-              {years.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="duration">
-              <LuClock className={styles.icon} /> Pelin kesto
-            </label>
-            <p className={styles.fieldDescription}>
-              Valitse pelin kesto, tämän arvon perusteella lasketaan pelin päättymisaika.
-            </p>
-            <select
-              id="duration"
-              name="duration"
-              required
-              defaultValue="75"
-            >
-              <option value="">Valitse kesto</option>
-              <option value="60">1 tunti</option>
-              <option value="75">1 tunti 15 minuuttia</option>
-              <option value="90">1 tunti 30 minuuttia</option>
-              <option value="105">1 tunti 45 minuuttia</option>
-              <option value="120">2 tuntia</option>
-            </select>
-          </div>
 
           <div className={styles.formGroup}>
             <label>
-              <LuUpload /> Valitse tiedosto
+              <LuSend /> Valitse tiedosto
             </label>
             <p className={styles.fieldDescription}>
-              Valitse ELSA:sta ladattu excel-tiedosto.
+              Valitse tähän kenttään ELSA:sta ladattu excel-tiedosto.
             </p>
-            <label htmlFor="file" className={styles.fileInputLabel}>
+            <label htmlFor="file" className={styles.fileupload}>
               <RiFileExcel2Line />
               <span>{selectedFile || 'Valitse tiedosto...'}</span>
               {selectedFile && <span className={styles.fileCheck}>✓</span>}
@@ -195,13 +161,122 @@ export default function Home() {
           </div>
 
           <div className={styles.formGroup}>
+            <label htmlFor="group">
+              <LuUsers /> Ryhmä
+            </label>
+            <p className={styles.fieldDescription}>
+              Kirjoita MyClub ryhmäsi nimi. Löydät oikean ryhmän nimen MyClub:n esimerkkitiedostosta
+            </p>
+            <input
+              type="text"
+              id="group"
+              name="group"
+              placeholder='Esim. HNMKY Tytöt 2014 Stadi'
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="year">
+              <LuCalendar /> Vuosi
+            </label>
+            <p className={styles.fieldDescription}>
+              Tarvitaan koska ELSA:n exportissa ei ole vuotta päivämäärien yhteydessä.
+            </p>
+            <select id="year" name="year" required defaultValue={currentYear}>
+              <option value="">- Valitse -</option>
+              {years.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="startAdjustment">
+              <LuClock className={styles.icon} /> Kokoontumisaika
+            </label>
+            <p className={styles.fieldDescription}>
+              Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen tulee olla paikalla esim lämppää varten.
+              Valinta aikaistaa tapahtuman alkuaikaa valitun minuuttimäärän verran.
+            </p>
+            <select
+              id="startAdjustment"
+              name="startAdjustment"
+              defaultValue="0"
+            >
+              <option value="0">Ei aikaistusta</option>
+              <option value="15">15 minuuttia ennen</option>
+              <option value="30">30 minuuttia ennen</option>
+              <option value="45">45 minuuttia ennen</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="duration">
+              <LuClock className={styles.icon} /> Tapahtuman kesto
+            </label>
+            <p className={styles.fieldDescription}>
+              Valinnan perusteella lasketaan tapahtuman päättymisaika.
+            </p>
+            <select
+              id="duration"
+              name="duration"
+              required
+              defaultValue="60"
+            >
+              <option value="">- Valitse -</option>
+              <option value="60">1 tunti</option>
+              <option value="75">1 tunti 15 minuuttia</option>
+              <option value="90">1 tunti 30 minuuttia</option>
+              <option value="105">1 tunti 45 minuuttia</option>
+              <option value="120">2 tuntia</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="eventType">
+              <LuCalendarClock /> Tapahtumatyyppi
+            </label>
+            <p className={styles.fieldDescription}>
+              Valitse tapahtuman tyyppi MyClubissa.
+            </p>
+            <select
+              id="eventType"
+              name="eventType"
+              defaultValue="Ottelu"
+            >
+              <option value="">- Valitse -</option>
+              <option value="Ottelu">Ottelu</option>
+              <option value="Muu">Muu</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="registration">
+              <LuClipboardCheck /> Ilmoittautuminen
+            </label>
+            <p className={styles.fieldDescription}>
+              Valitse kenelle tapahtuma näkyy MyClubissa.
+            </p>
+            <select
+              id="registration"
+              name="registration"
+            >
+              <option value="">- Valitse -</option>
+              <option value="Valituille henkilöille">Valituille henkilöille</option>
+              <option value="Ryhmän jäsenille">Ryhmän jäsenille</option>
+              <option value="Seuralle">Seuralle</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
           <label>
             <LuWandSparkles /> Muunna tiedosto
           </label>
 
           <p className={styles.fieldDescription}>
               Paina taikanappia ja applikaatio muotoilee ELSA:sta tuomasi excel-tiedoston MyClub-yhteensopivaksi
-              tuontitiedostoksi yllä annettujen asetusten mukaisesti <LuWandSparkles />.
+              tuontitiedostoksi yllä asetettujen valintojen mukaisesti <LuWandSparkles />.
           </p>
 
           <button
