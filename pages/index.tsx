@@ -1,6 +1,8 @@
 import { useState, FormEvent } from 'react'
 import styles from '../styles/Home.module.scss'
 
+const APP_VERSION = '0.1.0-beta' // Single source of truth for version
+
 interface ApiErrorResponse {
   message: string
 }
@@ -71,12 +73,13 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>ELSA {'->'} MyClub Excel muunnin</h1>
+      <h1>ELSA {'->'} MyClub Excel muunnin <span className={styles.version}>v{APP_VERSION}</span></h1>
       <p>Muunna ELSA:n excel tiedosto MyClubiin sopivaksi tuontitiedostoksi.</p>
 
       <details className={styles.credits}>
         <summary>Tietoja sovelluksesta</summary>
         <div className={styles.creditsContent}>
+          <h2>Tietoja sovelluksesta</h2>
           <p>
             Tämä on Namikan jojoilijan Timo Kirkkalan (<a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
           </p>
@@ -90,7 +93,21 @@ export default function Home() {
             <li>MyClub näkyvyysasetukset (pudotusvalikko)</li>
             <li>Ties mitä muuta? Laita toiveet kehittäjälle.</li>
           </ul>
-          <p style={{ marginTop: '2rem' }}>
+          <hr className={styles.divider} />
+          <h3>Muutosloki</h3>
+          <div className={styles.changelog}>
+            <h4>v0.1.0-beta (2024-12-30)</h4>
+            <ul>
+              <li>Ensimmäinen beta-versio</li>
+              <li>Perustoiminnallisuus ELSA excel tiedostojen muuntamiseen</li>
+              <li>Automaattinen divisioonanimen lisäys tapahtuman nimeen</li>
+              <li>Tuki pelin keston määrittämiselle</li>
+              <li>Tuki eri päivämääräformaateille</li>
+            </ul>
+          </div>
+          <hr className={styles.divider} />
+          <h2>Lähdekoodi</h2>
+          <p>
             {githubTextAndLink}
           </p>
         </div>

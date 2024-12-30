@@ -160,3 +160,30 @@
     }
   }
 }
+
+.version {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: normal;
+  margin-left: 0.5rem;
+}
+
+.changelog {
+  margin: 1rem 0;
+
+  h4 {
+    font-size: 0.875rem;
+    margin: 0 0 0.5rem 0;
+    color: #666;
+  }
+
+  ul {
+    font-size: 0.875rem;
+  }
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #eaeaea;
+  margin: 1.5rem 0;
+}

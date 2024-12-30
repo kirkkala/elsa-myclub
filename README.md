@@ -79,6 +79,24 @@ npm run dev
 
 The app will be available at http://localhost:3000
 
+### Versioning
+<details>
+<summary>The app follows Semantic Versioning (SemVer)</summary>
+
+```
+Major version (x.0.0): Breaking changes
+Minor version (0.x.0): New features
+Patch version (0.0.x): Bug fixes
+Beta suffix (-beta): Pre-release version
+```
+</details>
+
+To update the version:
+1. Update APP_VERSION in `pages/index.tsx`
+2. Add changelog entry in `pages/index.tsx`
+3. Commit with message: `chore: bump version to x.x.x`
+
+
 ### Deployment
 Deploy to Vercel (practically git push to main should do the same):
 ```bash
