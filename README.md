@@ -8,7 +8,7 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 - [React](https://react.dev/) 18.x
 - [TypeScript](https://www.typescriptlang.org/) 5.x (strict mode)
 - [formidable](https://www.npmjs.com/package/formidable) 3.x (file upload handling)
-- [xlsx](https://www.npmjs.com/package/xlsx) 0.20.x (Excel file processing from [SheetJS](https://sheetjs.com) CDN)
+- [xlsx](https://sheetjs.com) 0.20.3 (Excel file processing from SheetJS CDN)
 
 ### Prerequisites
 - Node.js version defined in `.nvmrc`
@@ -22,7 +22,7 @@ elsa-myclub/
 │   └── api/
 │       └── upload.ts     (API handler for file conversion)
 ├── styles/
-│   └── Home.module.css   (Styles for the frontend)
+│   └── Home.module.scss  (SCSS styles for the frontend)
 ├── package.json          (project metadata and dependencies)
 ├── next.config.js        (Next.js configuration)
 ├── tsconfig.json        (TypeScript configuration with strict mode)
@@ -96,4 +96,4 @@ npm run deploy
 
 ### Credits
 
-Created by Timo Kirkkala (timo.kirkkala@gmail.com) to help basketball team managers save time when importing game schedules to MyClub.
+Created by [Timo Kirkkala](https://github.com/kirkkala) (timo.kirkkala@gmail.com) to help basketball team managers save time when importing game schedules to MyClub.
