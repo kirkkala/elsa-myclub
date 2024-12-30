@@ -93,7 +93,6 @@ export default async function handler(
 
     const processedData = jsonData.map((row: any, index: number) => {
       const rawDate = row['Pvm']
-      console.log(`Row ${index} date:`, rawDate, 'type:', typeof rawDate) // Debug log
       const time = row['Klo']
       const location = row['Kenttä']
       const homeTeam = row['Koti']
