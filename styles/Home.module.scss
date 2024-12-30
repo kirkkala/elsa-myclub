@@ -1,0 +1,237 @@
+@use "./variables.scss" as v;
+@use "sass:color";
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin hover-effect {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.1);
+    color: color.adjust(v.$color-primary, $lightness: -10%);
+  }
+}
+
+// Base styles
+.container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+// Info section
+.info {
+  margin: 1rem 0 2rem;
+  border: 1px solid v.$color-border;
+  border-radius: v.$border-radius;
+  padding: 0.5rem;
+  background: v.$color-bg-light;
+  font-size: 0.875rem;
+
+  summary {
+    cursor: pointer;
+    padding: 0.5rem;
+    font-weight: 600;
+    user-select: none;
+    color: v.$color-text-light;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    &:hover { color: v.$color-primary; }
+
+    .summaryOpen {
+      display: none;
+    }
+  }
+
+  .summaryClosed {
+    .icon {
+      transform: translate(-0.2rem, 0.1rem);
+    }
+  }
+  &[open] {
+    summary {
+      .summaryOpen {
+        display: block;
+      }
+      .summaryClosed {
+        display: none;
+      }
+    }
+  }
+
+  .infoContent {
+    padding: 0 0.5rem;
+  }
+}
+
+// Form elements
+.formGroup {
+  margin-bottom: 2rem;
+
+  label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  select {
+    padding: 0.5rem 1rem;
+    border: 1px solid v.$color-border;
+    border-radius: v.$border-radius;
+    width: 100%;
+    max-width: 300px;
+    background-color: white;
+  }
+
+  .fileInputLabel {
+    @extend select;
+    @include flex-center;
+    width: fit-content;
+    max-width: 100%;
+    border-style: dashed;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: v.$color-text-light;
+    position: relative;
+    transition: width 0.3s ease;
+    padding-right: 2.5rem;  // Space for the checkmark
+
+    &:hover {
+      border-color: v.$color-primary;
+      color: v.$color-text;
+    }
+
+    svg { font-size: 1.2rem; }
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding-right: 0.5rem;
+    }
+  }
+
+  input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+  }
+}
+
+// Button styles
+.button {
+  @include flex-center;
+  @include hover-effect;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: v.$border-radius;
+  cursor: pointer;
+  color: v.$color-text;
+
+  &:disabled {
+    background: lightgray;
+    color: gray;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &.convert {
+    margin-top: 2rem;
+    font-size: 2rem;
+  }
+}
+
+// Utility classes
+.fieldDescription {
+  font-size: 0.75rem;
+  color: v.$color-text-light;
+  margin-bottom: 0.5rem;
+}
+
+.fileCheck {
+  position: absolute;
+  right: 1rem;
+  color: v.$color-green;
+}
+
+.version {
+  font-size: 0.875rem;
+  color: v.$color-text-light;
+  font-weight: normal;
+  margin-left: 0.5rem;
+}
+
+// Loading and error states
+.loading {
+  margin-top: 1rem;
+  color: v.$color-text-light;
+  .spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+  }
+}
+
+.error {
+  color: v.$color-primary;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: v.$border-radius;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Footer
+.footer {
+  margin: 4rem 0 8rem;
+  padding-top: 2rem;
+  border-top: 1px solid v.$color-border;
+  text-align: center;
+  font-size: 0.875rem;
+  color: v.$color-text-light;
+}
+
+.link {
+  color: v.$color-primary-dark;
+  text-decoration: none;
+  border-bottom: 1px solid v.$color-primary-dark;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-bottom-color: transparent;
+    color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom-color: transparent;
+    color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+  }
+}

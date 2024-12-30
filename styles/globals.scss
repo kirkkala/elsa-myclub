@@ -1,0 +1,37 @@
+@use "sass:color";
+@use "./variables.scss" as v;
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: v.$color-primary-dark;
+  text-decoration: none;
+  border-bottom: 1px solid v.$color-primary-dark;
+  transition: all 0.2s ease;
+
+    &:hover {
+      border-bottom-color: transparent;
+      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+    }
+
+    &:focus {
+      outline: none;
+      border-bottom-color: transparent;
+      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
+    }
+}
+
+hr {
+  border: none;
+  border-top: 1px solid v.$color-border-light;
+  margin: 1.5rem 0;
+}
