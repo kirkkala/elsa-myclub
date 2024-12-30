@@ -30,20 +30,9 @@ elsa-myclub/
 ├── vercel.json          (Vercel configuration)
 └── .nvmrc               (Node.js version specification)
 ```
-
-### TypeScript Configuration
-
-The project uses strict TypeScript mode with additional type checking:
-- `strict: true`
-- `noImplicitAny: true`
-- `strictNullChecks: true`
-- `strictFunctionTypes: true`
-- `noUnusedLocals: true`
-- `noUnusedParameters: true`
-
 ### Excel File Requirements
 
-Input file should have these columns:
+Input file should have columns as they were in ELSA export file 2024-12-31:
 - `Pvm` - Date (e.g., "22.09" or "29,09")
 - `Klo` - Time (e.g., "18:30")
 - `Kenttä` - Venue
@@ -51,11 +40,7 @@ Input file should have these columns:
 - `Vieras` - Away team
 - `Sarja` - Division/Series
 
-Output will have:
-- `Tapahtuma` - Event (e.g., "III div. Honka/Gold - HNMKY/Stadi")
-- `Alkaa` - Start (e.g., "22.09.2024 18:30:00")
-- `Päättyy` - End (calculated based on duration)
-- `Paikka` - Venue
+Output will be an excel file in the format of MyClub importable file, columns and rows combined and mutated from the provided ELSA excel file.
 
 ### Development
 Use node version defined in `.nvmrc`:

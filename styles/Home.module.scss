@@ -1,6 +1,6 @@
 @use "./variables.scss" as v;
 @use "sass:color";
-// Mixins
+
 @mixin flex-center {
   display: flex;
   align-items: center;
@@ -15,7 +15,6 @@
   }
 }
 
-// Base styles
 .container {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   max-width: 600px;
@@ -33,7 +32,7 @@
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
-// Info section
+
 .info {
   margin: 1rem 0 2rem;
   border: 1px solid v.$color-border;
@@ -78,9 +77,14 @@
   .infoContent {
     padding: 0 0.5rem;
   }
+
+  .changelog {
+    h4 {
+      margin-bottom: 0.5rem;
+    }
+  }
 }
 
-// Form elements
 .formGroup {
   margin-bottom: 2rem;
 
@@ -92,16 +96,42 @@
     gap: 0.5rem;
   }
 
-  select {
+  select,
+  input[type="text"] {
     padding: 0.5rem 1rem;
     border: 1px solid v.$color-border;
     border-radius: v.$border-radius;
     width: 100%;
     max-width: 300px;
     background-color: white;
+    font-size: 0.875rem;
+    color: v.$color-text;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: v.$color-primary;
+      box-shadow: 0 0 0 2px color.adjust(v.$color-primary, $alpha: -0.9);
+    }
+
+    &:hover:not(:focus) {
+      border-color: color.adjust(v.$color-border, $lightness: -10%);
+    }
+
+    &::placeholder {
+      color: v.$color-text-light;
+    }
   }
 
-  .fileInputLabel {
+  select:not(.fileupload) {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 2.5rem;
+  }
+
+  .fileupload {
     @extend select;
     @include flex-center;
     width: fit-content;
@@ -137,7 +167,6 @@
   }
 }
 
-// Button styles
 .button {
   @include flex-center;
   @include hover-effect;
@@ -160,7 +189,6 @@
   }
 }
 
-// Utility classes
 .fieldDescription {
   font-size: 0.75rem;
   color: v.$color-text-light;
@@ -180,7 +208,6 @@
   margin-left: 0.5rem;
 }
 
-// Loading and error states
 .loading {
   margin-top: 1rem;
   color: v.$color-text-light;
@@ -208,7 +235,6 @@
   to { transform: rotate(360deg); }
 }
 
-// Footer
 .footer {
   margin: 4rem 0 8rem;
   padding-top: 2rem;
