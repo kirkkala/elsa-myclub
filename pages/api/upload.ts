@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IncomingForm, Fields, Files } from 'formidable'
-import xlsx from 'xlsx'
+import * as XLSX from 'xlsx'
 import { promises as fs } from 'fs'
 
 export const config = {
@@ -90,9 +90,9 @@ export default async function handler(
     }
 
     const fileData = await fs.readFile(uploadedFile.filepath)
-    const workbook = xlsx.read(fileData)
+    const workbook = XLSX.read(fileData)
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-    const jsonData = xlsx.utils.sheet_to_json<ExcelRow>(firstSheet)
+    const jsonData = XLSX.utils.sheet_to_json<ExcelRow>(firstSheet)
 
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
@@ -129,11 +129,11 @@ export default async function handler(
       })
     }
 
-    const newWorkbook = xlsx.utils.book_new()
-    const newSheet = xlsx.utils.json_to_sheet(processedData)
-    xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'MyClub Import')
+    const newWorkbook = XLSX.utils.book_new()
+    const newSheet = XLSX.utils.json_to_sheet(processedData)
+    XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'MyClub Import')
 
-    const buffer = xlsx.write(newWorkbook, { type: 'buffer', bookType: 'xlsx' })
+    const buffer = XLSX.write(newWorkbook, { type: 'buffer', bookType: 'xlsx' })
 
     res.setHeader(
       'Content-Disposition',

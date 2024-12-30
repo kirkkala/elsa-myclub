@@ -2,22 +2,13 @@
 
 A tool to convert ELSA basketball schedule Excel files to MyClub format.
 
-## Features
-
-- Converts ELSA Excel files to MyClub format
-- Automatically calculates game end times based on selected duration
-- Handles various date formats (22.09, 29,09, 6.10, etc.)
-- Formats division names (e.g., "III divisioona" → "III div.")
-- Web-based interface with React
-- Type-safe with strict TypeScript mode
-
 ## Tech Stack
 
-- Next.js 15.1.3
-- React 18.2.0
-- TypeScript 5.4.2 (strict mode)
-- formidable 3.5.1 (file upload handling)
-- xlsx 0.18.5 (Excel file processing)
+- [Next.js](https://nextjs.org/) 15.x
+- [React](https://react.dev/) 18.x
+- [TypeScript](https://www.typescriptlang.org/) 5.x (strict mode)
+- [formidable](https://www.npmjs.com/package/formidable) 3.x (file upload handling)
+- [xlsx](https://www.npmjs.com/package/xlsx) 0.20.x (Excel file processing from [SheetJS](https://sheetjs.com) CDN)
 
 ### Prerequisites
 - Node.js version defined in `.nvmrc`
