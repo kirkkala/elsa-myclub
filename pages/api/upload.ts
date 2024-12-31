@@ -135,13 +135,12 @@ export default async function handler(
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = XLSX.utils.sheet_to_json<ExcelRow>(firstSheet)
 
-
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || '75', 10)
     const startAdjustment = parseInt(fields.startAdjustment?.[0] || '0', 10)
 
     const processedData: ProcessedRow[] = jsonData
-      .map((row: ExcelRow) => {
+      .map((row: ExcelRow): ProcessedRow | null => {
         if (!row.Klo || !row.Pvm) {
           return null
         }
@@ -163,7 +162,7 @@ export default async function handler(
             'Päättyy': endDateTime,
             'Ilmoittautuminen': getMyclubRegistration(fields),
             'Näkyvyys': 'Näkyy ryhmälle',
-          }
+          } as ProcessedRow
         } catch (err) {
           console.warn(`Warning: Error processing row:`, err instanceof Error ? err.message : String(err))
           return null
