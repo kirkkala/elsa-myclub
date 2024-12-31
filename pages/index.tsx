@@ -13,6 +13,8 @@ import {
   LuX
 } from "react-icons/lu";
 import { RiFileExcel2Line } from "react-icons/ri";
+import Link from 'next/link'
+import { SITE_CONFIG } from '../config'
 
 interface ApiErrorResponse {
   message: string
@@ -36,7 +38,7 @@ export default function Home() {
   const currentYear = new Date().getFullYear()
 
   const githubTextAndLink = (
-    <>Sovelluksen lähdekoodi löytyy <a className={styles.link} href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer" title="github.com/kirkkala/elsa-myclub">GitHubista</a>.</>
+    <>Sovelluksen lähdekoodi <a className={styles.link} href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer" title="github.com/kirkkala/elsa-myclub">GitHubista</a>.</>
   )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +92,10 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>ELSA → MyClub Excel muunnin <span className={styles.version}>v{process.env.APP_VERSION}</span></h1>
+      <div className={styles.header}>
+        <h1>{SITE_CONFIG.name}</h1>
+        <p>{SITE_CONFIG.version} <Link href="/changelog"><small>(changelog)</small></Link></p>
+      </div>
       <p>Muunna <a className={styles.link}
       href="https://elsa.basket.fi/"
       target="_blank"
@@ -114,27 +119,14 @@ export default function Home() {
           <p>Sovellus on vielä betaversiossa ja mahdollisesti buginenkin. Tavoitteena on tehdä tästä &ldquo;bulletproof&rdquo;
             syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.</p>
           <hr className={styles.divider} />
-          <h3>Muutosloki</h3>
-          <div className={styles.changelog}>
-            <h4>v0.1.1-beta (YYYY-MM-DD)</h4>
-            <ul>
-              <li>Pelin lämppä (jos määritetty) ja pelin alkuaika MyClub kuvaukseen</li>
-            </ul>
-
-            <h4>v0.1.0-beta (2024-12-30)</h4>
-            <ul>
-              <li>Ensimmäinen beta-versio 🎉</li>
-              <li>Perustoiminnallisuus ELSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla</li>
-              <li>Automaattinen divisioonanimen lisäys tapahtuman nimeen (Divisioona + koti/vierasjoukkue)</li>
-              <li>Tuki eri päivämääräformaateille ELSA:n epästandeista päivämääräkentistä</li>
-              <li>Tuki pelin keston määrittämiselle = Tapahtuman loppuaika</li>
-            </ul>
-          </div>
           <hr className={styles.divider} />
-          <h3>Lähdekoodi</h3>
+          <h3>Lähdekoodi ja muutoshistoria</h3>
           <p>
             {githubTextAndLink}
           </p>
+          <p>
+            Löydät sovelluksen versiohistorian myös <Link href="/changelog" className={styles.link}>täältä</Link>.
+            </p>
         </div>
       </details>
 
