@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
+const packageJson = require('./package.json')
+
 const nextConfig = {
   reactStrictMode: true,
-  sassOptions: {
-    includePaths: ['./styles'],
+  env: {
+    APP_VERSION: packageJson.version,
   },
 }
 

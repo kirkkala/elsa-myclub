@@ -14,8 +14,6 @@ import {
 } from "react-icons/lu";
 import { RiFileExcel2Line } from "react-icons/ri";
 
-const APP_VERSION = '0.1.0-beta' // Single source of truth for version
-
 interface ApiErrorResponse {
   message: string
 }
@@ -92,7 +90,7 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>ELSA → MyClub Excel muunnin <span className={styles.version}>v{APP_VERSION}</span></h1>
+      <h1>ELSA → MyClub Excel muunnin <span className={styles.version}>v{process.env.APP_VERSION}</span></h1>
       <p>Muunna <a className={styles.link}
       href="https://elsa.basket.fi/"
       target="_blank"
