@@ -3,6 +3,7 @@ import Head from 'next/head'
 import '../styles/globals.scss'
 import { SITE_CONFIG } from '../config'
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <Component {...pageProps} />
       <SpeedInsights />
+      <Analytics />
     </>
   )
 }
