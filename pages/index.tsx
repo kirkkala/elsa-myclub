@@ -116,7 +116,12 @@ export default function Home() {
           <hr className={styles.divider} />
           <h3>Muutosloki</h3>
           <div className={styles.changelog}>
-            <h4>v0.1.0-beta (2024-12-31)</h4>
+            <h4>v0.1.1-beta (YYYY-MM-DD)</h4>
+            <ul>
+              <li>Pelin lämppä (jos määritetty) ja pelin alkuaika MyClub kuvaukseen</li>
+            </ul>
+
+            <h4>v0.1.0-beta (2024-12-30)</h4>
             <ul>
               <li>Ensimmäinen beta-versio 🎉</li>
               <li>Perustoiminnallisuus ELSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla</li>

@@ -71,7 +71,7 @@ Beta suffix (-beta): Pre-release version
 To update the version:
 1. Update APP_VERSION in `pages/index.tsx`
 2. Add changelog entry in `pages/index.tsx`
-3. Commit with message: `chore: bump version to x.x.x`
+3. Commit with message: `Bump version to x.x.x`
 
 
 ### Deployment
