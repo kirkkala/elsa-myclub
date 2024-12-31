@@ -96,6 +96,18 @@ function adjustStartTime(time: string, adjustMinutes: number): string {
   return `${adjustedDate.getHours().toString().padStart(2, '0')}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
 }
 
+function createDescription(originalTime: string, startAdjustment: number): string {
+  const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
+
+  // We don't need warm-up if startAdjustment is 0
+  if (startAdjustment === 0) {
+    return gameStart
+  }
+
+  return `<p>Warm-up: ${adjustStartTime(originalTime, startAdjustment)}</p>
+${gameStart}`
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -143,6 +155,7 @@ export default async function handler(
 
           return {
             'Nimi': formatEventName(row.Sarja, row.Koti, row.Vieras),
+            'Kuvaus': createDescription(row.Klo, startAdjustment),
             'Ryhmä': getMyclubGroupValue(fields),
             'Tapahtumatyyppi': getMyclubEventType(fields),
             'Tapahtumapaikka': row.Kenttä,
