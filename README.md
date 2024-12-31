@@ -1,4 +1,4 @@
-# ELSA -> MyClub Excel Converter
+# ELSA → MyClub Excel Converter
 
 A tool to convert ELSA basketball schedule Excel files to MyClub format.
 
@@ -69,9 +69,9 @@ Beta suffix (-beta): Pre-release version
 </details>
 
 To update the version:
-1. Update APP_VERSION in `pages/index.tsx`
-2. Add changelog entry in `pages/index.tsx`
-3. Commit with message: `chore: bump version to x.x.x`
+1. Update APP_VERSION in `package.json`
+2. Add changelog entry in `CHANGELOG.md`
+3. Commit with message: `Bump version to x.x.x`
 
 
 ### Deployment

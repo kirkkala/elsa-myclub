@@ -1,22 +1,29 @@
-node_modules/
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Vercel
 .vercel/
+
 uploads/
 downloads/
-*.log
-.env
-.DS_Store
-# Next.js
-.next/
-out/
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
-# IDE
-.idea/
-.vscode/
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-# Local env files
-.env*.local
+
+# public
+/public/*
+!/public/favicon.ico
+
+# misc
+.DS_Store
+*.pem
