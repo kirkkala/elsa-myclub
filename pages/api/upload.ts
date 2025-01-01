@@ -38,7 +38,7 @@ function normalizeDate(date: string | number): string {
   const parts = cleanDate.split('.')
 
   if (parts.length !== 2) {
-    throw new Error(`Invalid date format: ${date}`)
+    throw new Error(`Virheellinen päivämäärämuoto: ${date}`)
   }
 
   const day = parts[0].padStart(2, '0')
@@ -127,7 +127,7 @@ export default async function handler(
 
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
     if (!uploadedFile) {
-      return res.status(400).json({ message: 'No file uploaded' })
+      return res.status(400).json({ message: 'Ei lisättyä tiedostoa' })
     }
 
     const fileData = await fs.readFile(uploadedFile.filepath)
@@ -172,7 +172,7 @@ export default async function handler(
 
     if (processedData.length === 0) {
       return res.status(400).json({
-        message: 'Could not process any rows from the Excel file. Please check the column names match the expected format (Pvm, Klo, Kenttä, etc.)'
+        message: 'Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).'
       })
     }
 
@@ -196,7 +196,7 @@ export default async function handler(
   } catch (error) {
     console.error('Detailed error:', error)
     res.status(500).json({
-      message: `Error processing file: ${error instanceof Error ? error.message : String(error)}`
+      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`
     })
   }
 }

@@ -60,7 +60,7 @@ export default function Home() {
 
       if (!response.ok) {
         const errorData = await response.json() as ApiErrorResponse
-        throw new Error(errorData.message || 'Failed to convert file')
+        throw new Error(errorData.message || 'Tiedoston muunnos epäonnistui')
       }
 
       const disposition = response.headers.get('Content-Disposition')
