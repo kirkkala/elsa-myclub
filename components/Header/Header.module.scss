@@ -1,0 +1,54 @@
+@use "../../styles/variables.scss" as v;
+@use "../../styles/shared/ui.scss" as ui;
+
+.header {
+  @include ui.headerBase;
+
+  h1 {
+    margin-bottom: 0.5rem;
+    color: v.$color-text;
+  }
+
+  p {
+    color: v.$color-text-light;
+
+    small {
+      font-size: 0.875rem;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.headerWithLogos {
+  composes: header;
+
+  .titleLogos {
+    @include ui.headerLogos;
+
+    .titleLogo {
+      height: 25px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .elsaLogo {
+      background: #004176;
+      padding: 0.25rem 0.5rem;
+      border-radius: v.$border-radius;
+      height: 30px;
+    }
+
+    .myclubLogo {
+      height: 45px;
+    }
+
+    .titleArrow {
+      color: v.$color-text-light;
+      font-size: 1.75rem;
+    }
+  }
+}
