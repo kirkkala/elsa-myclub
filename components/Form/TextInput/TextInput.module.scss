@@ -1,0 +1,18 @@
+@use "../../../styles/variables.scss" as v;
+@use "../../../styles/shared/form.scss" as form;
+
+.formGroup {
+  @include form.formGroup;
+
+  label {
+    @include form.formLabel;
+  }
+
+  .fieldDescription {
+    @include form.fieldDescription;
+  }
+
+  input {
+    @include form.baseInput;
+  }
+}

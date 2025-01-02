@@ -1,0 +1,47 @@
+@use "../../../styles/variables.scss" as v;
+@use "../../../styles/shared/form.scss" as form;
+@use "../../../styles/shared/ui.scss" as ui;
+
+.formGroup {
+  @include form.formGroup;
+
+  label {
+    @include form.formLabel;
+  }
+
+  .fieldDescription {
+    @include form.fieldDescription;
+  }
+
+  input[type="file"] {
+    @include ui.hiddenFileInput;
+  }
+
+  .fileupload {
+    @include form.fileInput;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    svg {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .fileCheck {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: v.$color-success;
+      font-size: 1.2rem;
+    }
+  }
+}

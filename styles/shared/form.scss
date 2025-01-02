@@ -1,0 +1,64 @@
+@use "../variables.scss" as v;
+
+@mixin fieldDescription {
+  color: v.$color-text-light;
+  font-size: .75rem;
+  margin-bottom: 0.5rem;
+  max-width: none;
+}
+
+@mixin formGroup {
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+@mixin formLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+@mixin baseInput {
+  width: 100%;
+  min-width: 300px;
+  padding: 0.75rem;
+  border: 1px solid v.$color-border;
+  border-radius: v.$border-radius;
+  background: white;
+  color: v.$color-text;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+
+  &:hover, &:focus {
+    border-color: v.$color-primary;
+    outline: none;
+  }
+}
+
+@mixin selectInput {
+  @include baseInput;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 2.5rem;
+}
+
+@mixin fileInput {
+  @include baseInput;
+  width: fit-content;
+  max-width: 100%;
+  border-style: dashed;
+  cursor: pointer;
+  color: v.$color-text-light;
+  position: relative;
+  padding-right: 2.5rem;
+
+  &:hover {
+    border-color: v.$color-primary;
+    color: v.$color-text;
+  }
+}
