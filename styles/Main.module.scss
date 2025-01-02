@@ -1,0 +1,67 @@
+@use "./variables.scss" as v;
+@use "./shared/form.scss" as form;
+@use "./shared/info.scss" as info;
+@use "./shared/ui.scss" as ui;
+@use "sass:color";
+
+.container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-size: 0.875rem;
+}
+
+.visuallyHidden {
+  @include ui.visuallyHidden;
+}
+
+.formGroup {
+  @include form.formGroup;
+
+  label {
+    @include form.formLabel;
+  }
+
+  select,
+  input[type="text"] {
+    @include form.baseInput;
+  }
+
+  select:not(.fileupload) {
+    @include form.selectInput;
+  }
+
+  input[type="file"] {
+    @include ui.hiddenFileInput;
+  }
+}
+
+.button {
+  @include ui.button;
+
+  &.convert {
+    margin-top: 2rem;
+    font-size: 2rem;
+  }
+}
+
+.loading {
+  @include ui.loadingSpinner;
+}
+
+.error {
+  @include ui.errorMessage;
+}
+
+.footer {
+  @include ui.footer;
+}
+
+.link {
+  @include info.infoLink;
+}
+
+.changelogContent {
+  @include ui.changelog;
+}

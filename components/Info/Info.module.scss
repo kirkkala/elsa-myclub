@@ -1,0 +1,26 @@
+@use "../../styles/variables.scss" as v;
+@use "../../styles/shared/info.scss" as info;
+@use "sass:color";
+
+.info {
+  @include info.infoBase;
+  @include info.infoSummaryStates;
+
+  summary {
+    @include info.infoSummary;
+  }
+
+  .infoContent {
+    @include info.infoContent;
+  }
+
+  .link {
+    @include info.infoLink;
+  }
+
+  .divider {
+    border: 0;
+    border-top: 1px solid v.$color-border;
+    margin: 1rem 0;
+  }
+}

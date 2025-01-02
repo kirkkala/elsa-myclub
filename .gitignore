@@ -20,10 +20,6 @@ downloads/
 *.tsbuildinfo
 next-env.d.ts
 
-# public
-/public/*
-!/public/favicon.ico
-
 # misc
 .DS_Store
 *.pem

@@ -1,0 +1,155 @@
+@use "../variables.scss" as v;
+@use "sass:color";
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin hover-effect {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.05);
+    font-size: 105%;
+  }
+}
+
+@mixin button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: v.$border-radius;
+  background: v.$color-primary;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  @include hover-effect;
+
+  &:hover:not(:disabled) {
+    background: color.adjust(v.$color-primary, $lightness: -10%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin loadingSpinner {
+  margin-top: 1rem;
+  color: v.$color-text-light;
+
+  .spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+  }
+}
+
+@mixin errorMessage {
+  color: v.$color-primary;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid currentColor;
+  border-radius: v.$border-radius;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@mixin visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@mixin fileCheck {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: v.$color-success;
+  font-size: 1.2rem;
+}
+
+@mixin hiddenFileInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+@mixin footer {
+  margin: 4rem 0 8rem;
+  padding-top: 2rem;
+  border-top: 1px solid v.$color-border;
+  text-align: center;
+  font-size: 0.875rem;
+  color: v.$color-text-light;
+}
+
+@mixin changelog {
+  background: v.$color-bg-light;
+  padding: 2rem;
+  border-radius: v.$border-radius;
+  margin: 2rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  ul {
+    margin-bottom: 0.5rem;
+    list-style-type: none;
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.75rem;
+      position: relative;
+
+      &::before {
+        content: "•";
+        position: absolute;
+        left: -1.5rem;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@mixin backLink {
+  margin: 1rem 0;
+}
+
+@mixin headerBase {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+@mixin headerLogos {
+  @include flex-center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
