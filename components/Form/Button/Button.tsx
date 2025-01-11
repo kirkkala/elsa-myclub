@@ -1,5 +1,5 @@
 import { IconType } from 'react-icons'
-import styles from '../../../styles/Main.module.scss'
+import styles from './Button.module.scss'
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset'

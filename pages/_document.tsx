@@ -8,7 +8,7 @@ export default function Document() {
         <meta charSet="utf-8" />
         <meta name="description" content="Namikan kehittämä nettiappi ELSA:n excel tiedostojen muuntamiseen MyClub-yhteensopiviksi" />
         <meta name="version" content={SITE_CONFIG.version} />
-        <meta name="author" content="Timo Kirkkala" />
+        <meta name="author" content={SITE_CONFIG.author.name} />
         <meta name="keywords" content="ELSA, MyClub, basketball, koripallo, excel, converter, muunnin" />
 
         {/* Open Graph / Social Media */}

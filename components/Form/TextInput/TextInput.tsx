@@ -22,7 +22,7 @@ export default function TextInput({
 }: TextInputProps) {
   return (
     <div className={styles.formGroup}>
-      <label htmlFor={id}>
+      <label>
         <Icon /> {label}
       </label>
       <p className={styles.fieldDescription}>

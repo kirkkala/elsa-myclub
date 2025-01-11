@@ -10,29 +10,37 @@ export default function Header() {
   const isChangelog = router.pathname === '/changelog'
 
   return (
-    <div className={isChangelog ? styles.header : styles.headerWithLogos}>
+    <header className={isChangelog ? styles.header : styles.headerWithLogos}>
       {!isChangelog && (
         <div className={styles.titleLogos}>
-          <Image
-            src="/images/elsa.png"
-            alt="ELSA"
-            width={25}
-            height={20}
-            className={`${styles.titleLogo} ${styles.elsaLogo}`}
-          />
+          <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/images/elsa.png"
+              alt="ELSA"
+              width={25}
+              height={20}
+              className={`${styles.titleLogo} ${styles.elsaLogo}`}
+            />
+          </a>
           <LuWandSparkles className={styles.titleArrow} />
-          <Image
-            src="/images/myclub.svg"
-            alt="MyClub"
-            width={45}
-            height={45}
-            className={`${styles.titleLogo} ${styles.myclubLogo}`}
-          />
+          <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/images/myclub.svg"
+              alt="MyClub"
+              width={45}
+              height={45}
+              className={`${styles.titleLogo} ${styles.myclubLogo}`}
+            />
+          </a>
         </div>
       )}
       <h1>{SITE_CONFIG.name}</h1>
-      <p>{SITE_CONFIG.version} {!isChangelog && (<Link href="/changelog">(<small>versiohistoria</small>)</Link>)}</p>
-    </div>
+      <p>
+        {SITE_CONFIG.version} {!isChangelog && (
+          <Link href="/changelog">(<small>versiohistoria</small>)</Link>
+        )}
+      </p>
+    </header>
   )
 }
 

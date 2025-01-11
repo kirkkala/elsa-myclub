@@ -1,24 +1,71 @@
 @use "../../styles/variables.scss" as v;
-@use "../../styles/shared/info.scss" as info;
 @use "sass:color";
 
 .info {
-  @include info.infoBase;
-  @include info.infoSummaryStates;
+  margin: 1rem 0 2rem;
+  border: 1px solid v.$color-border;
+  border-radius: v.$border-radius;
+  padding: 0.5rem;
+  background: v.$color-bg-light;
+  font-size: 0.875rem;
 
   summary {
-    @include info.infoSummary;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-weight: 600;
+    user-select: none;
+    color: v.$color-text-light;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+      color: v.$color-primary;
+    }
   }
 
   .infoContent {
-    @include info.infoContent;
+    padding: 1rem;
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    ul {
+      margin-bottom: 2rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
-  .link {
-    @include info.infoLink;
+  // Summary states
+  .summaryOpen {
+    display: none;
   }
 
-  .divider {
+  .summaryClosed {
+    .icon {
+      transform: translate(-0.2rem, 0.1rem);
+    }
+  }
+
+  &[open] {
+    summary {
+      .summaryOpen {
+        display: block;
+      }
+      .summaryClosed {
+        display: none;
+      }
+    }
+  }
+
+  hr {
     border: 0;
     border-top: 1px solid v.$color-border;
     margin: 1rem 0;

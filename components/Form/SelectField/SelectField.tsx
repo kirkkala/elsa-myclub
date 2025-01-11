@@ -23,7 +23,7 @@ export default function SelectField({
 }: SelectFieldProps) {
   return (
     <div className={styles.formGroup}>
-      <label htmlFor={id}>
+      <label>
         <Icon /> {label}
       </label>
       <p className={styles.fieldDescription}>

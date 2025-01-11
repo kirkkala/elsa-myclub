@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v0.1.2-beta (2025-01-02)
+## v0.1.2-beta (2025-01-11)
 - Tekninen päivitys: Komponenttipohjainen käyttöliittymäarkkitehtuuri 🤓
 - Visuaalinen päivitys: Logot ja tekstikorjaukset 💅🏻
 

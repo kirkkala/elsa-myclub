@@ -1,5 +1,6 @@
 import { LuHeart } from 'react-icons/lu'
-import styles from '../../styles/Main.module.scss'
+import styles from './Footer.module.scss'
+import { SITE_CONFIG } from '../../config'
 
 export default function Footer() {
   return (
@@ -7,18 +8,16 @@ export default function Footer() {
       <p>
         Made with <LuHeart style={{ transform: 'translateY(2px)' }} /> by{' '}
         <a
-          href="mailto:timo.kirkkala@gmail.com"
+          href={SITE_CONFIG.links.githubAuthorUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.link}
-        >Timo Kirkkala</a>
+        >{SITE_CONFIG.author.name}</a>
       </p>
       <p>Source code published on{' '}
         <a
-          href="https://github.com/kirkkala/elsa-myclub"
+          href={SITE_CONFIG.links.githubAppRepoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.link}
         >GitHub</a>
       </p>
     </footer>

@@ -1,31 +1,34 @@
-import Link from 'next/link'
 import styles from './Info.module.scss'
-import { LuBookMarked, LuGithub, LuInfo, LuX } from "react-icons/lu"
+import { LuInfo, LuX } from "react-icons/lu"
 
-export default function Info() {
+interface InfoProps {
+  title: string
+  expandable?: boolean
+  children: React.ReactNode
+}
+
+export default function Info({ title, expandable = true, children }: InfoProps) {
+  if (expandable) {
+    return (
+      <details className={styles.info}>
+        <summary>
+          <span className={styles.summaryClosed}><LuInfo className={styles.icon} /> {title}</span>
+          <span className={styles.summaryOpen}><LuX /></span>
+        </summary>
+        <div className={styles.infoContent}>
+          <h2>{title}</h2>
+          {children}
+        </div>
+      </details>
+    )
+  }
+
   return (
-    <details className={styles.info}>
-      <summary>
-        <span className={styles.summaryClosed}><LuInfo className={styles.icon} /> Tietoja sovelluksesta</span>
-        <span className={styles.summaryOpen}><LuX /></span>
-      </summary>
+    <div className={styles.info}>
+      <h2>{title}</h2>
       <div className={styles.infoContent}>
-        <h2>Tietoja sovelluksesta</h2>
-        <p>
-          Tämä on Namikan Stadi 2014 tyttöjen jojon Timo Kirkkalan (<a className={styles.link} href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>) tekemä
-          avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää ELSA:sta pelejä MyClubiin.
-        </p>
-        <p>Sovellus on vielä betaversiossa ja mahdollisesti buginenkin. Tavoitteena on tehdä tästä &ldquo;bulletproof&rdquo;
-          syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.</p>
-        <hr className={styles.divider} />
-        <p><LuGithub /> Sovelluksen lähdekoodi: <a
-          className={styles.link}
-          href="https://github.com/kirkkala/elsa-myclub"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="github.com/kirkkala/elsa-myclub"> GitHub</a></p>
-        <p><LuBookMarked /> Sovelluksen versiohistoria: <Link href="/changelog" className={styles.link}>/changelog</Link>.</p>
+        {children}
       </div>
-    </details>
+    </div>
   )
 }

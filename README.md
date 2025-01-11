@@ -18,18 +18,18 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 ### Project structure:
 ```
 elsa-myclub/
-├── components/
-│   └── All UI components
+├── components/         # React components with their styles
+├── config.ts           # App configuration and constants
 ├── pages/
-│   ├── index.tsx - the main page
-│   ├── changelog.tsx - the changelog page
+│   ├── index.tsx       # Main page
+│   ├── changelog.tsx   # Changelog page
 │   └── api/
-│       └── upload.ts - the API handler for file conversion
-├── styles/
-│   ├── shared/
-│   │   └── All shared .scss files
-│   └── Main, global, variables and other .scss files
-└── vercel.json - Vercel deployment configuration
+│       └── upload.ts   # File conversion handler
+├── public/
+│   └── images/         # App icons and logos
+└── styles/
+    ├── globals.scss    # Global styles
+    └── variables.scss  # Variables for styles
 ```
 ### Excel File Requirements
 
@@ -72,7 +72,7 @@ Beta suffix (-beta): Pre-release version
 To update the version:
 1. Update APP_VERSION in `package.json`
 2. Add changelog entry in `CHANGELOG.md`
-  - Use Finnishm the changelog is shown on the site
+  - Changelog in Finnish because that's shown on the app also
 3. Commit with message: `Bump version to x.x.x`
 
 

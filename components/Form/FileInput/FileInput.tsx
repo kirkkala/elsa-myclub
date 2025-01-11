@@ -14,7 +14,7 @@ export default function FileInput({ selectedFile, onChange }: FileInputProps) {
         <LuSend /> Valitse tiedosto
       </label>
       <p className={styles.fieldDescription}>
-        Valitse tähän kenttään ELSA:sta ladattu excel-tiedosto.
+        Valitse tähän ELSA:sta ladattu excel-tiedosto.
       </p>
       <label htmlFor="file" className={styles.fileupload}>
         <RiFileExcel2Line />
@@ -28,6 +28,7 @@ export default function FileInput({ selectedFile, onChange }: FileInputProps) {
         accept=".xlsx,.xls"
         required
         onChange={onChange}
+        className={styles.hiddenInput}
       />
     </div>
   )

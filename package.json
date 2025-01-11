@@ -2,6 +2,15 @@
   "name": "elsa-myclub",
   "version": "0.1.2-beta",
   "private": true,
+  "author": {
+    "name": "Timo Kirkkala",
+    "email": "timo.kirkkala@gmail.com",
+    "url": "https://github.com/kirkkala"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirkkala/elsa-myclub"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

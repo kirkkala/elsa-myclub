@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import styles from '../../styles/Main.module.scss'
+import { LuArrowLeft } from 'react-icons/lu'
+import styles from './BackLink.module.scss'
 
 export default function BackLink() {
   return (
-    <p className={styles.backLink}>
-      <Link href="/">← Takaisin</Link>
-    </p>
+    <Link href="/" className={styles.backLink}>
+      <LuArrowLeft /> Takaisin
+    </Link>
   )
 }
