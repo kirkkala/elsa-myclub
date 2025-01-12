@@ -6,7 +6,6 @@ import Header from '../components/Header/Header'
 import Info from '../components/Info/Info'
 import UploadForm from '../components/Form/UploadForm/UploadForm'
 import Footer from '../components/Footer/Footer'
-import EmailLink from '../components/EmailLink/EmailLink'
 
 export default function Home() {
   return (
@@ -24,8 +23,16 @@ export default function Home() {
       </p>
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          Tämä on Namikan Stadi 2014 tyttöjen jojon Timo Kirkkalan (<EmailLink />)
-          tekemä avoimen lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää kun halutaan siirtää <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">ELSA</a>:sta pelejä <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">MyClub</a>:iin.
+          Tämä on Namikan Stadi 2014 tyttöjen jojon Timo Kirkkalan tekemä avoimen
+          lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää
+          kun halutaan siirtää <a
+            href={SITE_CONFIG.links.elsa}
+            target="_blank"
+            rel="noopener noreferrer">eLSA</a>
+            :sta pelejä <a
+            href={SITE_CONFIG.links.myclub}
+            target="_blank"
+            rel="noopener noreferrer">MyClub</a>:iin.
         </p>
         <p>Sovellus on vielä betaversiossa ja mahdollisesti buginenkin. Tavoitteena on tehdä tästä &ldquo;bulletproof&rdquo;
           syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.</p>

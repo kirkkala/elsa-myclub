@@ -59,16 +59,8 @@ const SEO_CONFIG = {
   }
 } as const
 
-// Helper functions
-function getMailtoLink() {
-  const email = encodeURIComponent(SITE_CONFIG.author.email)
-  const subject = encodeURIComponent('ELSA-MyClub excel muunnin')
-  return `mailto:${email}?subject=${subject}`
-}
-
 // Export everything after definitions
 export {
   SITE_CONFIG,
-  SEO_CONFIG,
-  getMailtoLink
+  SEO_CONFIG
 }

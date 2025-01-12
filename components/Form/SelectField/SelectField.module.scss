@@ -1,35 +1,18 @@
-@use "../../../styles/variables.scss" as v;
 @use "../../../styles/shared/form.scss" as form;
+@use "../../../styles/variables.scss" as v;
 
 .formGroup {
-  @include form.formGroup;
-
-  label {
-    @include form.formLabel;
-  }
-
-  .fieldDescription {
-    @include form.fieldDescription;
-  }
+  @include form.form-group;
 
   select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid v.$color-border;
-    border-radius: 4px;
-    background: white;
-    font-size: 1rem;
-    color: v.$color-text;
-    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
 
     &:hover {
-      border-color: v.$color-primary;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$color-primary;
-      box-shadow: 0 0 0 2px rgba(v.$color-primary, 0.1);
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23E53E3E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     }
   }
 }

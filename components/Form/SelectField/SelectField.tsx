@@ -10,7 +10,7 @@ interface SelectFieldProps {
     value: string
     label: string
   }>
-  defaultValue?: string
+  required?: boolean
 }
 
 export default function SelectField({
@@ -19,30 +19,24 @@ export default function SelectField({
   description,
   Icon,
   options,
-  defaultValue
+  required
 }: SelectFieldProps) {
   return (
     <div className={styles.formGroup}>
       <label htmlFor={id}>
-        <Icon /> {label}
+        {Icon && <Icon />}
+        {label}
       </label>
-      <p id={`${id}-description`} className={styles.fieldDescription}>
-        {description}
-      </p>
-      <select
-        id={id}
-        name={id}
-        defaultValue={defaultValue}
-        aria-label={label}
-        aria-describedby={`${id}-description`}
-      >
-        <option value="">- Valitse -</option>
-        {options.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      {description && <div className={styles.fieldDescription}>{description}</div>}
+      <div className={styles.selectWrapper}>
+        <select id={id} name={id} required={required}>
+          {options.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   )
 }

@@ -13,7 +13,8 @@ export default function Footer() {
           rel="noopener noreferrer"
         >{SITE_CONFIG.author.name}</a>
       </p>
-      <p>Source code published on{' '}
+      <p>
+        Source code published on{' '}
         <a
           href={SITE_CONFIG.links.githubAppRepoUrl}
           target="_blank"

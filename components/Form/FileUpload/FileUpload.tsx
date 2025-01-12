@@ -1,13 +1,13 @@
 import { RiFileExcel2Line } from "react-icons/ri"
 import { LuSend } from "react-icons/lu"
-import styles from './FileInput.module.scss'
+import styles from './FileUpload.module.scss'
 
-interface FileInputProps {
+interface FileUploadProps {
   selectedFile: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function FileInput({ selectedFile, onChange }: FileInputProps) {
+export default function FileUpload({ selectedFile, onChange }: FileUploadProps) {
   return (
     <div className={styles.formGroup}>
       <label>

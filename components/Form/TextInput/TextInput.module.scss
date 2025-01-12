@@ -1,38 +1,5 @@
-@use "../../../styles/variables.scss" as v;
 @use "../../../styles/shared/form.scss" as form;
 
 .formGroup {
-  @include form.formGroup;
-
-  label {
-    @include form.formLabel;
-  }
-
-  .fieldDescription {
-    @include form.fieldDescription;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid v.$color-border;
-    border-radius: 4px;
-    background: white;
-    font-size: 1rem;
-    color: v.$color-text;
-
-    &:hover {
-      border-color: v.$color-primary;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$color-primary;
-      box-shadow: 0 0 0 2px rgba(v.$color-primary, 0.1);
-    }
-
-    &::placeholder {
-      color: v.$color-text-light;
-    }
-  }
+  @include form.form-group;
 }

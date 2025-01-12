@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react'
 import styles from './UploadForm.module.scss'
-import FileInput from '../FileInput/FileInput'
+import FileUpload from '../FileUpload/FileUpload'
 import SelectField from '../SelectField/SelectField'
 import {
   LuCalendar,
@@ -84,7 +84,7 @@ export default function UploadForm() {
   return (
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit}>
-        <FileInput
+        <FileUpload
           selectedFile={selectedFile}
           onChange={handleFileChange}
         />
