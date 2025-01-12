@@ -6,8 +6,8 @@ This changelog is printed on the application at /changelog
 
 ## v0.1.2-beta (2025-01-12)
 - Tekninen päivitys: Komponenttipohjainen käyttöliittymäarkkitehtuuri 🤓
+- Visuaalinen päivitys: Logot, tekstikorjaukset, tyylien yhtenäistäminen 💅🏻
 - Hakukoneoptimointi, metatagit 🔎
-- Visuaalinen päivitys: Logot ja tekstikorjaukset 💅🏻
 
 ## v0.1.1-beta (2024-12-31)
 - Pelin lämppä (jos määritetty) ja pelin alkuaika MyClub kuvaukseen 📅

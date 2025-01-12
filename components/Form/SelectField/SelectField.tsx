@@ -11,6 +11,7 @@ interface SelectFieldProps {
     label: string
   }>
   required?: boolean
+  defaultValue?: string
 }
 
 export default function SelectField({
@@ -19,7 +20,8 @@ export default function SelectField({
   description,
   Icon,
   options,
-  required
+  required,
+  defaultValue
 }: SelectFieldProps) {
   return (
     <div className={styles.formGroup}>
@@ -29,7 +31,7 @@ export default function SelectField({
       </label>
       {description && <div className={styles.fieldDescription}>{description}</div>}
       <div className={styles.selectWrapper}>
-        <select id={id} name={id} required={required}>
+        <select id={id} name={id} required={required} defaultValue={defaultValue}>
           {options.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
