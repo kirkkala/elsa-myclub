@@ -8,7 +8,7 @@ interface EmailLinkProps {
 export default function EmailLink({ showAddress = true, children }: EmailLinkProps) {
   return (
     <a href={getMailtoLink()}>
-      {children || (showAddress ? SITE_CONFIG.email.address : 'Timo Kirkkala')}
+      {children || (showAddress ? SITE_CONFIG.author.email : SITE_CONFIG.author.name)}
     </a>
   )
 }

@@ -13,11 +13,11 @@ export default function Home() {
     <Layout>
       <Header />
       <p>
-        Muunna <a
+        Helpota jojotöitä ja muunna <a
           href={SITE_CONFIG.links.elsa}
           target="_blank"
-          rel="noopener noreferrer">ELSA</a>:sta
-        ladattu excel tiedosto <a
+          rel="noopener noreferrer">eLSA</a>:sta
+        ladattu excel <a
           href={SITE_CONFIG.links.myclub}
           target="_blank"
           rel="noopener noreferrer">MyClub</a>:iin soveltuvaksi tuontitiedostoksi.
