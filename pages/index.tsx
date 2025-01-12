@@ -34,8 +34,20 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer">MyClub</a>:iin.
         </p>
-        <p>Sovellus on vielä betaversiossa ja mahdollisesti buginenkin. Tavoitteena on tehdä tästä &ldquo;bulletproof&rdquo;
-          syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.</p>
+        <p>Sovellus on vielä betaversiossa ja mahdollisesti buginen. Tavoitteena
+          on tehdä tästä &ldquo;bulletproof&rdquo; syksylle 2025 kun jojot seuraavan
+          kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin. Hyvän  pelihengen
+          nimissä myös muut kuin Namikalaiset saavat käyttää sovellusta.</p>
+        <p>
+          Tsemppiä peleihin ja koko ruljanssin pyörittämiseen, HOS! 💪🏀
+        </p>
+        <h3>Tietosuojaseloste</h3>
+        <p>
+          Sovellus ei kerää tietoa käyttäjästä, ainoastaan vähän statistiikkaa
+          kävijämääristä. Sivustolle ladattuja excel-tiedostoja ei tallenneta
+          mihinkään muualle kuin käyttäjän omalle tietokoneelle. Keksejäkään eli
+          niitä herkullisia evästeitäkään ei täällä käytetä 🍪
+        </p>
         <hr />
         <ul className="list-reset">
           <li><LuBookMarked /> Sovelluksen <Link href="/changelog">versiohistoria</Link></li>
