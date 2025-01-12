@@ -21,7 +21,13 @@ export async function getStaticProps() {
   const changelogPath = path.join(process.cwd(), 'CHANGELOG.md')
   const fileContents = fs.readFileSync(changelogPath, 'utf8')
   const { content } = matter(fileContents)
-  const processedContent = await remark().use(html).process(content)
+
+  // Increase heading level by one to have better semantics on the page
+  const shiftedContent = content.replace(/^(#+)/gm, '#$1')
+
+  const processedContent = await remark()
+    .use(html)
+    .process(shiftedContent)
   const contentHtml = processedContent.toString()
 
   return {

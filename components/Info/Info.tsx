@@ -15,7 +15,7 @@ export default function Info({ title, expandable = true, children }: InfoProps) 
           <span className={styles.summaryClosed}><LuInfo className={styles.icon} /> {title}</span>
           <span className={styles.summaryOpen}><LuX /></span>
         </summary>
-        <div className={styles.infoContent}>
+        <div className={`${styles.infoContent} ${styles.expandable}`}>
           <h2>{title}</h2>
           {children}
         </div>
@@ -25,8 +25,8 @@ export default function Info({ title, expandable = true, children }: InfoProps) 
 
   return (
     <div className={styles.info}>
-      <h2>{title}</h2>
       <div className={styles.infoContent}>
+        <h2>{title}</h2>
         {children}
       </div>
     </div>

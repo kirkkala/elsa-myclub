@@ -28,6 +28,10 @@
   .infoContent {
     padding: 1rem;
 
+    &.expandable {
+      padding-top: 0;
+    }
+
     h2 {
       margin-top: 0;
       margin-bottom: 1rem;
