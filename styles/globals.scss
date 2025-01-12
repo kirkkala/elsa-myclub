@@ -55,7 +55,8 @@ ul {
 }
 
 a {
-  color: v.$color-primary;
+  font-weight: 500;
+  color: v.$color-primary-dark;
   text-decoration: none;
 
   &:hover {
