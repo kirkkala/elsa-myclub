@@ -23,16 +23,18 @@ export default function SelectField({
 }: SelectFieldProps) {
   return (
     <div className={styles.formGroup}>
-      <label>
+      <label htmlFor={id}>
         <Icon /> {label}
       </label>
-      <p className={styles.fieldDescription}>
+      <p id={`${id}-description`} className={styles.fieldDescription}>
         {description}
       </p>
       <select
         id={id}
         name={id}
         defaultValue={defaultValue}
+        aria-label={label}
+        aria-describedby={`${id}-description`}
       >
         <option value="">- Valitse -</option>
         {options.map(option => (

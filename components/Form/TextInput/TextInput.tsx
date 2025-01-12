@@ -22,10 +22,10 @@ export default function TextInput({
 }: TextInputProps) {
   return (
     <div className={styles.formGroup}>
-      <label>
+      <label htmlFor={id}>
         <Icon /> {label}
       </label>
-      <p className={styles.fieldDescription}>
+      <p id={`${id}-description`} className={styles.fieldDescription}>
         {description}
       </p>
       <input
@@ -35,6 +35,7 @@ export default function TextInput({
         placeholder={placeholder}
         defaultValue={defaultValue}
         required={required}
+        aria-describedby={`${id}-description`}
       />
     </div>
   )
