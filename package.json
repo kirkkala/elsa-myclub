@@ -1,7 +1,16 @@
 {
   "name": "elsa-myclub",
-  "version": "0.1.1-beta",
+  "version": "0.1.2-beta",
   "private": true,
+  "author": {
+    "name": "Timo Kirkkala",
+    "email": "timo.kirkkala@gmail.com",
+    "url": "https://github.com/kirkkala"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kirkkala/elsa-myclub"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,6 +23,7 @@
     "formidable": "^3.5.1",
     "gray-matter": "^4.0.3",
     "next": "^15.1.3",
+    "next-seo": "^6.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",

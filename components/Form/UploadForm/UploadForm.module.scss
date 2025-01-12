@@ -1,0 +1,18 @@
+@use "../../../styles/variables.scss" as v;
+@use "../../../styles/shared/ui.scss" as ui;
+
+.formContainer {
+  margin: 2rem 0;
+
+  .loading {
+    @include ui.loadingSpinner;
+  }
+
+  .error {
+    @include ui.errorMessage;
+  }
+
+  .submitGroup {
+    margin-top: 2rem;
+  }
+}

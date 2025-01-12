@@ -1,41 +1,71 @@
-@use "sass:color";
 @use "./variables.scss" as v;
 
-html {
-  overflow-y: scroll;
-}
-
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: v.$color-primary-dark;
-  text-decoration: none;
-  border-bottom: 1px solid v.$color-primary-dark;
-  transition: all 0.2s ease;
-
-    &:hover {
-      border-bottom-color: transparent;
-      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
-    }
-
-    &:focus {
-      outline: none;
-      border-bottom-color: transparent;
-      color: color.adjust(v.$color-primary-dark, $lightness: -10%);
-    }
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  color: v.$color-text;
+  background: white;
 }
 
-hr {
-  border: none;
-  border-top: 1px solid v.$color-border-light;
-  margin: 1.5rem 0;
+// Basic element resets
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 1rem;
 }
 
 ul {
-  margin-top: 0.5rem;
+  list-style: none;
+    padding-left: 1.5rem;
+
+    li {
+      position: relative;
+      margin-bottom: 0.4rem;
+
+      &::before {
+        content: "•";
+        position: absolute;
+        left: -1.5rem;
+      }
+    }
+
+    &.list-reset {
+      list-style: none;
+      padding-left: 0;
+
+      li {
+        &::before {
+          content: none;
+          display: none;
+        }
+      }
+
+    }
+}
+
+a {
+  font-weight: 500;
+  color: v.$color-primary-dark;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
 }

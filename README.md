@@ -12,23 +12,24 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 - [React Icons](https://react-icons.github.io/react-icons/) 5.x (Icon components)
 
 ### Prerequisites
-- Node.js version defined in `.nvmrc`
+- Node.js version as defined in `.nvmrc`
 - Vercel CLI (`npm i -g vercel`)
 
 ### Project structure:
 ```
 elsa-myclub/
+├── components/         # React components with their styles
+├── config.ts           # App configuration and constants
 ├── pages/
-│   ├── index.tsx         (React frontend for file upload)
+│   ├── index.tsx       # Main page
+│   ├── changelog.tsx   # Changelog page
 │   └── api/
-│       └── upload.ts     (API handler for file conversion)
-├── styles/
-│   └── Home.module.scss  (SCSS styles for the frontend)
-├── package.json          (project metadata and dependencies)
-├── next.config.js        (Next.js configuration)
-├── tsconfig.json        (TypeScript configuration with strict mode)
-├── vercel.json          (Vercel configuration)
-└── .nvmrc               (Node.js version specification)
+│       └── upload.ts   # File conversion handler
+├── public/
+│   └── images/         # App icons and logos
+└── styles/
+    ├── globals.scss    # Global styles
+    └── variables.scss  # Variables for styles
 ```
 ### Excel File Requirements
 
@@ -71,6 +72,7 @@ Beta suffix (-beta): Pre-release version
 To update the version:
 1. Update APP_VERSION in `package.json`
 2. Add changelog entry in `CHANGELOG.md`
+  - Changelog in Finnish because that's shown on the app also
 3. Commit with message: `Bump version to x.x.x`
 
 

@@ -1,0 +1,5 @@
+@use "../../../styles/shared/form.scss" as form;
+
+.formGroup {
+  @include form.form-group;
+}
