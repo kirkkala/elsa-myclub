@@ -164,23 +164,21 @@ export default function UploadForm() {
           defaultValue="SELECTED"
         />
 
-        <div className={styles.submitGroup}>
-          <Button type="submit" disabled={loading} Icon={LuWandSparkles}>
-            Muunna tiedosto
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={loading || !selectedFile}
+          Icon={LuWandSparkles}
+          label="Muunna tiedosto"
+          description={selectedFile
+            ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
+            : "Lisää ensin eLSA excel tiedosto jotta voit tehdä muunnoksen"
+          }
+        >
+          {loading ? 'Muunnetaan...' : 'Muunna tiedosto'}
+        </Button>
+
+        {error && <div className={styles.error}>{error}</div>}
       </form>
-
-      {loading && (
-        <div className={styles.loading}>
-          <span className={styles.spinner} />
-          Muunnetaan tiedostoa...
-        </div>
-      )}
-
-      {error && (
-        <div className={styles.error}>{error}</div>
-      )}
     </div>
   )
 }

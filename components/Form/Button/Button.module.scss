@@ -1,27 +1,32 @@
+@use "../../../styles/shared/form.scss" as form;
 @use "../../../styles/variables.scss" as v;
 @use "sass:color";
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: v.$border-radius;
-  background: v.$color-primary-dark;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.formGroup {
+  @include form.form-group;
 
-  &:hover:not(:disabled) {
-    transform: scale(1.05);
-    background: color.adjust(v.$color-primary, $lightness: -10%);
-  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: v.$border-radius;
+    background: v.$color-primary-dark;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      background: color.adjust(v.$color-primary, $lightness: -10%);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 }
