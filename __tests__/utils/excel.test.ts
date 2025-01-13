@@ -43,18 +43,28 @@ describe('Excel conversion utils', () => {
   })
 
   describe('formatSeriesName', () => {
-    it('extracts division from full series name', () => {
+    it('extracts 1st division from full series name', () => {
       expect(formatSeriesName('11-vuotiaat tytöt I divisioona Eteläinen alue'))
         .toBe('I div.')
     })
 
-    it('handles multi-character division numbers', () => {
-      expect(formatSeriesName('11-vuotiaat tytöt III divisioona Eteläinen alue'))
+    it('extracts 1st division from full series name', () => {
+      expect(formatSeriesName('13-vuotiaat pojat I divisioona Eteläinen alue'))
+        .toBe('I div.')
+    })
+
+    it('extracts 2nd division from full series name', () => {
+      expect(formatSeriesName('13-vuotiaat pojat II divisioona Eteläinen alue'))
+        .toBe('II div.')
+    })
+
+    it('extracts 3rd division from full series name', () => {
+      expect(formatSeriesName('9-vuotiaat tytöt III divisioona Eteläinen alue'))
         .toBe('III div.')
     })
 
-    it('returns empty string for invalid series', () => {
-      expect(formatSeriesName('Invalid series name')).toBe('')
+    it('returns empty string for series we don\'t expect', () => {
+      expect(formatSeriesName('100-vuotiaat leidit harrastesarja')).toBe('')
     })
   })
 })
