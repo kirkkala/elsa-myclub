@@ -59,12 +59,12 @@ function calculateEndTime(startTime: string, durationMinutes: number): string {
   return `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`
 }
 
-function formatSeriesName(fullSeries: string): string {
+export function formatSeriesName(fullSeries: string): string {
   const divMatch = fullSeries.match(/(I+)\s*divisioona/i)
   return divMatch ? `${divMatch[1]} div.` : ''
 }
 
-function formatEventName(series: string, homeTeam: string, awayTeam: string): string {
+export function formatEventName(series: string, homeTeam: string, awayTeam: string): string {
   const formattedSeries = formatSeriesName(series)
   return formattedSeries
     ? `${formattedSeries} ${homeTeam} - ${awayTeam}`

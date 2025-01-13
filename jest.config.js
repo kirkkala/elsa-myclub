@@ -12,7 +12,11 @@ const customJestConfig = {
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
     '^.+\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '<rootDir>/__tests__/mocks/'
+  ],
 }
 
 module.exports = createJestConfig(customJestConfig)

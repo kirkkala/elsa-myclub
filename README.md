@@ -18,18 +18,30 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 ### Project structure:
 ```
 elsa-myclub/
+├── __tests__/           # Tests and test data
+│   ├── mocks/          # Mock data for tests
+│   │   └── test-data.ts
+│   └── utils/          # Utility function tests
+│       └── excel.test.ts
 ├── components/         # React components with their styles
-├── config.ts           # App configuration and constants
+│   └── Form/
+│       └── __tests__/  # Component-specific tests
+├── config.ts          # App configuration and constants
 ├── pages/
-│   ├── index.tsx       # Main page
-│   ├── changelog.tsx   # Changelog page
+│   ├── index.tsx      # Main page
+│   ├── changelog.tsx  # Changelog page
 │   └── api/
-│       └── upload.ts   # File conversion handler
+│       └── upload.ts  # File conversion handler
 ├── public/
-│   └── images/         # App icons and logos
-└── styles/
-    ├── globals.scss    # Global styles
-    └── variables.scss  # Variables for styles
+│   └── images/        # App icons and logos
+├── styles/
+│   ├── globals.scss   # Global styles
+│   └── variables.scss # Variables for styles
+├── jest.config.js     # Jest test configuration
+├── jest.setup.js      # Test environment setup
+└── .github/
+    └── workflows/     # CI/CD configurations
+        └── test.yml   # GitHub Actions test workflow
 ```
 ### Excel File Requirements
 
@@ -81,6 +93,34 @@ Deploy to Vercel (practically git push to main should do the same):
 ```bash
 npm run deploy
 ```
+
+## Testing
+
+The project uses Jest and React Testing Library for testing. Tests are located:
+- Component tests: `components/**/__tests__/`
+- Utility tests: `utils/__tests__/`
+- Mock data: `__mocks__/`
+
+### Running Tests
+
+```bash
+# Run tests
+npm test
+
+# Watch mode
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+```
+
+### CI/CD
+
+Tests are automatically run on GitHub Actions for:
+- All pushes to main branch
+- All pull requests
+
+See `.github/workflows/test.yml` for CI configuration.
 
 ### Credits
 
