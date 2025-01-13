@@ -29,7 +29,13 @@ interface ExcelRow {
   Sarja: string
 }
 
-function normalizeDate(date: string | number): string {
+/**
+ * Normalizes date string from ELSA format to Finnish format
+ * @param date - Date in ELSA format (currently very inconveniently formatted as e.g. "14,12" or 14.12 or "14.12")
+ * @returns Normalized date string (e.g. "14.12.")
+ * @throws {Error} If date format is not what we expect
+ */
+export function normalizeDate(date: string | number): string {
   const dateStr = typeof date === 'number'
     ? date.toFixed(2)
     : String(date)
@@ -38,7 +44,7 @@ function normalizeDate(date: string | number): string {
   const parts = cleanDate.split('.')
 
   if (parts.length !== 2) {
-    throw new Error(`Virheellinen päivämäärämuoto: ${date}`)
+    throw new Error(`Odottamaton päivämäärämuoto: ${date}`)
   }
 
   const day = parts[0].padStart(2, '0')
@@ -47,11 +53,24 @@ function normalizeDate(date: string | number): string {
   return `${day}.${month}.`
 }
 
-function formatDateTime(date: string, time: string, year: string | number): string {
+/**
+ * Formats date and time into MyClub datetime format
+ * @param date - Normalized date string (e.g. "14.12.")
+ * @param time - Time string (e.g. "12:30")
+ * @param year - Year as string or number
+ * @returns Formatted datetime (e.g. "14.12.2025 12:30:00")
+ */
+export function formatDateTime(date: string, time: string, year: string | number): string {
   return `${date}${year} ${time}:00`
 }
 
-function calculateEndTime(startTime: string, durationMinutes: number): string {
+/**
+ * Calculates end time based on start time and duration
+ * @param startTime - Start time (e.g. "12:30")
+ * @param durationMinutes - Duration in minutes
+ * @returns End time (e.g. "14:30")
+ */
+export function calculateEndTime(startTime: string, durationMinutes: number): string {
   const [hours, minutes] = startTime.split(':').map(Number)
   const startDate = new Date(2000, 0, 1, hours, minutes)
   const endDate = new Date(startDate.getTime() + durationMinutes * 60000)
@@ -59,11 +78,39 @@ function calculateEndTime(startTime: string, durationMinutes: number): string {
   return `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`
 }
 
+/**
+ * Adjusts start time by adding minutes (for warm-up time)
+ * @param time - Original time (e.g. "12:30" or "12: 30")
+ * @param adjustment - Minutes to add (can be 0)
+ * @returns Adjusted time (e.g. "12:45")
+ */
+export function adjustStartTime(time: string, adjustment: number): string {
+  if (adjustment === 0) return time.replace(' ', '')
+
+  const [hours, minutes] = time.replace(' ', '').split(':').map(Number)
+  const date = new Date(2000, 0, 1, hours, minutes)
+  date.setMinutes(date.getMinutes() + adjustment)
+
+  return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+}
+
+/**
+ * Extracts and formats division name from full series name
+ * @param fullSeries - Full series name from ELSA (e.g. "11-vuotiaat tytöt I divisioona")
+ * @returns Formatted division (e.g. "I div.") or empty string if no match
+ */
 export function formatSeriesName(fullSeries: string): string {
   const divMatch = fullSeries.match(/(I+)\s*divisioona/i)
   return divMatch ? `${divMatch[1]} div.` : ''
 }
 
+/**
+ * Formats event name for MyClub from series and team names
+ * @param series - Full series name from ELSA
+ * @param homeTeam - Home team name
+ * @param awayTeam - Away team name
+ * @returns Formatted event name (e.g. "I div. Team A - Team B")
+ */
 export function formatEventName(series: string, homeTeam: string, awayTeam: string): string {
   const formattedSeries = formatSeriesName(series)
   return formattedSeries
@@ -86,14 +133,6 @@ function getMyclubRegistration(fields: Fields): string {
   return validOptions.includes(String(registration))
     ? String(registration)
     : 'Valituille henkilöille'
-}
-
-function adjustStartTime(time: string, adjustMinutes: number): string {
-  const [hours, minutes] = time.split(':').map(Number)
-  const startDate = new Date(2000, 0, 1, hours, minutes)
-  const adjustedDate = new Date(startDate.getTime() - adjustMinutes * 60000)
-
-  return `${adjustedDate.getHours().toString().padStart(2, '0')}:${adjustedDate.getMinutes().toString().padStart(2, '0')}`
 }
 
 function createDescription(originalTime: string, startAdjustment: number): string {
