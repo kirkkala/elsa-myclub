@@ -9,6 +9,37 @@ export const config = {
   },
 }
 
+/**
+ * Represents a row from ELSA Excel file
+ * @interface ExcelRow
+ * @property {string | number} Pvm - Date in ELSA format (e.g. "14,12" or 14.12)
+ * @property {string} Klo - Time in 24h format (e.g. "12:30")
+ * @property {string} Kenttä - Venue name
+ * @property {string} Koti - Home team name
+ * @property {string} Vieras - Away team name
+ * @property {string} Sarja - Full series name (e.g. "11-vuotiaat tytöt I divisioona")
+ */
+interface ExcelRow {
+  Pvm: string | number
+  Klo: string
+  Kenttä: string
+  Koti: string
+  Vieras: string
+  Sarja: string
+}
+
+/**
+ * Represents a processed row in MyClub format
+ * @interface ProcessedRow
+ * @property {string} Nimi - Event name (e.g. "I div. Team A - Team B")
+ * @property {string} Ryhmä - Team/group name in MyClub
+ * @property {string} Tapahtumatyyppi - Event type ("Ottelu" or "Muu")
+ * @property {string} Tapahtumapaikka - Venue name
+ * @property {string} Alkaa - Start time (e.g. "14.12.2025 12:30:00")
+ * @property {string} Päättyy - End time (e.g. "14.12.2025 14:30:00")
+ * @property {string} Ilmoittautuminen - Registration type
+ * @property {string} Näkyvyys - Visibility setting (always "Näkyy ryhmälle")
+ */
 interface ProcessedRow {
   Nimi: string
   Ryhmä: string
@@ -20,17 +51,8 @@ interface ProcessedRow {
   Näkyvyys: string
 }
 
-interface ExcelRow {
-  Pvm: string | number
-  Klo: string
-  Kenttä: string
-  Koti: string
-  Vieras: string
-  Sarja: string
-}
-
 /**
- * Normalizes date string from ELSA format to Finnish format
+ * Normalizes date string from ELSA format to Finnish format accepted by MyClub
  * @param date - Date in ELSA format (currently very inconveniently formatted as e.g. "14,12" or 14.12 or "14.12")
  * @returns Normalized date string (e.g. "14.12.")
  * @throws {Error} If date format is not what we expect
@@ -118,15 +140,31 @@ export function formatEventName(series: string, homeTeam: string, awayTeam: stri
     : `${homeTeam} - ${awayTeam}`
 }
 
+/**
+ * Gets the MyClub group value from form fields
+ * @param fields - Form fields from the upload request
+ * @returns Group name, defaults to a name that hint user to set it if not specified
+ */
 function getMyclubGroupValue(fields: Fields): string {
-  return String(fields.group?.[0] || 'Edustus') // Default to "Edustus" if not specified
+  return String(fields.group?.[0] || 'MyClub ryhmän nimi')
 }
 
+/**
+ * Gets the MyClub event type from form fields
+ * @param fields - Form fields from the upload request
+ * @returns Event type, either "Ottelu" or "Muu" (defaults to "Ottelu")
+ */
 function getMyclubEventType(fields: Fields): string {
   const eventType = fields.eventType?.[0]
-  return eventType === 'Muu' ? 'Muu' : 'Ottelu' // Default to "Ottelu"
+  return eventType === 'Muu' ? 'Muu' : 'Ottelu'
 }
 
+/**
+ * Gets the MyClub registration type from form fields
+ * @param fields - Form fields from the upload request
+ * @returns Registration type, one of: "Ryhmän jäsenille", "Seuralle", "Valituille henkilöille"
+ * Defaults to "Valituille henkilöille" if invalid value provided
+ */
 function getMyclubRegistration(fields: Fields): string {
   const registration = fields.registration?.[0]
   const validOptions = ['Ryhmän jäsenille', 'Seuralle', 'Valituille henkilöille']
@@ -135,6 +173,13 @@ function getMyclubRegistration(fields: Fields): string {
     : 'Valituille henkilöille'
 }
 
+/**
+ * Creates HTML description for MyClub event
+ * @param originalTime - Original game start time (e.g. "12:30")
+ * @param startAdjustment - Minutes to adjust for warm-up (0 for no warm-up)
+ * @returns HTML formatted description with game start and optional warm-up time
+ * @see adjustStartTime - Used to calculate warm-up time
+ */
 function createDescription(originalTime: string, startAdjustment: number): string {
   const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
 
@@ -147,6 +192,34 @@ function createDescription(originalTime: string, startAdjustment: number): strin
 ${gameStart}`
 }
 
+/**
+ * API endpoint handler for converting ELSA Excel files to MyClub format
+ * @async
+ * @param req - Next.js API request
+ * @param res - Next.js API response
+ *
+ * @description
+ * Handles file upload and conversion process:
+ * 1. Parses multipart form data (Excel file + settings)
+ * 2. Reads Excel file content
+ * 3. Converts ELSA format to MyClub format
+ * 4. Returns converted Excel file
+ *
+ * @example
+ * Required form fields:
+ * - file: Excel file from ELSA, uploaded by the user
+ * - year: Target year for events
+ * - duration: Game duration in minutes
+ * - startAdjustment: Warm-up time in minutes
+ * - group: MyClub group name
+ *
+ * Optional form fields:
+ * - eventType: "Ottelu" or "Muu" (default: "Ottelu")
+ * - registration: Registration type (default: "Valituille henkilöille")
+ *
+ * @throws {Error} If file upload fails or Excel processing fails
+ * @returns Excel file in MyClub format or error response
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
