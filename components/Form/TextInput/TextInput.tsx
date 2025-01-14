@@ -25,9 +25,9 @@ export default function TextInput({
       <label htmlFor={id}>
         <Icon /> {label}
       </label>
-      <p id={`${id}-description`} className={styles.fieldDescription}>
+      <div id={`${id}-description`} className={styles.fieldDescription}>
         {description}
-      </p>
+      </div>
       <input
         type="text"
         id={id}
