@@ -3,7 +3,13 @@
 
 // Basic form group structure
 @mixin form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px dotted v.$color-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   label {
     display: flex;

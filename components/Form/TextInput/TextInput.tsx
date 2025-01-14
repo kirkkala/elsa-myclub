@@ -4,7 +4,7 @@ import styles from './TextInput.module.scss'
 interface TextInputProps {
   id: string
   label: string
-  description: string
+  description: React.ReactNode
   Icon: IconType
   placeholder?: string
   defaultValue?: string

@@ -16,3 +16,16 @@
     }
   }
 }
+
+.selectWrapper {
+  display: flex;
+  align-items: center;
+
+  .prefix {
+    margin-right: 0.5rem;
+  }
+
+  select {
+    flex: 1;
+  }
+}

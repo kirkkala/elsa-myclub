@@ -9,8 +9,9 @@ import {
   LuUsers,
   LuWandSparkles,
 } from "react-icons/lu"
-import TextInput from '../TextInput/TextInput'
 import Button from '../Button/Button'
+import SelectOrInput from '../SelectOrInput/SelectOrInput'
+import groupsData from '../../../config/groups.json';
 
 interface ApiErrorResponse {
   message: string
@@ -32,10 +33,7 @@ export default function UploadForm() {
   const [selectedFile, setSelectedFile] = useState<string>('')
 
   const currentYear = new Date().getFullYear()
-  const years = Array.from(
-    { length: 2030 - currentYear + 1 },
-    (_, i) => currentYear + i
-  )
+  const years = [currentYear, currentYear + 1]
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -89,19 +87,32 @@ export default function UploadForm() {
           onChange={handleFileChange}
         />
 
-        <TextInput
+        <SelectOrInput
           id="group"
-          label="Ryhmä"
-          description="Kirjoita MyClub ryhmäsi nimi. Löydät oikean ryhmän nimen MyClub:n esimerkkitiedostosta"
           Icon={LuUsers}
-          placeholder="esim. HNMKY Stadi 2014 tytöt"
+          label="Joukkue (MyClub ryhmä)"
+          description={`Valitse joukkueesi nimi listalta tai paina "Kirjoita nimi" antaaksesi MyClub ryhmän nimen mikäli seurasi on muu kuin HNMKY.`}
+          switchText={{
+            toInput: {
+              action: "Kirjoita nimi"
+            },
+            toList: {
+              action: "Näytä listavalitsin (HNMKY)"
+            }
+          }}
+          options={groupsData.groups.map(option => ({
+            value: option,
+            label: option
+          }))}
+          placeholder="esim. Harlem Globetrotters"
+          teamPrefix="HNMKY"
           required
         />
 
         <SelectField
           id="year"
           label="Vuosi"
-          description="Tarvitaan koska ELSA:n exportissa ei ole vuotta päivämäärien yhteydessä."
+          description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten tämän pitää antaa manuaalisesti."
           Icon={LuCalendar}
           options={years.map(year => ({
             value: String(year),
@@ -171,7 +182,7 @@ export default function UploadForm() {
           label="Muunna tiedosto"
           description={selectedFile
             ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
-            : "Lisää ensin eLSA excel tiedosto jotta voit tehdä muunnoksen"
+            : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
           }
         >
           {loading ? 'Muunnetaan...' : 'Muunna tiedosto'}

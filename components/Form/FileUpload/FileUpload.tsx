@@ -11,10 +11,10 @@ export default function FileUpload({ selectedFile, onChange }: FileUploadProps) 
   return (
     <div className={styles.formGroup}>
       <label>
-        <LuSend /> Valitse tiedosto
+        <LuSend /> eLSA excel tiedosto
       </label>
       <p className={styles.fieldDescription}>
-        Valitse tähän ELSA:sta ladattu excel-tiedosto.
+        Valitse tähän ELSA:sta lataamasi excel-tiedosto.
       </p>
       <label htmlFor="file" className={styles.fileupload}>
         <RiFileExcel2Line />

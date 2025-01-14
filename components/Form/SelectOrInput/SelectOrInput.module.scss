@@ -1,0 +1,23 @@
+@use "../../../styles/variables.scss" as v;
+@use "../../../styles/shared/ui.scss" as ui;
+@use "../../../styles/shared/form.scss" as form;
+
+.selectOrInput {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px dotted v.$color-border;
+
+  > div {
+    margin-bottom: 0;
+    padding-bottom: 2rem;
+  }
+}
+
+.switcher {
+  margin-top: 0.5rem;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
