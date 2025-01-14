@@ -23,6 +23,7 @@ export default function FileUpload({ selectedFile, onChange }: FileUploadProps) 
       </label>
       <input
         type="file"
+        data-testid="file-input" // @todo: check if we need separate test-ID's for this component
         name="file"
         id="file"
         accept=".xlsx,.xls"

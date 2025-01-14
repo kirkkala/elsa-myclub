@@ -4,6 +4,9 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v0.1.3-beta (2025-01-13)
+- Jest-testiautomaatio 🤖
+
 ## v0.1.2-beta (2025-01-12)
 - Tekninen päivitys: Komponenttipohjainen käyttöliittymäarkkitehtuuri 🤓
 - Visuaalinen päivitys: Logot, tekstikorjaukset, tyylien yhtenäistäminen 💅🏻
