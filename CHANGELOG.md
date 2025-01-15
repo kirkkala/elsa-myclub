@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v0.1.4-beta [#UNRELEASED]
+## v0.1.4-beta (2025-01-15)
 - Valintalista HNMKY joukkueille (MyClub ryhmän nimi) 📋✨
 - Muiden seurojen toimijoille mahdollisuus nimetä joukkue käsin 🤝
 
