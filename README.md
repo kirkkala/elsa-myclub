@@ -18,15 +18,17 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 ### Project structure:
 ```
 elsa-myclub/
-├── __tests__/           # Tests and test data
+├── __tests__/          # Tests and test data
 │   ├── mocks/          # Mock data for tests
 │   │   └── test-data.ts
 │   └── utils/          # Utility function tests
 │       └── excel.test.ts
-├── components/         # React components with their styles
+├── components/         # React components with their styles and tests
 │   └── Form/
-│       └── __tests__/  # Component-specific tests
-├── config.ts          # App configuration and constants
+│       └── *          # Reusable form components
+├── config/
+│   ├── groups.json    # MyClub group names
+│   └── index.ts       # Other site configurations
 ├── pages/
 │   ├── index.tsx      # Main page
 │   ├── changelog.tsx  # Changelog page
@@ -35,6 +37,7 @@ elsa-myclub/
 ├── public/
 │   └── images/        # App icons and logos
 ├── styles/
+│   ├── shared/        # Shared style modules
 │   ├── globals.scss   # Global styles
 │   └── variables.scss # Variables for styles
 ├── jest.config.js     # Jest test configuration
@@ -93,6 +96,14 @@ Deploy to Vercel (practically git push to main should do the same):
 ```bash
 npm run deploy
 ```
+
+## Configuration
+
+##
+### MyClub groups names
+
+1. Ask from organization's office a list of team names (MyClub groups) for the
+current season and update them to `config/groups.json`.
 
 ## Testing
 

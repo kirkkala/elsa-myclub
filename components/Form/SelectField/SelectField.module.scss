@@ -16,3 +16,19 @@
     }
   }
 }
+
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  select {
+    width: 100%;
+  }
+
+  .suffix {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+  }
+}

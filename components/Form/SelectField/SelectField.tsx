@@ -4,7 +4,7 @@ import styles from './SelectField.module.scss'
 interface SelectFieldProps {
   id: string
   label: string
-  description: string
+  description?: string
   Icon: IconType
   options: Array<{
     value: string
@@ -12,6 +12,8 @@ interface SelectFieldProps {
   }>
   required?: boolean
   defaultValue?: string
+  suffix?: React.ReactNode
+  className?: string
 }
 
 export default function SelectField({
@@ -21,23 +23,36 @@ export default function SelectField({
   Icon,
   options,
   required,
-  defaultValue
+  defaultValue,
+  suffix,
+  className
 }: SelectFieldProps) {
   return (
-    <div className={styles.formGroup}>
+    <div className={`${styles.formGroup} ${className || ''}`} data-testid="select-wrapper">
       <label htmlFor={id}>
         {Icon && <Icon />}
         {label}
       </label>
-      {description && <div className={styles.fieldDescription}>{description}</div>}
+      {description && (
+        <div id={`${id}-description`} className={styles.fieldDescription}>
+          {description}
+        </div>
+      )}
       <div className={styles.selectWrapper}>
-        <select id={id} name={id} required={required} defaultValue={defaultValue}>
+        <select
+          id={id}
+          name={id}
+          required={required}
+          defaultValue={defaultValue}
+          aria-describedby={description ? `${id}-description` : undefined}
+        >
           {options.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
         </select>
+        {suffix && <div className={styles.suffix}>{suffix}</div>}
       </div>
     </div>
   )

@@ -23,29 +23,39 @@ export default function Home() {
       </p>
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          Tämä on Namikan Stadi 2014 tyttöjen jojon Timo Kirkkalan tekemä avoimen
-          lähdekoodin sovellus jonka tavoite on vähentää manuaalisen työn määrää
-          kun halutaan siirtää <a
+          Tämä on HNMKY Stadi 2014 tyttöjen jojon Timo Kirkkalan tekemä sovellus
+          jolla vähennetään manuaalisen työn määrää kun halutaan siirtää <a
             href={SITE_CONFIG.links.elsa}
             target="_blank"
             rel="noopener noreferrer">eLSA</a>
             :sta pelejä <a
             href={SITE_CONFIG.links.myclub}
             target="_blank"
-            rel="noopener noreferrer">MyClub</a>:iin.
+            rel="noopener noreferrer">MyClub</a>:iin. Sovelluksen koodi on
+            julkaistu avoimena lähdekoodina <a
+            href={SITE_CONFIG.links.githubAppRepoUrl}
+            target="_blank"
+            rel="noopener noreferrer">GitHubissa</a>.
         </p>
-        <p>Sovellus on vielä betaversiossa ja mahdollisesti buginen. Tavoitteena
+        <p>Sovellus on yhä betaversiossa eikä vielä ihan täydellinen. Tavoitteena
           on tehdä tästä &ldquo;bulletproof&rdquo; syksylle 2025 kun jojot seuraavan
-          kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin. Hyvän  pelihengen
-          nimissä myös muut kuin Namikalaiset saavat käyttää sovellusta.</p>
+          kerran päääsevät siirtämään otteluita ELSA:sta MyClub:iin.
+        </p>
         <p>
-          Tsemppiä peleihin ja koko ruljanssin pyörittämiseen, HOS! 💪🏀
+          <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
+          HNMKY</a>:n joukkueet voivat valita ryhmän nimen valintalistalta mutta
+          hyvän pelihengen nimissä myös muut kuin Namikan joukkueet on otettu huomioon
+          sovellusta kehittäessä, MyClub ryhmän nimen voi siis antaa myös käsin
+          kirjoitettuna.</p>
+        <p>
+          Toivottavasti sovelluksesta on apua, tsemppiä peleihin sekä koko tämän
+          ruljanssin pyörittämiseen, HOS! 💪🏀
         </p>
         <h3>Tietosuojaseloste</h3>
         <p>
           Sovellus ei kerää tietoa käyttäjästä, ainoastaan vähän statistiikkaa
-          kävijämääristä. Sivustolle ladattuja excel-tiedostoja ei tallenneta
-          mihinkään muualle kuin käyttäjän omalle tietokoneelle. Keksejäkään eli
+          kävijämääristä. Sovellukseen ladattuja excel-tiedostoja ei tallenneta
+          mihinkään muualle kuin käyttäjän omalle tietokoneelle. Keksejä eli
           niitä herkullisia evästeitäkään ei täällä käytetä 🍪
         </p>
         <hr />
