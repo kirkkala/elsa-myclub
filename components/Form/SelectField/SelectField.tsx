@@ -28,7 +28,7 @@ export default function SelectField({
   className
 }: SelectFieldProps) {
   return (
-    <div className={`${styles.formGroup} ${className || ''}`}>
+    <div className={`${styles.formGroup} ${className || ''}`} data-testid="select-wrapper">
       <label htmlFor={id}>
         {Icon && <Icon />}
         {label}

@@ -105,8 +105,6 @@ npm run deploy
 1. Ask from organization's office a list of team names (MyClub groups) for the
 current season and update them to `config/groups.json`.
 
-The "HNMKY" prefix should be kept in all group names.
-
 ## Testing
 
 The project uses Jest and React Testing Library for testing. Tests are located:

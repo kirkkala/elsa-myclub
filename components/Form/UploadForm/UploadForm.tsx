@@ -107,7 +107,6 @@ export default function UploadForm() {
             label: option
           }))}
           placeholder="esim. Harlem Globetrotters"
-          teamPrefix="HNMKY"
           required
         />
 
