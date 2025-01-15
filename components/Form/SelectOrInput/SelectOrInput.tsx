@@ -8,12 +8,11 @@ import styles from './SelectOrInput.module.scss'
 interface SelectOrInputProps {
   id: string
   label: string
-  description: string
+  description?: string
   Icon: IconType
   options: Array<{ value: string; label: string }>
   placeholder?: string
   required?: boolean
-  teamPrefix: string
   switchText: {
     toInput: {
       text?: string
@@ -29,46 +28,35 @@ interface SelectOrInputProps {
 export default function SelectOrInput({
   id,
   label,
-  description = '',
+  description,
   Icon,
   options,
   placeholder,
   required,
-  teamPrefix,
   switchText
 }: SelectOrInputProps) {
   const [useCustomInput, setUseCustomInput] = useState(false);
-
-  const stripPrefix = (name: string) => name.replace(`${teamPrefix} `, '');
 
   const displayOptions = [
     { value: "", label: "Valitse joukkue" },
     ...options.map(option => ({
       value: option.value,
-      label: stripPrefix(option.value)
+      label: option.value
     }))
   ];
 
-  const renderDescription = (switchProps: {
-    text?: string,
-    action: string,
-    onClick: () => void
-  }) => (
-    <>
-      {description}
-      <div className={styles.switcher}>
-        {switchProps.text && <span>{switchProps.text} </span>}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            switchProps.onClick();
-          }}
-        >
-          {useCustomInput ? <LuList /> : <LuPencil />} {switchProps.action}
-        </a>
-      </div>
-    </>
+  const switchLink = (
+    <a
+      href="#"
+      onClick={(e) => {
+        e.preventDefault();
+        setUseCustomInput(!useCustomInput);
+      }}
+    >
+      {useCustomInput ? <LuList /> : <LuPencil />}
+      {' '}
+      {useCustomInput ? switchText.toList.action : switchText.toInput.action}
+    </a>
   );
 
   return (
@@ -78,28 +66,21 @@ export default function SelectOrInput({
           id={id}
           label={label}
           className={styles.nestedField}
-          description={renderDescription({
-            text: switchText.toInput.text,
-            action: switchText.toInput.action,
-            onClick: () => setUseCustomInput(true)
-          })}
+          description={description}
           Icon={Icon}
           options={displayOptions}
           required={required}
-          teamPrefix={teamPrefix}
+          suffix={switchLink}
         />
       ) : (
         <TextInput
           id={id}
           label={label}
-          description={renderDescription({
-            text: switchText.toList.text,
-            action: switchText.toList.action,
-            onClick: () => setUseCustomInput(false)
-          })}
+          description={description}
           Icon={Icon}
           placeholder={placeholder}
           required={required}
+          suffix={switchLink}
         />
       )}
     </div>

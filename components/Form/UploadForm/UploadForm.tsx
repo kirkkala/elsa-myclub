@@ -91,7 +91,9 @@ export default function UploadForm() {
           id="group"
           Icon={LuUsers}
           label="Joukkue (MyClub ryhmä)"
-          description={`Valitse joukkueesi nimi listalta tai paina "Kirjoita nimi" antaaksesi MyClub ryhmän nimen mikäli seurasi on muu kuin HNMKY.`}
+          description={`Joukkueen nimen perusteella MyClub osaa yhdistää
+            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub ryhmä)
+            ei ole listalla, paina "Kirjoita nimi" ja voit antaa joukkueen nimen itse.`}
           switchText={{
             toInput: {
               action: "Kirjoita nimi"

@@ -3,3 +3,19 @@
 .formGroup {
   @include form.form-group;
 }
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  input {
+    width: 100%;
+  }
+
+  .suffix {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+  }
+}

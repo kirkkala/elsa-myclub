@@ -4,9 +4,7 @@ import SelectOrInput from '../SelectOrInput'
 const uiTexts = {
   label: 'Test Label',
   description: 'Test description',
-  toInputText: 'Switch to input',
   toInputAction: 'Add custom text',
-  toListText: 'Found it?',
   toListAction: 'Select from list',
   placeholder: 'Enter custom value'
 }
@@ -18,19 +16,16 @@ describe('SelectOrInput', () => {
     description: uiTexts.description,
     Icon: () => <span>icon</span>,
     options: [
-      { value: 'Team A', label: 'Team A' },
-      { value: 'Team B', label: 'Team B' }
+      { value: 'HNMKY Team A', label: 'HNMKY Team A' },
+      { value: 'HNMKY Team B', label: 'HNMKY Team B' }
     ],
     placeholder: uiTexts.placeholder,
     required: true,
-    teamPrefix: 'Team',
     switchText: {
       toInput: {
-        text: uiTexts.toInputText,
         action: uiTexts.toInputAction
       },
       toList: {
-        text: uiTexts.toListText,
         action: uiTexts.toListAction
       }
     }
@@ -41,7 +36,7 @@ describe('SelectOrInput', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
     expect(screen.getByText(uiTexts.label)).toBeInTheDocument()
     expect(screen.getByText(uiTexts.description)).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.toInputText)).toBeInTheDocument()
+    expect(screen.getByText(uiTexts.toInputAction)).toBeInTheDocument()
   })
 
   it('shows custom input with correct text when switching modes', () => {
@@ -54,7 +49,7 @@ describe('SelectOrInput', () => {
     fireEvent.click(screen.getByText(uiTexts.toInputAction))
     expect(screen.getByRole('textbox')).toBeInTheDocument()
     expect(screen.getByPlaceholderText(uiTexts.placeholder)).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.toListText)).toBeInTheDocument()
+    expect(screen.getByText(uiTexts.toListAction)).toBeInTheDocument()
   })
 
   it('returns to select field when switching back', () => {
@@ -64,17 +59,10 @@ describe('SelectOrInput', () => {
     expect(screen.getByRole('combobox')).toBeInTheDocument()
   })
 
-  it('strips team prefix from select options', () => {
-    const props = {
-      ...mockProps,
-      options: [
-        { value: 'Team First Team', label: 'Team First Team' },
-        { value: 'Team Second Team', label: 'Team Second Team' }
-      ]
-    }
-    render(<SelectOrInput {...props} />)
-    expect(screen.getByText('First Team')).toBeInTheDocument()
-    expect(screen.getByText('Second Team')).toBeInTheDocument()
+  it('displays full team names in select options', () => {
+    render(<SelectOrInput {...mockProps} />)
+    expect(screen.getByText('HNMKY Team A')).toBeInTheDocument()
+    expect(screen.getByText('HNMKY Team B')).toBeInTheDocument()
   })
 
   it('maintains required attribute in both modes', () => {
