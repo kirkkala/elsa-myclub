@@ -1,0 +1,16 @@
+# Build outputs
+.next
+dist
+build
+out
+
+# Dependencies
+node_modules
+
+# Coverage reports
+coverage
+
+# Other
+.git
+.cache
+public
