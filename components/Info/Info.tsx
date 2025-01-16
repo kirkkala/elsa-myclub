@@ -7,7 +7,7 @@ interface InfoProps {
   children: React.ReactNode
 }
 
-export default function Info({ title, expandable = true, children }: InfoProps) {
+export default function Info({ title, expandable = true, children }: InfoProps): React.ReactElement {
   if (expandable) {
     return (
       <details className={styles.info}>

@@ -3,17 +3,19 @@ import { LuSend } from "react-icons/lu"
 import styles from "./FileUpload.module.scss"
 
 interface FileUploadProps {
+  label: string
+  description: string
   selectedFile: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function FileUpload({ selectedFile, onChange }: FileUploadProps) {
+export default function FileUpload({ selectedFile, onChange, label, description }: FileUploadProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
       <label>
-        <LuSend /> eLSA excel tiedosto
+        <LuSend /> {label}
       </label>
-      <p className={styles.fieldDescription}>Valitse tähän ELSA:sta lataamasi excel-tiedosto.</p>
+      <p className={styles.fieldDescription}>{description}</p>
       <label htmlFor="file" className={styles.fileupload}>
         <RiFileExcel2Line />
         <span>{selectedFile || "Valitse tiedosto..."}</span>

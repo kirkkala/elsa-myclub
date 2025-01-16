@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next"
 import { IncomingForm, Fields, Files } from "formidable"
 import * as XLSX from "xlsx"
 import { promises as fs } from "fs"
+import type { NextApiHandler } from "next"
 
 export const config = {
   api: {
@@ -105,7 +105,9 @@ export function calculateEndTime(startTime: string, durationMinutes: number): st
  * @returns Adjusted time (e.g. "12:45")
  */
 export function adjustStartTime(time: string, adjustment: number): string {
-  if (adjustment === 0) return time.replace(" ", "")
+  if (adjustment === 0) {
+    return time.replace(" ", "")
+  }
 
   const [hours, minutes] = time.replace(" ", "").split(":").map(Number)
   const date = new Date(2000, 0, 1, hours, minutes)
@@ -181,7 +183,6 @@ function getMyclubRegistration(fields: Fields): string {
 function createDescription(originalTime: string, startAdjustment: number): string {
   const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
 
-  // We don't need warm-up if startAdjustment is 0
   if (startAdjustment === 0) {
     return gameStart
   }
@@ -218,19 +219,22 @@ ${gameStart}`
  * @throws {Error} If file upload fails or Excel processing fails
  * @returns Excel file in MyClub format or error response
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" })
   }
 
   try {
     const form = new IncomingForm()
-    const [fields, files]: [Fields, Files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err)
-        resolve([fields, files])
+    const formData = await new Promise<[Fields, Files]>((resolve, reject) => {
+      form.parse(req, (err, formFields, formFiles) => {
+        if (err) {
+          reject(err)
+        }
+        resolve([formFields, formFiles])
       })
     })
+    const [fields, files] = formData
 
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
     if (!uploadedFile) {
@@ -291,7 +295,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const newSheet = XLSX.utils.json_to_sheet(processedData)
     XLSX.utils.book_append_sheet(newWorkbook, newSheet, "MyClub Import")
 
-    const buffer = XLSX.write(newWorkbook, { type: "buffer", bookType: "xlsx" })
+    const buffer = XLSX.write(newWorkbook, { type: "buffer", bookType: "xlsx" }) as Buffer
 
     res.setHeader("Content-Disposition", 'attachment; filename="myclub_import.xlsx"')
     res.setHeader(
@@ -307,3 +311,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
   }
 }
+
+export default handler

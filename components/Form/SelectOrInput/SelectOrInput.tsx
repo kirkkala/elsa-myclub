@@ -26,15 +26,9 @@ interface SelectOrInputProps {
 }
 
 export default function SelectOrInput({
-  id,
-  label,
-  description,
-  Icon,
   options,
-  placeholder,
-  required,
-  switchText,
-}: SelectOrInputProps) {
+  ...props
+}: SelectOrInputProps): React.ReactElement {
   const [useCustomInput, setUseCustomInput] = useState(false)
 
   const displayOptions = [
@@ -54,7 +48,7 @@ export default function SelectOrInput({
       }}
     >
       {useCustomInput ? <LuList /> : <LuPencil />}{" "}
-      {useCustomInput ? switchText.toList.action : switchText.toInput.action}
+      {useCustomInput ? props.switchText.toList.action : props.switchText.toInput.action}
     </a>
   )
 
@@ -62,23 +56,23 @@ export default function SelectOrInput({
     <div className={styles.selectOrInput}>
       {!useCustomInput ? (
         <SelectField
-          id={id}
-          label={label}
+          id={props.id}
+          label={props.label}
           className={styles.nestedField}
-          description={description}
-          Icon={Icon}
+          description={props.description}
+          Icon={props.Icon}
           options={displayOptions}
-          required={required}
+          required={props.required}
           suffix={switchLink}
         />
       ) : (
         <TextInput
-          id={id}
-          label={label}
-          description={description}
-          Icon={Icon}
-          placeholder={placeholder}
-          required={required}
+          id={props.id}
+          label={props.label}
+          description={props.description}
+          Icon={props.Icon}
+          placeholder={props.placeholder}
+          required={props.required}
           suffix={switchLink}
         />
       )}

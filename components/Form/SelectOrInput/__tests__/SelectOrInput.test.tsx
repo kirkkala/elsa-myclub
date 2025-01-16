@@ -14,7 +14,7 @@ describe("SelectOrInput", () => {
     id: "test-field",
     label: uiTexts.label,
     description: uiTexts.description,
-    Icon: () => <span>icon</span>,
+    Icon: (): React.ReactElement => <span>icon</span>,
     options: [
       { value: "HNMKY Team A", label: "HNMKY Team A" },
       { value: "HNMKY Team B", label: "HNMKY Team B" },

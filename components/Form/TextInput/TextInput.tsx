@@ -21,7 +21,7 @@ export default function TextInput({
   defaultValue,
   required = false,
   suffix,
-}: TextInputProps) {
+}: TextInputProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
       <label htmlFor={id}>

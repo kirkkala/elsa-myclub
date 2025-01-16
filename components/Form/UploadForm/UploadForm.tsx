@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react"
+import { useState } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
@@ -11,17 +11,7 @@ interface ApiErrorResponse {
   message: string
 }
 
-interface FormElements extends HTMLFormControlsCollection {
-  year: HTMLSelectElement
-  duration: HTMLSelectElement
-  file: HTMLInputElement
-}
-
-interface ConversionForm extends HTMLFormElement {
-  readonly elements: FormElements
-}
-
-export default function UploadForm() {
+export default function UploadForm(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
@@ -29,15 +19,19 @@ export default function UploadForm() {
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
   }
 
-  const handleSubmit = async (e: FormEvent<ConversionForm>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    setError("")
+    void handleFormSubmit(e)
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     setLoading(true)
+    setError("")
 
     try {
       const formData = new FormData(e.currentTarget)
@@ -75,7 +69,12 @@ export default function UploadForm() {
   return (
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit}>
-        <FileUpload selectedFile={selectedFile} onChange={handleFileChange} />
+        <FileUpload
+          selectedFile={selectedFile}
+          onChange={handleFileChange}
+          label="eLSA excel tiedosto"
+          description="Valitse tähän ELSA:sta lataamasi excel-tiedosto."
+        />
 
         <SelectOrInput
           id="group"

@@ -1,3 +1,4 @@
+import React from "react"
 import BackLink from "../components/BackLink/BackLink"
 import Info from "../components/Info/Info"
 import Header from "../components/Header/Header"
@@ -9,7 +10,7 @@ import matter from "gray-matter"
 import { remark } from "remark"
 import html from "remark-html"
 import Head from "../components/Head/Head"
-import { SEO_CONFIG } from "../config"
+import { SEO_CONFIG, SITE_CONFIG } from "../config"
 import { useRouter } from "next/router"
 
 type PageType = keyof typeof SEO_CONFIG.pages
@@ -17,7 +18,7 @@ interface ChangelogProps {
   contentHtml: string
 }
 
-export async function getStaticProps() {
+export async function getStaticProps(): Promise<{ props: ChangelogProps }> {
   const changelogPath = path.join(process.cwd(), "CHANGELOG.md")
   const fileContents = fs.readFileSync(changelogPath, "utf8")
   const { content } = matter(fileContents)
@@ -33,14 +34,16 @@ export async function getStaticProps() {
   }
 }
 
-export default function Changelog({ contentHtml }: ChangelogProps) {
+export default function Changelog({ contentHtml }: ChangelogProps): React.ReactElement {
   const { pathname } = useRouter()
-  const pageType = (pathname === "/" ? "home" : pathname.slice(1)) as PageType
-  const pageMeta = SEO_CONFIG.pages[pageType] || SEO_CONFIG.pages.home
+  const pageType = pathname === "/" ? "home" : pathname.substring(1)
+  const pageMeta = SEO_CONFIG.pages[pageType as PageType]
+  const title = `${SITE_CONFIG.name as string} - Versiohistoria`
+
   return (
     <>
       <Head
-        title={pageMeta.title}
+        title={title}
         description={pageMeta.description}
         ogTitle={pageMeta.openGraph.title}
         ogDescription={pageMeta.openGraph.description}

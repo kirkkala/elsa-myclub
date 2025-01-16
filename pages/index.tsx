@@ -1,3 +1,4 @@
+import React from "react"
 import Link from "next/link"
 import { LuBookMarked, LuGithub } from "react-icons/lu"
 import { SITE_CONFIG } from "../config"
@@ -7,7 +8,7 @@ import Info from "../components/Info/Info"
 import UploadForm from "../components/Form/UploadForm/UploadForm"
 import Footer from "../components/Footer/Footer"
 
-export default function Home() {
+export default function Home(): React.ReactElement {
   return (
     <Layout>
       <Header />
