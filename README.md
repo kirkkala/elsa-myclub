@@ -12,10 +12,12 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 - [React Icons](https://react-icons.github.io/react-icons/) 5.x (Icon components)
 
 ### Prerequisites
+
 - Node.js version as defined in `.nvmrc`
 - Vercel CLI (`npm i -g vercel`)
 
 ### Project structure:
+
 ```
 elsa-myclub/
 ├── __tests__/          # Tests and test data
@@ -46,9 +48,11 @@ elsa-myclub/
     └── workflows/     # CI/CD configurations
         └── test.yml   # GitHub Actions test workflow
 ```
+
 ### Excel File Requirements
 
 Input file should have columns as they were in ELSA export file 2024-12-31:
+
 - `Pvm` - Date (e.g., "22.09" or "29,09")
 - `Klo` - Time (e.g., "18:30")
 - `Kenttä` - Venue
@@ -59,12 +63,15 @@ Input file should have columns as they were in ELSA export file 2024-12-31:
 Output will be an excel file in the format of MyClub importable file, columns and rows combined and mutated from the provided ELSA excel file.
 
 ### Development
+
 Use node version defined in `.nvmrc`:
+
 ```bash
 nvm use
 ```
 
 Install dependencies and start the development server:
+
 ```bash
 npm install
 npm run dev
@@ -73,6 +80,7 @@ npm run dev
 The app will be available at http://localhost:3000
 
 ### Versioning
+
 <details>
 <summary>The app follows Semantic Versioning (SemVer)</summary>
 
@@ -82,17 +90,22 @@ Minor version (0.x.0): New features
 Patch version (0.0.x): Bug fixes
 Beta suffix (-beta): Pre-release version
 ```
+
 </details>
 
 To update the version:
+
 1. Update APP_VERSION in `package.json`
 2. Add changelog entry in `CHANGELOG.md`
-  - Changelog in Finnish because that's shown on the app also
+
+- Changelog in Finnish because that's shown on the app also
+
 3. Commit with message: `Bump version to x.x.x`
 
-
 ### Deployment
+
 Deploy to Vercel (practically git push to main should do the same):
+
 ```bash
 npm run deploy
 ```
@@ -100,14 +113,16 @@ npm run deploy
 ## Configuration
 
 ##
+
 ### MyClub groups names
 
 1. Ask from organization's office a list of team names (MyClub groups) for the
-current season and update them to `config/groups.json`.
+   current season and update them to `config/groups.json`.
 
 ## Testing
 
 The project uses Jest and React Testing Library for testing. Tests are located:
+
 - Component tests: `components/**/__tests__/`
 - Utility tests: `utils/__tests__/`
 - Mock data: `__mocks__/`
@@ -128,6 +143,7 @@ npm run test:coverage
 ### CI/CD
 
 Tests are automatically run on GitHub Actions for:
+
 - All pushes to main branch
 - All pull requests
 

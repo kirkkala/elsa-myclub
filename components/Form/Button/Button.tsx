@@ -1,8 +1,8 @@
-import { IconType } from 'react-icons'
-import styles from './Button.module.scss'
+import { IconType } from "react-icons"
+import styles from "./Button.module.scss"
 
 interface ButtonProps {
-  type?: 'button' | 'submit'
+  type?: "button" | "submit"
   disabled?: boolean
   Icon?: IconType
   label?: string
@@ -11,12 +11,12 @@ interface ButtonProps {
 }
 
 export default function Button({
-  type = 'button',
+  type = "button",
   disabled,
   Icon,
   label,
   description,
-  children
+  children,
 }: ButtonProps) {
   return (
     <div className={styles.formGroup}>
@@ -27,11 +27,7 @@ export default function Button({
         </label>
       )}
       {description && <div className={styles.fieldDescription}>{description}</div>}
-      <button
-        type={type}
-        disabled={disabled}
-        className={styles.button}
-      >
+      <button type={type} disabled={disabled} className={styles.button}>
         {children}
       </button>
     </div>

@@ -18,7 +18,9 @@
     "lint": "next lint",
     "test": "node --no-deprecation ./node_modules/.bin/jest",
     "test:watch": "node --no-deprecation ./node_modules/.bin/jest --watch",
-    "test:coverage": "node --no-deprecation ./node_modules/.bin/jest --coverage"
+    "test:coverage": "node --no-deprecation ./node_modules/.bin/jest --coverage",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@vercel/analytics": "^1.4.1",
@@ -50,6 +52,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "typescript": "^5.4.2",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
-    "@typescript-eslint/parser": "^7.1.1"
+    "@typescript-eslint/parser": "^7.1.1",
+    "prettier": "^3.4.2",
+    "eslint-config-prettier": "^10.0.1"
   }
 }

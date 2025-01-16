@@ -1,6 +1,6 @@
 import { RiFileExcel2Line } from "react-icons/ri"
 import { LuSend } from "react-icons/lu"
-import styles from './FileUpload.module.scss'
+import styles from "./FileUpload.module.scss"
 
 interface FileUploadProps {
   selectedFile: string
@@ -13,12 +13,10 @@ export default function FileUpload({ selectedFile, onChange }: FileUploadProps) 
       <label>
         <LuSend /> eLSA excel tiedosto
       </label>
-      <p className={styles.fieldDescription}>
-        Valitse tähän ELSA:sta lataamasi excel-tiedosto.
-      </p>
+      <p className={styles.fieldDescription}>Valitse tähän ELSA:sta lataamasi excel-tiedosto.</p>
       <label htmlFor="file" className={styles.fileupload}>
         <RiFileExcel2Line />
-        <span>{selectedFile || 'Valitse tiedosto...'}</span>
+        <span>{selectedFile || "Valitse tiedosto..."}</span>
         {selectedFile && <span className={styles.fileCheck}>✓</span>}
       </label>
       <input

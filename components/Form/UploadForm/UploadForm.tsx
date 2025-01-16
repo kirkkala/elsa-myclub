@@ -1,17 +1,11 @@
-import { useState, FormEvent } from 'react'
-import styles from './UploadForm.module.scss'
-import FileUpload from '../FileUpload/FileUpload'
-import SelectField from '../SelectField/SelectField'
-import {
-  LuCalendar,
-  LuCalendarClock,
-  LuClock,
-  LuUsers,
-  LuWandSparkles,
-} from "react-icons/lu"
-import Button from '../Button/Button'
-import SelectOrInput from '../SelectOrInput/SelectOrInput'
-import groupsData from '../../../config/groups.json';
+import { useState, FormEvent } from "react"
+import styles from "./UploadForm.module.scss"
+import FileUpload from "../FileUpload/FileUpload"
+import SelectField from "../SelectField/SelectField"
+import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuWandSparkles } from "react-icons/lu"
+import Button from "../Button/Button"
+import SelectOrInput from "../SelectOrInput/SelectOrInput"
+import groupsData from "../../../config/groups.json"
 
 interface ApiErrorResponse {
   message: string
@@ -29,51 +23,50 @@ interface ConversionForm extends HTMLFormElement {
 
 export default function UploadForm() {
   const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const [selectedFile, setSelectedFile] = useState<string>('')
+  const [error, setError] = useState<string>("")
+  const [selectedFile, setSelectedFile] = useState<string>("")
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    setSelectedFile(file ? file.name : '')
+    setSelectedFile(file ? file.name : "")
   }
 
   const handleSubmit = async (e: FormEvent<ConversionForm>) => {
     e.preventDefault()
-    setError('')
+    setError("")
     setLoading(true)
 
     try {
       const formData = new FormData(e.currentTarget)
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       })
 
       if (!response.ok) {
-        const errorData = await response.json() as ApiErrorResponse
-        throw new Error(errorData.message || 'Tiedoston muunnos epäonnistui')
+        const errorData = (await response.json()) as ApiErrorResponse
+        throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
       }
 
-      const disposition = response.headers.get('Content-Disposition')
+      const disposition = response.headers.get("Content-Disposition")
       const filename = disposition
-        ? disposition.split('filename=')[1].replace(/"/g, '')
-        : 'converted.xlsx'
+        ? disposition.split("filename=")[1].replace(/"/g, "")
+        : "converted.xlsx"
 
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
+      const a = document.createElement("a")
       a.href = url
       a.download = filename
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
       a.remove()
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred')
+      setError(err instanceof Error ? err.message : "An unknown error occurred")
     } finally {
       setLoading(false)
     }
@@ -82,10 +75,7 @@ export default function UploadForm() {
   return (
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit}>
-        <FileUpload
-          selectedFile={selectedFile}
-          onChange={handleFileChange}
-        />
+        <FileUpload selectedFile={selectedFile} onChange={handleFileChange} />
 
         <SelectOrInput
           id="group"
@@ -96,15 +86,15 @@ export default function UploadForm() {
             ei ole listalla, paina "Kirjoita nimi" ja voit antaa joukkueen nimen itse.`}
           switchText={{
             toInput: {
-              action: "Kirjoita nimi"
+              action: "Kirjoita nimi",
             },
             toList: {
-              action: "Näytä listavalitsin (HNMKY)"
-            }
+              action: "Näytä listavalitsin (HNMKY)",
+            },
           }}
-          options={groupsData.groups.map(option => ({
+          options={groupsData.groups.map((option) => ({
             value: option,
-            label: option
+            label: option,
           }))}
           placeholder="esim. Harlem Globetrotters"
           required
@@ -115,9 +105,9 @@ export default function UploadForm() {
           label="Vuosi"
           description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten tämän pitää antaa manuaalisesti."
           Icon={LuCalendar}
-          options={years.map(year => ({
+          options={years.map((year) => ({
             value: String(year),
-            label: String(year)
+            label: String(year),
           }))}
           defaultValue={String(currentYear)}
         />
@@ -131,7 +121,7 @@ export default function UploadForm() {
             { value: "0", label: "Ei aikaistusta" },
             { value: "15", label: "15 minuuttia ennen" },
             { value: "30", label: "30 minuuttia ennen" },
-            { value: "45", label: "45 minuuttia ennen" }
+            { value: "45", label: "45 minuuttia ennen" },
           ]}
           defaultValue="0"
         />
@@ -146,7 +136,7 @@ export default function UploadForm() {
             { value: "75", label: "1 tunti 15 minuuttia" },
             { value: "90", label: "1 tunti 30 minuuttia" },
             { value: "105", label: "1 tunti 45 minuuttia" },
-            { value: "120", label: "2 tuntia" }
+            { value: "120", label: "2 tuntia" },
           ]}
           defaultValue="90"
         />
@@ -158,7 +148,7 @@ export default function UploadForm() {
           Icon={LuCalendarClock}
           options={[
             { value: "GAME", label: "Ottelu" },
-            { value: "OTHER", label: "Muu" }
+            { value: "OTHER", label: "Muu" },
           ]}
           defaultValue="GAME"
         />
@@ -171,7 +161,7 @@ export default function UploadForm() {
           options={[
             { value: "SELECTED", label: "Valituille henkilöille" },
             { value: "GROUP", label: "Ryhmän jäsenille" },
-            { value: "CLUB", label: "Seuralle" }
+            { value: "CLUB", label: "Seuralle" },
           ]}
           defaultValue="SELECTED"
         />
@@ -181,12 +171,13 @@ export default function UploadForm() {
           disabled={loading || !selectedFile}
           Icon={LuWandSparkles}
           label="Muunna tiedosto"
-          description={selectedFile
-            ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
-            : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
+          description={
+            selectedFile
+              ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
+              : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
           }
         >
-          {loading ? 'Muunnetaan...' : 'Muunna tiedosto'}
+          {loading ? "Muunnetaan..." : "Muunna tiedosto"}
         </Button>
 
         {error && <div className={styles.error}>{error}</div>}

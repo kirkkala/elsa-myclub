@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { IconType } from 'react-icons'
-import { LuPencil, LuList } from 'react-icons/lu'
-import SelectField from '../SelectField/SelectField'
-import TextInput from '../TextInput/TextInput'
-import styles from './SelectOrInput.module.scss'
+import { useState } from "react"
+import { IconType } from "react-icons"
+import { LuPencil, LuList } from "react-icons/lu"
+import SelectField from "../SelectField/SelectField"
+import TextInput from "../TextInput/TextInput"
+import styles from "./SelectOrInput.module.scss"
 
 interface SelectOrInputProps {
   id: string
@@ -33,31 +33,30 @@ export default function SelectOrInput({
   options,
   placeholder,
   required,
-  switchText
+  switchText,
 }: SelectOrInputProps) {
-  const [useCustomInput, setUseCustomInput] = useState(false);
+  const [useCustomInput, setUseCustomInput] = useState(false)
 
   const displayOptions = [
     { value: "", label: "Valitse joukkue" },
-    ...options.map(option => ({
+    ...options.map((option) => ({
       value: option.value,
-      label: option.value
-    }))
-  ];
+      label: option.value,
+    })),
+  ]
 
   const switchLink = (
     <a
       href="#"
       onClick={(e) => {
-        e.preventDefault();
-        setUseCustomInput(!useCustomInput);
+        e.preventDefault()
+        setUseCustomInput(!useCustomInput)
       }}
     >
-      {useCustomInput ? <LuList /> : <LuPencil />}
-      {' '}
+      {useCustomInput ? <LuList /> : <LuPencil />}{" "}
       {useCustomInput ? switchText.toList.action : switchText.toInput.action}
     </a>
-  );
+  )
 
   return (
     <div className={styles.selectOrInput}>
@@ -84,5 +83,5 @@ export default function SelectOrInput({
         />
       )}
     </div>
-  );
+  )
 }
