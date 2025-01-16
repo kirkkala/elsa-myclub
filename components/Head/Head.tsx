@@ -11,7 +11,12 @@ interface MetaProps {
   ogDescription?: string
 }
 
-export default function Head({ title, description, ogTitle, ogDescription }: MetaProps) {
+export default function Head({
+  title,
+  description,
+  ogTitle,
+  ogDescription,
+}: MetaProps) {
   const { pathname } = useRouter()
   const pageType = (pathname === '/' ? 'home' : pathname.slice(1)) as PageType
   const pageMeta = SEO_CONFIG.pages[pageType] || SEO_CONFIG.pages.home

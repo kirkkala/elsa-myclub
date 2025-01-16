@@ -8,7 +8,7 @@ describe('TextInput', () => {
     label: 'Test Label',
     description: 'Test description',
     Icon: LuUser,
-    placeholder: 'Enter value'
+    placeholder: 'Enter value',
   }
 
   it('renders basic input with all elements', () => {

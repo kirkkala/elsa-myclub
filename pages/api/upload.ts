@@ -58,9 +58,7 @@ interface ProcessedRow {
  * @throws {Error} If date format is not what we expect
  */
 export function normalizeDate(date: string | number): string {
-  const dateStr = typeof date === 'number'
-    ? date.toFixed(2)
-    : String(date)
+  const dateStr = typeof date === 'number' ? date.toFixed(2) : String(date)
 
   const cleanDate = dateStr.replace(',', '.')
   const parts = cleanDate.split('.')
@@ -82,7 +80,11 @@ export function normalizeDate(date: string | number): string {
  * @param year - Year as string or number
  * @returns Formatted datetime (e.g. "14.12.2025 12:30:00")
  */
-export function formatDateTime(date: string, time: string, year: string | number): string {
+export function formatDateTime(
+  date: string,
+  time: string,
+  year: string | number
+): string {
   return `${date}${year} ${time}:00`
 }
 
@@ -92,7 +94,10 @@ export function formatDateTime(date: string, time: string, year: string | number
  * @param durationMinutes - Duration in minutes
  * @returns End time (e.g. "14:30")
  */
-export function calculateEndTime(startTime: string, durationMinutes: number): string {
+export function calculateEndTime(
+  startTime: string,
+  durationMinutes: number
+): string {
   const [hours, minutes] = startTime.split(':').map(Number)
   const startDate = new Date(2000, 0, 1, hours, minutes)
   const endDate = new Date(startDate.getTime() + durationMinutes * 60000)
@@ -133,7 +138,11 @@ export function formatSeriesName(fullSeries: string): string {
  * @param awayTeam - Away team name
  * @returns Formatted event name (e.g. "I div. Team A - Team B")
  */
-export function formatEventName(series: string, homeTeam: string, awayTeam: string): string {
+export function formatEventName(
+  series: string,
+  homeTeam: string,
+  awayTeam: string
+): string {
   const formattedSeries = formatSeriesName(series)
   return formattedSeries
     ? `${formattedSeries} ${homeTeam} - ${awayTeam}`
@@ -167,7 +176,11 @@ function getMyclubEventType(fields: Fields): string {
  */
 function getMyclubRegistration(fields: Fields): string {
   const registration = fields.registration?.[0]
-  const validOptions = ['Ryhmän jäsenille', 'Seuralle', 'Valituille henkilöille']
+  const validOptions = [
+    'Ryhmän jäsenille',
+    'Seuralle',
+    'Valituille henkilöille',
+  ]
   return validOptions.includes(String(registration))
     ? String(registration)
     : 'Valituille henkilöille'
@@ -180,7 +193,10 @@ function getMyclubRegistration(fields: Fields): string {
  * @returns HTML formatted description with game start and optional warm-up time
  * @see adjustStartTime - Used to calculate warm-up time
  */
-function createDescription(originalTime: string, startAdjustment: number): string {
+function createDescription(
+  originalTime: string,
+  startAdjustment: number
+): string {
   const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
 
   // We don't need warm-up if startAdjustment is 0
@@ -230,12 +246,14 @@ export default async function handler(
 
   try {
     const form = new IncomingForm()
-    const [fields, files]: [Fields, Files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err)
-        resolve([fields, files])
-      })
-    })
+    const [fields, files]: [Fields, Files] = await new Promise(
+      (resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) reject(err)
+          resolve([fields, files])
+        })
+      }
+    )
 
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
     if (!uploadedFile) {
@@ -260,23 +278,30 @@ export default async function handler(
         try {
           const normalizedDate = normalizeDate(row.Pvm)
           const adjustedStartTime = adjustStartTime(row.Klo, startAdjustment)
-          const startDateTime = formatDateTime(normalizedDate, adjustedStartTime, year)
+          const startDateTime = formatDateTime(
+            normalizedDate,
+            adjustedStartTime,
+            year
+          )
           const endTime = calculateEndTime(row.Klo, duration)
           const endDateTime = formatDateTime(normalizedDate, endTime, year)
 
           return {
-            'Nimi': formatEventName(row.Sarja, row.Koti, row.Vieras),
-            'Kuvaus': createDescription(row.Klo, startAdjustment),
-            'Ryhmä': getMyclubGroupValue(fields),
-            'Tapahtumatyyppi': getMyclubEventType(fields),
-            'Tapahtumapaikka': row.Kenttä,
-            'Alkaa': startDateTime,
-            'Päättyy': endDateTime,
-            'Ilmoittautuminen': getMyclubRegistration(fields),
-            'Näkyvyys': 'Näkyy ryhmälle',
+            Nimi: formatEventName(row.Sarja, row.Koti, row.Vieras),
+            Kuvaus: createDescription(row.Klo, startAdjustment),
+            Ryhmä: getMyclubGroupValue(fields),
+            Tapahtumatyyppi: getMyclubEventType(fields),
+            Tapahtumapaikka: row.Kenttä,
+            Alkaa: startDateTime,
+            Päättyy: endDateTime,
+            Ilmoittautuminen: getMyclubRegistration(fields),
+            Näkyvyys: 'Näkyy ryhmälle',
           } as ProcessedRow
         } catch (err) {
-          console.warn(`Warning: Error processing row:`, err instanceof Error ? err.message : String(err))
+          console.warn(
+            `Warning: Error processing row:`,
+            err instanceof Error ? err.message : String(err)
+          )
           return null
         }
       })
@@ -284,7 +309,8 @@ export default async function handler(
 
     if (processedData.length === 0) {
       return res.status(400).json({
-        message: 'Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).'
+        message:
+          'Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).',
       })
     }
 
@@ -304,11 +330,10 @@ export default async function handler(
     )
 
     res.send(buffer)
-
   } catch (error) {
     console.error('Detailed error:', error)
     res.status(500).json({
-      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`
+      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`,
     })
   }
 }

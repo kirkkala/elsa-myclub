@@ -5,9 +5,5 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  return (
-    <main className={styles.container}>
-      {children}
-    </main>
-  )
+  return <main className={styles.container}>{children}</main>
 }

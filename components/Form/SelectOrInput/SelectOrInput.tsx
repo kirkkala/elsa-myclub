@@ -33,31 +33,32 @@ export default function SelectOrInput({
   options,
   placeholder,
   required,
-  switchText
+  switchText,
 }: SelectOrInputProps) {
-  const [useCustomInput, setUseCustomInput] = useState(false);
+  const [useCustomInput, setUseCustomInput] = useState(false)
 
   const displayOptions = [
-    { value: "", label: "Valitse joukkue" },
-    ...options.map(option => ({
+    { value: '', label: 'Valitse joukkue' },
+    ...options.map((option) => ({
       value: option.value,
-      label: option.value
-    }))
-  ];
+      label: option.value,
+    })),
+  ]
+
+  console.log('asdasd')
 
   const switchLink = (
     <a
       href="#"
       onClick={(e) => {
-        e.preventDefault();
-        setUseCustomInput(!useCustomInput);
+        e.preventDefault()
+        setUseCustomInput(!useCustomInput)
       }}
     >
-      {useCustomInput ? <LuList /> : <LuPencil />}
-      {' '}
+      {useCustomInput ? <LuList /> : <LuPencil />}{' '}
       {useCustomInput ? switchText.toList.action : switchText.toInput.action}
     </a>
-  );
+  )
 
   return (
     <div className={styles.selectOrInput}>
@@ -84,5 +85,5 @@ export default function SelectOrInput({
         />
       )}
     </div>
-  );
+  )
 }

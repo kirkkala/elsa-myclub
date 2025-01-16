@@ -8,10 +8,10 @@ import {
   LuClock,
   LuUsers,
   LuWandSparkles,
-} from "react-icons/lu"
+} from 'react-icons/lu'
 import Button from '../Button/Button'
 import SelectOrInput from '../SelectOrInput/SelectOrInput'
-import groupsData from '../../../config/groups.json';
+import groupsData from '../../../config/groups.json'
 
 interface ApiErrorResponse {
   message: string
@@ -49,11 +49,11 @@ export default function UploadForm() {
       const formData = new FormData(e.currentTarget)
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: formData,
       })
 
       if (!response.ok) {
-        const errorData = await response.json() as ApiErrorResponse
+        const errorData = (await response.json()) as ApiErrorResponse
         throw new Error(errorData.message || 'Tiedoston muunnos epäonnistui')
       }
 
@@ -71,7 +71,6 @@ export default function UploadForm() {
       a.click()
       window.URL.revokeObjectURL(url)
       a.remove()
-
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred')
     } finally {
@@ -82,10 +81,7 @@ export default function UploadForm() {
   return (
     <div className={styles.formContainer}>
       <form onSubmit={handleSubmit}>
-        <FileUpload
-          selectedFile={selectedFile}
-          onChange={handleFileChange}
-        />
+        <FileUpload selectedFile={selectedFile} onChange={handleFileChange} />
 
         <SelectOrInput
           id="group"
@@ -96,15 +92,15 @@ export default function UploadForm() {
             ei ole listalla, paina "Kirjoita nimi" ja voit antaa joukkueen nimen itse.`}
           switchText={{
             toInput: {
-              action: "Kirjoita nimi"
+              action: 'Kirjoita nimi',
             },
             toList: {
-              action: "Näytä listavalitsin (HNMKY)"
-            }
+              action: 'Näytä listavalitsin (HNMKY)',
+            },
           }}
-          options={groupsData.groups.map(option => ({
+          options={groupsData.groups.map((option) => ({
             value: option,
-            label: option
+            label: option,
           }))}
           placeholder="esim. Harlem Globetrotters"
           required
@@ -115,9 +111,9 @@ export default function UploadForm() {
           label="Vuosi"
           description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten tämän pitää antaa manuaalisesti."
           Icon={LuCalendar}
-          options={years.map(year => ({
+          options={years.map((year) => ({
             value: String(year),
-            label: String(year)
+            label: String(year),
           }))}
           defaultValue={String(currentYear)}
         />
@@ -128,10 +124,10 @@ export default function UploadForm() {
           description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen tulee olla paikalla esim lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa valitun minuuttimäärän verran."
           Icon={LuClock}
           options={[
-            { value: "0", label: "Ei aikaistusta" },
-            { value: "15", label: "15 minuuttia ennen" },
-            { value: "30", label: "30 minuuttia ennen" },
-            { value: "45", label: "45 minuuttia ennen" }
+            { value: '0', label: 'Ei aikaistusta' },
+            { value: '15', label: '15 minuuttia ennen' },
+            { value: '30', label: '30 minuuttia ennen' },
+            { value: '45', label: '45 minuuttia ennen' },
           ]}
           defaultValue="0"
         />
@@ -142,11 +138,11 @@ export default function UploadForm() {
           description="Valinnan perusteella lasketaan tapahtuman päättymisaika."
           Icon={LuClock}
           options={[
-            { value: "60", label: "1 tunti" },
-            { value: "75", label: "1 tunti 15 minuuttia" },
-            { value: "90", label: "1 tunti 30 minuuttia" },
-            { value: "105", label: "1 tunti 45 minuuttia" },
-            { value: "120", label: "2 tuntia" }
+            { value: '60', label: '1 tunti' },
+            { value: '75', label: '1 tunti 15 minuuttia' },
+            { value: '90', label: '1 tunti 30 minuuttia' },
+            { value: '105', label: '1 tunti 45 minuuttia' },
+            { value: '120', label: '2 tuntia' },
           ]}
           defaultValue="90"
         />
@@ -157,8 +153,8 @@ export default function UploadForm() {
           description="Valitse tapahtuman tyyppi MyClubissa."
           Icon={LuCalendarClock}
           options={[
-            { value: "GAME", label: "Ottelu" },
-            { value: "OTHER", label: "Muu" }
+            { value: 'GAME', label: 'Ottelu' },
+            { value: 'OTHER', label: 'Muu' },
           ]}
           defaultValue="GAME"
         />
@@ -169,9 +165,9 @@ export default function UploadForm() {
           description="Valitse kenelle tapahtuma näkyy MyClubissa."
           Icon={LuUsers}
           options={[
-            { value: "SELECTED", label: "Valituille henkilöille" },
-            { value: "GROUP", label: "Ryhmän jäsenille" },
-            { value: "CLUB", label: "Seuralle" }
+            { value: 'SELECTED', label: 'Valituille henkilöille' },
+            { value: 'GROUP', label: 'Ryhmän jäsenille' },
+            { value: 'CLUB', label: 'Seuralle' },
           ]}
           defaultValue="SELECTED"
         />
@@ -181,9 +177,10 @@ export default function UploadForm() {
           disabled={loading || !selectedFile}
           Icon={LuWandSparkles}
           label="Muunna tiedosto"
-          description={selectedFile
-            ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
-            : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
+          description={
+            selectedFile
+              ? 'Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi'
+              : 'Lisää ensin eLSA excel tiedosto jonka haluat muuntaa'
           }
         >
           {loading ? 'Muunnetaan...' : 'Muunna tiedosto'}

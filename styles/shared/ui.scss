@@ -1,4 +1,4 @@
-@use "../variables.scss" as v;
+@use '../variables.scss' as v;
 
 @mixin flex-center {
   display: flex;
@@ -42,5 +42,7 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }

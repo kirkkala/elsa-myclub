@@ -5,7 +5,7 @@ import {
   normalizeDate,
   formatDateTime,
   calculateEndTime,
-  adjustStartTime
+  adjustStartTime,
 } from '../../pages/api/upload'
 
 describe('Excel conversion utils', () => {
@@ -14,56 +14,64 @@ describe('Excel conversion utils', () => {
       const input = {
         sarja: '11-vuotiaat tytöt I divisioona Eteläinen alue',
         koti: 'Puhu Juniorit',
-        vieras: 'HNMKY/Stadi'
+        vieras: 'HNMKY/Stadi',
       }
 
-      expect(formatEventName(input.sarja, input.koti, input.vieras))
-        .toBe('I div. Puhu Juniorit - HNMKY/Stadi')
+      expect(formatEventName(input.sarja, input.koti, input.vieras)).toBe(
+        'I div. Puhu Juniorit - HNMKY/Stadi'
+      )
     })
 
     it('handles different division numbers', () => {
       const input = {
         sarja: '11-vuotiaat tytöt III divisioona Eteläinen alue',
         koti: 'HNMKY/Stadi',
-        vieras: 'Beat Basket Black'
+        vieras: 'Beat Basket Black',
       }
 
-      expect(formatEventName(input.sarja, input.koti, input.vieras))
-        .toBe('III div. HNMKY/Stadi - Beat Basket Black')
+      expect(formatEventName(input.sarja, input.koti, input.vieras)).toBe(
+        'III div. HNMKY/Stadi - Beat Basket Black'
+      )
     })
 
-    test.each(sampleExcelData.input.rows.map((row, i) => [
-      row[1], // sarja
-      row[6], // koti
-      row[7], // vieras
-      sampleExcelData.expected.rows[i][0] // expected title
-    ]))('converts "%s" game correctly', (sarja, koti, vieras, expected) => {
+    test.each(
+      sampleExcelData.input.rows.map((row, i) => [
+        row[1], // sarja
+        row[6], // koti
+        row[7], // vieras
+        sampleExcelData.expected.rows[i][0], // expected title
+      ])
+    )('converts "%s" game correctly', (sarja, koti, vieras, expected) => {
       expect(formatEventName(sarja, koti, vieras)).toBe(expected)
     })
   })
 
   describe('formatSeriesName', () => {
     it('extracts 1st division from full series name', () => {
-      expect(formatSeriesName('11-vuotiaat tytöt I divisioona Eteläinen alue'))
-        .toBe('I div.')
+      expect(
+        formatSeriesName('11-vuotiaat tytöt I divisioona Eteläinen alue')
+      ).toBe('I div.')
     })
 
     it('extracts 1st division from full series name', () => {
-      expect(formatSeriesName('13-vuotiaat pojat I divisioona Eteläinen alue'))
-        .toBe('I div.')
+      expect(
+        formatSeriesName('13-vuotiaat pojat I divisioona Eteläinen alue')
+      ).toBe('I div.')
     })
 
     it('extracts 2nd division from full series name', () => {
-      expect(formatSeriesName('13-vuotiaat pojat II divisioona Eteläinen alue'))
-        .toBe('II div.')
+      expect(
+        formatSeriesName('13-vuotiaat pojat II divisioona Eteläinen alue')
+      ).toBe('II div.')
     })
 
     it('extracts 3rd division from full series name', () => {
-      expect(formatSeriesName('9-vuotiaat tytöt III divisioona Eteläinen alue'))
-        .toBe('III div.')
+      expect(
+        formatSeriesName('9-vuotiaat tytöt III divisioona Eteläinen alue')
+      ).toBe('III div.')
     })
 
-    it('returns empty string for series we don\'t expect', () => {
+    it("returns empty string for series we don't expect", () => {
       expect(formatSeriesName('100-vuotiaat leidit harrastesarja')).toBe('')
     })
   })
@@ -93,17 +101,23 @@ describe('Date and time conversions', () => {
     })
 
     it('throws error for invalid date format', () => {
-      expect(() => normalizeDate('invalid')).toThrow('Odottamaton päivämäärämuoto')
+      expect(() => normalizeDate('invalid')).toThrow(
+        'Odottamaton päivämäärämuoto'
+      )
     })
   })
 
   describe('formatDateTime', () => {
     it('combines date, time and year (as string)', () => {
-      expect(formatDateTime('14.12.', '12:30', '2025')).toBe('14.12.2025 12:30:00')
+      expect(formatDateTime('14.12.', '12:30', '2025')).toBe(
+        '14.12.2025 12:30:00'
+      )
     })
 
     it('works with numeric year', () => {
-      expect(formatDateTime('14.12.', '12:30', 2025)).toBe('14.12.2025 12:30:00')
+      expect(formatDateTime('14.12.', '12:30', 2025)).toBe(
+        '14.12.2025 12:30:00'
+      )
     })
   })
 

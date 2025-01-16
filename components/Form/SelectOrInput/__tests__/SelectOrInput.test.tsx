@@ -6,7 +6,7 @@ const uiTexts = {
   description: 'Test description',
   toInputAction: 'Add custom text',
   toListAction: 'Select from list',
-  placeholder: 'Enter custom value'
+  placeholder: 'Enter custom value',
 }
 
 describe('SelectOrInput', () => {
@@ -17,18 +17,18 @@ describe('SelectOrInput', () => {
     Icon: () => <span>icon</span>,
     options: [
       { value: 'HNMKY Team A', label: 'HNMKY Team A' },
-      { value: 'HNMKY Team B', label: 'HNMKY Team B' }
+      { value: 'HNMKY Team B', label: 'HNMKY Team B' },
     ],
     placeholder: uiTexts.placeholder,
     required: true,
     switchText: {
       toInput: {
-        action: uiTexts.toInputAction
+        action: uiTexts.toInputAction,
       },
       toList: {
-        action: uiTexts.toListAction
-      }
-    }
+        action: uiTexts.toListAction,
+      },
+    },
   }
 
   it('renders select field by default with all elements', () => {

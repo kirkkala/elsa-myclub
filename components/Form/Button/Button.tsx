@@ -16,7 +16,7 @@ export default function Button({
   Icon,
   label,
   description,
-  children
+  children,
 }: ButtonProps) {
   return (
     <div className={styles.formGroup}>
@@ -26,12 +26,10 @@ export default function Button({
           {label}
         </label>
       )}
-      {description && <div className={styles.fieldDescription}>{description}</div>}
-      <button
-        type={type}
-        disabled={disabled}
-        className={styles.button}
-      >
+      {description && (
+        <div className={styles.fieldDescription}>{description}</div>
+      )}
+      <button type={type} disabled={disabled} className={styles.button}>
         {children}
       </button>
     </div>

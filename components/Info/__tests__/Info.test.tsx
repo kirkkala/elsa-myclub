@@ -10,7 +10,9 @@ describe('Info component', () => {
         </Info>
       )
 
-      expect(screen.getByRole('heading', { name: 'Test Title' })).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Test Title' })
+      ).toBeInTheDocument()
       expect(screen.getByText('Test Content')).toBeInTheDocument()
     })
 

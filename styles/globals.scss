@@ -1,4 +1,4 @@
-@use "./variables.scss" as v;
+@use './variables.scss' as v;
 
 * {
   box-sizing: border-box;
@@ -8,7 +8,7 @@
 
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   font-size: 16px;
   color: v.$color-text;
@@ -16,7 +16,12 @@ body {
 }
 
 // Basic element resets
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0 0 1rem;
   line-height: 1.2;
 }
@@ -27,31 +32,30 @@ p {
 
 ul {
   list-style: none;
-    padding-left: 1.5rem;
+  padding-left: 1.5rem;
+
+  li {
+    position: relative;
+    margin-bottom: 0.4rem;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: -1.5rem;
+    }
+  }
+
+  &.list-reset {
+    list-style: none;
+    padding-left: 0;
 
     li {
-      position: relative;
-      margin-bottom: 0.4rem;
-
       &::before {
-        content: "•";
-        position: absolute;
-        left: -1.5rem;
+        content: none;
+        display: none;
       }
     }
-
-    &.list-reset {
-      list-style: none;
-      padding-left: 0;
-
-      li {
-        &::before {
-          content: none;
-          display: none;
-        }
-      }
-
-    }
+  }
 }
 
 a {

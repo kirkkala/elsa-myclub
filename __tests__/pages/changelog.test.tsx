@@ -4,8 +4,8 @@ import Changelog, { getStaticProps } from '../../pages/changelog'
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter: () => ({
-    pathname: '/changelog'
-  })
+    pathname: '/changelog',
+  }),
 }))
 
 // Mock fs module but keep real readFileSync for CHANGELOG.md
@@ -17,7 +17,7 @@ jest.mock('fs', () => {
         return actualFs.readFileSync(filePath, 'utf8')
       }
       return ''
-    })
+    }),
   }
 })
 
@@ -28,7 +28,7 @@ jest.mock('gray-matter', () => {
       content: fileContent,
       data: {},
       isEmpty: false,
-      excerpt: ''
+      excerpt: '',
     }
   }
 })
@@ -37,21 +37,22 @@ jest.mock('gray-matter', () => {
 jest.mock('remark', () => ({
   remark: () => ({
     use: () => ({
-      process: (content: string) => Promise.resolve({
-        toString: () => {
-          return content
-            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-            .replace(/^## (.*$)/gm, '<h3>$1</h3>')
-            .replace(/^# (.*$)/gm, '<h2>$1</h2>')
-            .replace(/^- (.*$)/gm, '<li>$1</li>')
-        }
-      })
-    })
-  })
+      process: (content: string) =>
+        Promise.resolve({
+          toString: () => {
+            return content
+              .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+              .replace(/^## (.*$)/gm, '<h3>$1</h3>')
+              .replace(/^# (.*$)/gm, '<h2>$1</h2>')
+              .replace(/^- (.*$)/gm, '<li>$1</li>')
+          },
+        }),
+    }),
+  }),
 }))
 
 jest.mock('remark-html', () => ({
-  default: () => ({})
+  default: () => ({}),
 }))
 
 describe('Changelog page', () => {
@@ -60,9 +61,11 @@ describe('Changelog page', () => {
     render(<Changelog {...props} />)
 
     // Look for the specific heading text
-    expect(screen.getByRole('heading', {
-      name: 'v0.1.2-beta (2025-01-12)'
-    })).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', {
+        name: 'v0.1.2-beta (2025-01-12)',
+      })
+    ).toBeInTheDocument()
 
     // Test actual changelog content
     expect(screen.getByText(/Tekninen päivitys/)).toBeInTheDocument()

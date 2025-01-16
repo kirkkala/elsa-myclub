@@ -20,7 +20,7 @@ export default function TextInput({
   placeholder,
   defaultValue,
   required = false,
-  suffix
+  suffix,
 }: TextInputProps) {
   return (
     <div className={styles.formGroup}>

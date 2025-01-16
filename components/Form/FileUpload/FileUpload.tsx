@@ -1,5 +1,5 @@
-import { RiFileExcel2Line } from "react-icons/ri"
-import { LuSend } from "react-icons/lu"
+import { RiFileExcel2Line } from 'react-icons/ri'
+import { LuSend } from 'react-icons/lu'
 import styles from './FileUpload.module.scss'
 
 interface FileUploadProps {
@@ -7,10 +7,13 @@ interface FileUploadProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function FileUpload({ selectedFile, onChange }: FileUploadProps) {
+export default function FileUpload({
+  selectedFile,
+  onChange,
+}: FileUploadProps) {
   return (
     <div className={styles.formGroup}>
-      <label>
+      <label htmlFor="file-upload-label">
         <LuSend /> eLSA excel tiedosto
       </label>
       <p className={styles.fieldDescription}>
@@ -23,7 +26,7 @@ export default function FileUpload({ selectedFile, onChange }: FileUploadProps) 
       </label>
       <input
         type="file"
-        data-testid="file-input" // @todo: check if we need separate test-ID's for this component
+        data-testid="file-input"
         name="file"
         id="file"
         accept=".xlsx,.xls"

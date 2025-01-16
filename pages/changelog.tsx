@@ -25,13 +25,11 @@ export async function getStaticProps() {
   // Increase heading level by one to have better semantics on the page
   const shiftedContent = content.replace(/^(#+)/gm, '#$1')
 
-  const processedContent = await remark()
-    .use(html)
-    .process(shiftedContent)
+  const processedContent = await remark().use(html).process(shiftedContent)
   const contentHtml = processedContent.toString()
 
   return {
-    props: { contentHtml }
+    props: { contentHtml },
   }
 }
 

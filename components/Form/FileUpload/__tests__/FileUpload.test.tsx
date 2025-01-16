@@ -17,7 +17,7 @@ describe('FileUpload', () => {
     render(<FileUpload selectedFile="" onChange={handleChange} />)
 
     const file = new File([''], 'test.xlsx', {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     })
     const input = screen.getByTestId('file-input')
 
