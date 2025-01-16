@@ -276,7 +276,7 @@ const handler: NextApiHandler = async (req, res) => {
           } as ProcessedRow
         } catch (err) {
           console.warn(
-            `Warning: Error processing row:`,
+            "Warning: Error processing row:",
             err instanceof Error ? err.message : String(err)
           )
           return null
@@ -297,7 +297,9 @@ const handler: NextApiHandler = async (req, res) => {
 
     const buffer = XLSX.write(newWorkbook, { type: "buffer", bookType: "xlsx" }) as Buffer
 
-    res.setHeader("Content-Disposition", 'attachment; filename="myclub_import.xlsx"')
+    // @todo: use the original filename with myclub prefix
+    const filename = "elsa-myclub-import.xlsx"
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`)
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
