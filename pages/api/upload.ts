@@ -227,9 +227,9 @@ const handler: NextApiHandler = async (req, res) => {
   try {
     const form = new IncomingForm()
     const formData = await new Promise<[Fields, Files]>((resolve, reject) => {
-      form.parse(req, (err, formFields, formFiles) => {
+      form.parse(req, (err, formFields: Fields, formFiles: Files) => {
         if (err) {
-          reject(err)
+          reject(new Error(String(err)))
         }
         resolve([formFields, formFiles])
       })
