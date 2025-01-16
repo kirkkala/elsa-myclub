@@ -15,7 +15,7 @@ export default function Head({
   title,
   description,
   ogTitle,
-  ogDescription
+  ogDescription,
 }: HeadProps): React.ReactElement {
   const { pathname } = useRouter()
   const pageType = pathname.slice(1) || "home"

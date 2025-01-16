@@ -34,7 +34,10 @@ export default function SelectField({
   ))
 
   return (
-    <div className={styles.formGroup + (className ? ` ${className}` : "")} data-testid="select-wrapper">
+    <div
+      className={styles.formGroup + (className ? ` ${className}` : "")}
+      data-testid="select-wrapper"
+    >
       <label htmlFor={id}>
         <Icon />
         {label}

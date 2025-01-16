@@ -9,7 +9,12 @@ interface FileUploadProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function FileUpload({ selectedFile, onChange, label, description }: FileUploadProps): React.ReactElement {
+export default function FileUpload({
+  selectedFile,
+  onChange,
+  label,
+  description,
+}: FileUploadProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
       <label>
