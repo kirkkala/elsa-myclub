@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v0.1.5-beta (UNRELEASED)
+
+- Tekninen: Strict eslinting 👮‍♂️💅🏻
+
 ## v0.1.4-beta (2025-01-15)
 
 - Valintalista HNMKY joukkueille (MyClub ryhmän nimi) 📋✨
