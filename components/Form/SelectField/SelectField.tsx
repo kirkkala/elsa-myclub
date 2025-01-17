@@ -1,5 +1,5 @@
-import { IconType } from 'react-icons'
-import styles from './SelectField.module.scss'
+import { IconType } from "react-icons"
+import styles from "./SelectField.module.scss"
 
 interface SelectFieldProps {
   id: string
@@ -25,12 +25,21 @@ export default function SelectField({
   required,
   defaultValue,
   suffix,
-  className
-}: SelectFieldProps) {
+  className,
+}: SelectFieldProps): React.ReactElement {
+  const optionElements = options.map((option) => (
+    <option key={option.value} value={option.value}>
+      {option.label}
+    </option>
+  ))
+
   return (
-    <div className={`${styles.formGroup} ${className || ''}`} data-testid="select-wrapper">
+    <div
+      className={styles.formGroup + (className ? ` ${className}` : "")}
+      data-testid="select-wrapper"
+    >
       <label htmlFor={id}>
-        {Icon && <Icon />}
+        <Icon />
         {label}
       </label>
       {description && (
@@ -46,11 +55,7 @@ export default function SelectField({
           defaultValue={defaultValue}
           aria-describedby={description ? `${id}-description` : undefined}
         >
-          {options.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
+          {optionElements}
         </select>
         {suffix && <div className={styles.suffix}>{suffix}</div>}
       </div>

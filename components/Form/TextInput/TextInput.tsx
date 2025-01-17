@@ -1,5 +1,5 @@
-import { IconType } from 'react-icons'
-import styles from './TextInput.module.scss'
+import { IconType } from "react-icons"
+import styles from "./TextInput.module.scss"
 
 interface TextInputProps {
   id: string
@@ -20,8 +20,8 @@ export default function TextInput({
   placeholder,
   defaultValue,
   required = false,
-  suffix
-}: TextInputProps) {
+  suffix,
+}: TextInputProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
       <label htmlFor={id}>

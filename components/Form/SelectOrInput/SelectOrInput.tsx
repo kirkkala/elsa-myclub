@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { IconType } from 'react-icons'
-import { LuPencil, LuList } from 'react-icons/lu'
-import SelectField from '../SelectField/SelectField'
-import TextInput from '../TextInput/TextInput'
-import styles from './SelectOrInput.module.scss'
+import { useState } from "react"
+import { IconType } from "react-icons"
+import { LuPencil, LuList } from "react-icons/lu"
+import SelectField from "../SelectField/SelectField"
+import TextInput from "../TextInput/TextInput"
+import styles from "./SelectOrInput.module.scss"
 
 interface SelectOrInputProps {
   id: string
@@ -26,63 +26,56 @@ interface SelectOrInputProps {
 }
 
 export default function SelectOrInput({
-  id,
-  label,
-  description,
-  Icon,
   options,
-  placeholder,
-  required,
-  switchText
-}: SelectOrInputProps) {
-  const [useCustomInput, setUseCustomInput] = useState(false);
+  ...props
+}: SelectOrInputProps): React.ReactElement {
+  const [useCustomInput, setUseCustomInput] = useState(false)
 
   const displayOptions = [
     { value: "", label: "Valitse joukkue" },
-    ...options.map(option => ({
+    ...options.map((option) => ({
       value: option.value,
-      label: option.value
-    }))
-  ];
+      label: option.value,
+    })),
+  ]
 
   const switchLink = (
     <a
       href="#"
       onClick={(e) => {
-        e.preventDefault();
-        setUseCustomInput(!useCustomInput);
+        e.preventDefault()
+        setUseCustomInput(!useCustomInput)
       }}
     >
-      {useCustomInput ? <LuList /> : <LuPencil />}
-      {' '}
-      {useCustomInput ? switchText.toList.action : switchText.toInput.action}
+      {useCustomInput ? <LuList /> : <LuPencil />}{" "}
+      {useCustomInput ? props.switchText.toList.action : props.switchText.toInput.action}
     </a>
-  );
+  )
 
   return (
     <div className={styles.selectOrInput}>
       {!useCustomInput ? (
         <SelectField
-          id={id}
-          label={label}
+          id={props.id}
+          label={props.label}
           className={styles.nestedField}
-          description={description}
-          Icon={Icon}
+          description={props.description}
+          Icon={props.Icon}
           options={displayOptions}
-          required={required}
+          required={props.required}
           suffix={switchLink}
         />
       ) : (
         <TextInput
-          id={id}
-          label={label}
-          description={description}
-          Icon={Icon}
-          placeholder={placeholder}
-          required={required}
+          id={props.id}
+          label={props.label}
+          description={props.description}
+          Icon={props.Icon}
+          placeholder={props.placeholder}
+          required={props.required}
           suffix={switchLink}
         />
       )}
     </div>
-  );
+  )
 }

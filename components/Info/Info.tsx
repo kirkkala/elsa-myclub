@@ -1,5 +1,5 @@
 import { LuInfo, LuX } from "react-icons/lu"
-import styles from './Info.module.scss'
+import styles from "./Info.module.scss"
 
 interface InfoProps {
   title: string
@@ -7,7 +7,11 @@ interface InfoProps {
   children: React.ReactNode
 }
 
-export default function Info({ title, expandable = true, children }: InfoProps) {
+export default function Info({
+  title,
+  expandable = true,
+  children,
+}: InfoProps): React.ReactElement {
   if (expandable) {
     return (
       <details className={styles.info}>
@@ -17,12 +21,16 @@ export default function Info({ title, expandable = true, children }: InfoProps) 
           aria-expanded="false"
           onClick={(e) => {
             const details = e.currentTarget.parentElement as HTMLDetailsElement
-            e.currentTarget.setAttribute('aria-label', details.open ? 'Näytä lisää' : 'Piilota')
-            e.currentTarget.setAttribute('aria-expanded', details.open ? 'false' : 'true')
+            e.currentTarget.setAttribute("aria-label", details.open ? "Näytä lisää" : "Piilota")
+            e.currentTarget.setAttribute("aria-expanded", details.open ? "false" : "true")
           }}
         >
-          <span className={styles.summaryClosed}><LuInfo className={styles.icon} /> {title}</span>
-          <span className={styles.summaryOpen}><LuX /></span>
+          <span className={styles.summaryClosed}>
+            <LuInfo className={styles.icon} /> {title}
+          </span>
+          <span className={styles.summaryOpen}>
+            <LuX />
+          </span>
         </summary>
         <div className={`${styles.infoContent} ${styles.expandable}`}>
           <h2>{title}</h2>

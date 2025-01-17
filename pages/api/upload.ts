@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { IncomingForm, Fields, Files } from 'formidable'
-import * as XLSX from 'xlsx'
-import { promises as fs } from 'fs'
+import { IncomingForm, Fields, Files } from "formidable"
+import * as XLSX from "xlsx"
+import { promises as fs } from "fs"
+import type { NextApiHandler } from "next"
 
 export const config = {
   api: {
@@ -58,19 +58,17 @@ interface ProcessedRow {
  * @throws {Error} If date format is not what we expect
  */
 export function normalizeDate(date: string | number): string {
-  const dateStr = typeof date === 'number'
-    ? date.toFixed(2)
-    : String(date)
+  const dateStr = typeof date === "number" ? date.toFixed(2) : String(date)
 
-  const cleanDate = dateStr.replace(',', '.')
-  const parts = cleanDate.split('.')
+  const cleanDate = dateStr.replace(",", ".")
+  const parts = cleanDate.split(".")
 
   if (parts.length !== 2) {
     throw new Error(`Odottamaton päivämäärämuoto: ${date}`)
   }
 
-  const day = parts[0].padStart(2, '0')
-  const month = parts[1].padStart(2, '0')
+  const day = parts[0].padStart(2, "0")
+  const month = parts[1].padStart(2, "0")
 
   return `${day}.${month}.`
 }
@@ -93,11 +91,11 @@ export function formatDateTime(date: string, time: string, year: string | number
  * @returns End time (e.g. "14:30")
  */
 export function calculateEndTime(startTime: string, durationMinutes: number): string {
-  const [hours, minutes] = startTime.split(':').map(Number)
+  const [hours, minutes] = startTime.split(":").map(Number)
   const startDate = new Date(2000, 0, 1, hours, minutes)
   const endDate = new Date(startDate.getTime() + durationMinutes * 60000)
 
-  return `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`
+  return `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
 }
 
 /**
@@ -107,13 +105,15 @@ export function calculateEndTime(startTime: string, durationMinutes: number): st
  * @returns Adjusted time (e.g. "12:45")
  */
 export function adjustStartTime(time: string, adjustment: number): string {
-  if (adjustment === 0) return time.replace(' ', '')
+  if (adjustment === 0) {
+    return time.replace(" ", "")
+  }
 
-  const [hours, minutes] = time.replace(' ', '').split(':').map(Number)
+  const [hours, minutes] = time.replace(" ", "").split(":").map(Number)
   const date = new Date(2000, 0, 1, hours, minutes)
   date.setMinutes(date.getMinutes() + adjustment)
 
-  return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+  return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
 }
 
 /**
@@ -123,7 +123,7 @@ export function adjustStartTime(time: string, adjustment: number): string {
  */
 export function formatSeriesName(fullSeries: string): string {
   const divMatch = fullSeries.match(/(I+)\s*divisioona/i)
-  return divMatch ? `${divMatch[1]} div.` : ''
+  return divMatch ? `${divMatch[1]} div.` : ""
 }
 
 /**
@@ -146,7 +146,7 @@ export function formatEventName(series: string, homeTeam: string, awayTeam: stri
  * @returns Group name, defaults to a name that hint user to set it if not specified
  */
 function getMyclubGroupValue(fields: Fields): string {
-  return String(fields.group?.[0] || 'MyClub ryhmän nimi')
+  return String(fields.group?.[0] || "MyClub ryhmän nimi")
 }
 
 /**
@@ -156,7 +156,7 @@ function getMyclubGroupValue(fields: Fields): string {
  */
 function getMyclubEventType(fields: Fields): string {
   const eventType = fields.eventType?.[0]
-  return eventType === 'Muu' ? 'Muu' : 'Ottelu'
+  return eventType === "Muu" ? "Muu" : "Ottelu"
 }
 
 /**
@@ -167,10 +167,10 @@ function getMyclubEventType(fields: Fields): string {
  */
 function getMyclubRegistration(fields: Fields): string {
   const registration = fields.registration?.[0]
-  const validOptions = ['Ryhmän jäsenille', 'Seuralle', 'Valituille henkilöille']
+  const validOptions = ["Ryhmän jäsenille", "Seuralle", "Valituille henkilöille"]
   return validOptions.includes(String(registration))
     ? String(registration)
-    : 'Valituille henkilöille'
+    : "Valituille henkilöille"
 }
 
 /**
@@ -183,7 +183,6 @@ function getMyclubRegistration(fields: Fields): string {
 function createDescription(originalTime: string, startAdjustment: number): string {
   const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
 
-  // We don't need warm-up if startAdjustment is 0
   if (startAdjustment === 0) {
     return gameStart
   }
@@ -220,26 +219,26 @@ ${gameStart}`
  * @throws {Error} If file upload fails or Excel processing fails
  * @returns Excel file in MyClub format or error response
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' })
+const handler: NextApiHandler = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" })
   }
 
   try {
     const form = new IncomingForm()
-    const [fields, files]: [Fields, Files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err)
-        resolve([fields, files])
+    const formData = await new Promise<[Fields, Files]>((resolve, reject) => {
+      form.parse(req, (err, formFields: Fields, formFiles: Files) => {
+        if (err) {
+          reject(new Error(String(err)))
+        }
+        resolve([formFields, formFiles])
       })
     })
+    const [fields, files] = formData
 
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
     if (!uploadedFile) {
-      return res.status(400).json({ message: 'Ei lisättyä tiedostoa' })
+      return res.status(400).json({ message: "Ei lisättyä tiedostoa" })
     }
 
     const fileData = await fs.readFile(uploadedFile.filepath)
@@ -248,8 +247,8 @@ export default async function handler(
     const jsonData = XLSX.utils.sheet_to_json<ExcelRow>(firstSheet)
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
-    const duration = parseInt(fields.duration?.[0] || '75', 10)
-    const startAdjustment = parseInt(fields.startAdjustment?.[0] || '0', 10)
+    const duration = parseInt(fields.duration?.[0] || "75", 10)
+    const startAdjustment = parseInt(fields.startAdjustment?.[0] || "0", 10)
 
     const processedData: ProcessedRow[] = jsonData
       .map((row: ExcelRow): ProcessedRow | null => {
@@ -265,18 +264,21 @@ export default async function handler(
           const endDateTime = formatDateTime(normalizedDate, endTime, year)
 
           return {
-            'Nimi': formatEventName(row.Sarja, row.Koti, row.Vieras),
-            'Kuvaus': createDescription(row.Klo, startAdjustment),
-            'Ryhmä': getMyclubGroupValue(fields),
-            'Tapahtumatyyppi': getMyclubEventType(fields),
-            'Tapahtumapaikka': row.Kenttä,
-            'Alkaa': startDateTime,
-            'Päättyy': endDateTime,
-            'Ilmoittautuminen': getMyclubRegistration(fields),
-            'Näkyvyys': 'Näkyy ryhmälle',
+            Nimi: formatEventName(row.Sarja, row.Koti, row.Vieras),
+            Kuvaus: createDescription(row.Klo, startAdjustment),
+            Ryhmä: getMyclubGroupValue(fields),
+            Tapahtumatyyppi: getMyclubEventType(fields),
+            Tapahtumapaikka: row.Kenttä,
+            Alkaa: startDateTime,
+            Päättyy: endDateTime,
+            Ilmoittautuminen: getMyclubRegistration(fields),
+            Näkyvyys: "Näkyy ryhmälle",
           } as ProcessedRow
         } catch (err) {
-          console.warn(`Warning: Error processing row:`, err instanceof Error ? err.message : String(err))
+          console.warn(
+            "Warning: Error processing row:",
+            err instanceof Error ? err.message : String(err)
+          )
           return null
         }
       })
@@ -284,31 +286,32 @@ export default async function handler(
 
     if (processedData.length === 0) {
       return res.status(400).json({
-        message: 'Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).'
+        message:
+          "Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).",
       })
     }
 
     const newWorkbook = XLSX.utils.book_new()
     const newSheet = XLSX.utils.json_to_sheet(processedData)
-    XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'MyClub Import')
+    XLSX.utils.book_append_sheet(newWorkbook, newSheet, "MyClub Import")
 
-    const buffer = XLSX.write(newWorkbook, { type: 'buffer', bookType: 'xlsx' })
+    const buffer = XLSX.write(newWorkbook, { type: "buffer", bookType: "xlsx" }) as Buffer
 
+    // @todo: use the original filename with myclub prefix
+    const filename = "elsa-myclub-import.xlsx"
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`)
     res.setHeader(
-      'Content-Disposition',
-      'attachment; filename="myclub_import.xlsx"'
-    )
-    res.setHeader(
-      'Content-Type',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
     res.send(buffer)
-
   } catch (error) {
-    console.error('Detailed error:', error)
+    console.error("Detailed error:", error)
     res.status(500).json({
-      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`
+      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`,
     })
   }
 }
+
+export default handler

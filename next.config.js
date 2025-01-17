@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const packageJson = require('./package.json')
+const packageJson = require("./package.json")
 
 const nextConfig = {
   reactStrictMode: true,

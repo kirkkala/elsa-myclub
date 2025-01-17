@@ -26,7 +26,9 @@
     color: v.$color-text-light;
   }
 
-  input, select, .fileupload {
+  input,
+  select,
+  .fileupload {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid v.$color-border;
@@ -51,4 +53,3 @@
     }
   }
 }
-
