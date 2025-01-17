@@ -25,12 +25,12 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
             <tr>
               <th>#</th>
               <th>Nimi</th>
+              <th>Alkaa</th>
+              <th>Päättyy</th>
               <th>Kuvaus</th>
               <th>Ryhmä</th>
               <th>Tapahtumatyyppi</th>
               <th>Tapahtumapaikka</th>
-              <th>Alkaa</th>
-              <th>Päättyy</th>
               <th>Ilmoittautuminen</th>
               <th>Näkyvyys</th>
             </tr>
@@ -40,12 +40,12 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
               <tr key={getRowKey(row)}>
                 <td>{index + 1}</td>
                 <td>{row.Nimi}</td>
+                <td>{row.Alkaa}</td>
+                <td>{row.Päättyy}</td>
                 <td>{row.Kuvaus}</td>
                 <td>{row.Ryhmä}</td>
                 <td>{row.Tapahtumatyyppi}</td>
                 <td>{row.Tapahtumapaikka}</td>
-                <td>{row.Alkaa}</td>
-                <td>{row.Päättyy}</td>
                 <td>{row.Ilmoittautuminen}</td>
                 <td>{row.Näkyvyys}</td>
               </tr>

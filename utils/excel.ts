@@ -162,12 +162,12 @@ ${gameStart}`
 
           return {
             Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
+            Alkaa: startDateTime,
+            Päättyy: endDateTime,
             Ryhmä: this.getMyclubGroupValue(fields),
             Kuvaus: this.createDescription(row.Klo, startAdjustment),
             Tapahtumatyyppi: this.getMyclubEventType(fields),
             Tapahtumapaikka: row.Kenttä,
-            Alkaa: startDateTime,
-            Päättyy: endDateTime,
             Ilmoittautuminen: this.getMyclubRegistration(fields),
             Näkyvyys: "Näkyy ryhmälle",
           }
