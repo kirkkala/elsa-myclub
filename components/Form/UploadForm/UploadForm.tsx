@@ -118,9 +118,12 @@ export default function UploadForm(): React.ReactElement {
           Icon={LuClock}
           options={[
             { value: "0", label: "Ei aikaistusta" },
-            { value: "15", label: "15 minuuttia ennen" },
-            { value: "30", label: "30 minuuttia ennen" },
-            { value: "45", label: "45 minuuttia ennen" },
+            { value: "15", label: "15 min ennen ottelun alkua" },
+            { value: "30", label: "30 min ennen ottelun alkua" },
+            { value: "45", label: "45 min ennen ottelun alkua" },
+            { value: "60", label: "60 min ennen ottelun alkua" },
+            { value: "75", label: "1 h 15 min ennen ottelun alkua" },
+            { value: "90", label: "1 h 30 min ennen ottelun alkua" },
           ]}
           defaultValue="0"
         />
@@ -128,7 +131,7 @@ export default function UploadForm(): React.ReactElement {
         <SelectField
           id="duration"
           label="Tapahtuman kesto"
-          description="Valinnan perusteella lasketaan tapahtuman päättymisaika."
+          description="Valinnan perusteella lasketaan tapahtuman päättymisaika, kokoontumisaika lisätään tähän."
           Icon={LuClock}
           options={[
             { value: "60", label: "1 tunti" },

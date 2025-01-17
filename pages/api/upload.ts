@@ -85,17 +85,32 @@ export function formatDateTime(date: string, time: string, year: string | number
 }
 
 /**
- * Calculates end time based on start time and duration
- * @param startTime - Start time (e.g. "12:30")
- * @param durationMinutes - Duration in minutes
- * @returns End time (e.g. "14:30")
+ * Adjusts event times based on meeting time, warm-up time, and game duration
+ * @param gameTime - Original game time (e.g. "12:30")
+ * @param meetingMinutes - Meeting time in minutes (subtracted from start)
+ * @param warmupMinutes - Warm-up time in minutes (added to start)
+ * @param durationMinutes - Game duration in minutes
+ * @returns Object with start and end times
  */
-export function calculateEndTime(startTime: string, durationMinutes: number): string {
-  const [hours, minutes] = startTime.split(":").map(Number)
-  const startDate = new Date(2000, 0, 1, hours, minutes)
-  const endDate = new Date(startDate.getTime() + durationMinutes * 60000)
+export function calculateEventTimes(
+  gameTime: string,
+  meetingMinutes: number,
+  warmupMinutes: number,
+  durationMinutes: number
+): { startTime: string; endTime: string } {
+  // First subtract meeting time from the game time to get event start
+  const [hours, minutes] = gameTime.replace(" ", "").split(":").map(Number)
+  const gameDate = new Date(2000, 0, 1, hours, minutes)
 
-  return `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
+  // Calculate start time by subtracting meeting time and adding warm-up time
+  const startDate = new Date(gameDate.getTime() - meetingMinutes * 60000 + warmupMinutes * 60000)
+  const startTime = `${startDate.getHours().toString().padStart(2, "0")}:${startDate.getMinutes().toString().padStart(2, "0")}`
+
+  // Calculate end time from game time plus duration
+  const endDate = new Date(gameDate.getTime() + durationMinutes * 60000)
+  const endTime = `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
+
+  return { startTime, endTime }
 }
 
 /**
@@ -249,6 +264,7 @@ const handler: NextApiHandler = async (req, res) => {
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || "75", 10)
     const startAdjustment = parseInt(fields.startAdjustment?.[0] || "0", 10)
+    const meetingTime = parseInt(fields.meetingTime?.[0] || "0", 10)
 
     const processedData: ProcessedRow[] = jsonData
       .map((row: ExcelRow): ProcessedRow | null => {
@@ -258,9 +274,13 @@ const handler: NextApiHandler = async (req, res) => {
 
         try {
           const normalizedDate = normalizeDate(row.Pvm)
-          const adjustedStartTime = adjustStartTime(row.Klo, startAdjustment)
-          const startDateTime = formatDateTime(normalizedDate, adjustedStartTime, year)
-          const endTime = calculateEndTime(row.Klo, duration)
+          const { startTime, endTime } = calculateEventTimes(
+            row.Klo,
+            meetingTime,
+            startAdjustment,
+            duration
+          )
+          const startDateTime = formatDateTime(normalizedDate, startTime, year)
           const endDateTime = formatDateTime(normalizedDate, endTime, year)
 
           return {
