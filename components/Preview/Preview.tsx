@@ -1,8 +1,8 @@
-import { ProcessedRow } from "../../pages/api/upload"
+import type { MyClubExcelRow } from "@/utils/excel"
 import styles from "./Preview.module.css"
 
 interface PreviewProps {
-  data: ProcessedRow[]
+  data: MyClubExcelRow[]
 }
 
 export default function Preview({ data }: PreviewProps): React.ReactNode | null {
@@ -10,9 +10,9 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
     return null
   }
 
-  const getRowKey = (row: ProcessedRow): string => {
-    // Combine multiple fields to create a unique key
-    return `${row.Nimi}-${row.Tapahtumapaikka}-${row.Alkaa}`
+  const getRowKey = (row: MyClubExcelRow): string => {
+    const id = `${row.Alkaa}-${row.Päättyy}`.replace(/\W/g, "_")
+    return id
   }
 
   return (
@@ -23,6 +23,7 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>#</th>
               <th>Nimi</th>
               <th>Kuvaus</th>
               <th>Ryhmä</th>
@@ -35,8 +36,9 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
             </tr>
           </thead>
           <tbody>
-            {data.map((row) => (
+            {data.map((row, index) => (
               <tr key={getRowKey(row)}>
+                <td>{index + 1}</td>
                 <td>{row.Nimi}</td>
                 <td>{row.Kuvaus}</td>
                 <td>{row.Ryhmä}</td>

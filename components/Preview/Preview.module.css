@@ -37,8 +37,13 @@
   color: #374151;
 }
 
+.table td {
+  border-right: 1px solid #e5e7eb;
+}
+
 .table tr:last-child td {
   border-bottom: none;
+  border-right: none;
 }
 
 .table tbody tr:hover {

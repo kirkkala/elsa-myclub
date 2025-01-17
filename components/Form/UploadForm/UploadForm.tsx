@@ -7,14 +7,14 @@ import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
-import type { ProcessedRow } from "../../../pages/api/upload"
+import type { MyClubExcelRow } from "@/utils/excel"
 
 interface ApiErrorResponse {
   message: string
 }
 
 interface PreviewApiResponse {
-  data: ProcessedRow[]
+  data: MyClubExcelRow[]
 }
 
 type ApiResponse = PreviewApiResponse | ApiErrorResponse
@@ -32,7 +32,7 @@ export default function UploadForm(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
-  const [previewData, setPreviewData] = useState<ProcessedRow[]>([])
+  const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
