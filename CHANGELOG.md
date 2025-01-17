@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v0.1.5-beta (UNRELEASED)
+## v0.1.5-beta (2025-01-18)
 
 - Lisää vaihtoehtoja kokoontumisajalle ±🕒
 - Aloitus/lopetusaika ottaa huomioon kokoontumisajan 🕒
