@@ -19,7 +19,7 @@ export const config = {
  * @property {string} Vieras - Away team name
  * @property {string} Sarja - Full series name (e.g. "11-vuotiaat tytöt I divisioona")
  */
-interface ExcelRow {
+export interface ExcelRow {
   Pvm: string | number
   Klo: string
   Kenttä: string
@@ -39,8 +39,9 @@ interface ExcelRow {
  * @property {string} Päättyy - End time (e.g. "14.12.2025 14:30:00")
  * @property {string} Ilmoittautuminen - Registration type
  * @property {string} Näkyvyys - Visibility setting (always "Näkyy ryhmälle")
+ * @property {string} Kuvaus - Description of the event
  */
-interface ProcessedRow {
+export interface ProcessedRow {
   Nimi: string
   Ryhmä: string
   Tapahtumatyyppi: string
@@ -49,6 +50,7 @@ interface ProcessedRow {
   Päättyy: string
   Ilmoittautuminen: string
   Näkyvyys: string
+  Kuvaus: string
 }
 
 /**
@@ -160,7 +162,7 @@ export function formatEventName(series: string, homeTeam: string, awayTeam: stri
  * @param fields - Form fields from the upload request
  * @returns Group name, defaults to a name that hint user to set it if not specified
  */
-function getMyclubGroupValue(fields: Fields): string {
+export function getMyclubGroupValue(fields: Fields): string {
   return String(fields.group?.[0] || "MyClub ryhmän nimi")
 }
 
@@ -169,7 +171,7 @@ function getMyclubGroupValue(fields: Fields): string {
  * @param fields - Form fields from the upload request
  * @returns Event type, either "Ottelu" or "Muu" (defaults to "Ottelu")
  */
-function getMyclubEventType(fields: Fields): string {
+export function getMyclubEventType(fields: Fields): string {
   const eventType = fields.eventType?.[0]
   return eventType === "Muu" ? "Muu" : "Ottelu"
 }
@@ -180,7 +182,7 @@ function getMyclubEventType(fields: Fields): string {
  * @returns Registration type, one of: "Ryhmän jäsenille", "Seuralle", "Valituille henkilöille"
  * Defaults to "Valituille henkilöille" if invalid value provided
  */
-function getMyclubRegistration(fields: Fields): string {
+export function getMyclubRegistration(fields: Fields): string {
   const registration = fields.registration?.[0]
   const validOptions = ["Ryhmän jäsenille", "Seuralle", "Valituille henkilöille"]
   return validOptions.includes(String(registration))
@@ -195,14 +197,14 @@ function getMyclubRegistration(fields: Fields): string {
  * @returns HTML formatted description with game start and optional warm-up time
  * @see adjustStartTime - Used to calculate warm-up time
  */
-function createDescription(originalTime: string, startAdjustment: number): string {
-  const gameStart = `<p><strong>Game start</strong>: ${originalTime}</p>`
+export function createDescription(originalTime: string, startAdjustment: number): string {
+  const gameStart = `Game start: ${originalTime}`
 
   if (startAdjustment === 0) {
     return gameStart
   }
 
-  return `<p>Warm-up: ${adjustStartTime(originalTime, startAdjustment)}</p>
+  return `<br />Warm-up: ${adjustStartTime(originalTime, startAdjustment)}
 ${gameStart}`
 }
 

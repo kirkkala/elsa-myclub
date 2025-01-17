@@ -2,19 +2,37 @@ import { useState } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuWandSparkles } from "react-icons/lu"
+import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuWandSparkles, LuDownload } from "react-icons/lu"
 import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
+import Preview from "../../Preview/Preview"
+import type { ProcessedRow } from "../../../pages/api/upload"
 
 interface ApiErrorResponse {
   message: string
+}
+
+interface PreviewApiResponse {
+  data: ProcessedRow[]
+}
+
+type ApiResponse = PreviewApiResponse | ApiErrorResponse
+
+interface FormElements extends HTMLFormElement {
+  year: HTMLSelectElement
+  duration: HTMLSelectElement
+  meetingTime: HTMLSelectElement
+  group: HTMLInputElement | HTMLSelectElement
+  eventType: HTMLSelectElement
+  participants: HTMLSelectElement
 }
 
 export default function UploadForm(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
+  const [previewData, setPreviewData] = useState<ProcessedRow[]>([])
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
@@ -26,35 +44,85 @@ export default function UploadForm(): React.ReactElement {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
-    void handleFormSubmit(e)
+    void handlePreview(e)
   }
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handlePreview = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     setLoading(true)
     setError("")
 
     try {
       const formData = new FormData(e.currentTarget)
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        body: formData,
+      })
+
+      const result = (await response.json()) as ApiResponse
+
+      if (!response.ok) {
+        throw new Error("message" in result ? result.message : "Tiedoston esikatselu epäonnistui")
+      }
+
+      if (!("data" in result)) {
+        throw new Error("Virheellinen vastaus palvelimelta")
+      }
+
+      setPreviewData(result.data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unknown error occurred")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownloadSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+    void handleDownload(e)
+  }
+
+  const handleDownload = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+
+    try {
+      const fileInput = document.querySelector("input[type=\"file\"]") as HTMLInputElement
+      if (!fileInput?.files?.[0]) {
+        throw new Error("Tiedosto puuttuu")
+      }
+
+      const formData = new FormData()
+      formData.append("file", fileInput.files[0])
+
+      // Type cast the form to our interface
+      const originalForm = document.querySelector("form") as FormElements
+      if (!originalForm) {
+        throw new Error("Lomaketta ei löytynyt")
+      }
+
+      formData.append("year", originalForm.year.value)
+      formData.append("duration", originalForm.duration.value)
+      formData.append("meetingTime", originalForm.meetingTime.value)
+      formData.append("group", originalForm.group.value)
+      formData.append("eventType", originalForm.eventType.value)
+      formData.append("participants", originalForm.participants.value)
+
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       })
 
       if (!response.ok) {
-        const errorData = (await response.json()) as ApiErrorResponse
+        const errorData = await response.json() as ApiErrorResponse
         throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
       }
-
-      const disposition = response.headers.get("Content-Disposition")
-      const filename = disposition
-        ? disposition.split("filename=")[1].replace(/"/g, "")
-        : "converted.xlsx"
 
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = filename
+      a.download = "elsa-myclub-import.xlsx"
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -131,7 +199,7 @@ export default function UploadForm(): React.ReactElement {
         <SelectField
           id="duration"
           label="Tapahtuman kesto"
-          description="Valinnan perusteella lasketaan tapahtuman päättymisaika, kokoontumisaika lisätään tähän."
+          description="Ottelun kesto, tämän perusteella lasketaan tapahtuman päättymisaika eli mahdollinen kokoontumisaika lisättynä."
           Icon={LuClock}
           options={[
             { value: "60", label: "1 tunti" },
@@ -172,18 +240,31 @@ export default function UploadForm(): React.ReactElement {
           type="submit"
           disabled={loading || !selectedFile}
           Icon={LuWandSparkles}
-          label="Muunna tiedosto"
-          description={
-            selectedFile
-              ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
-              : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
-          }
+          label="Esikatsele"
+          description="Esikatsele muunnoksen rivejä ennen lataamista. Tarkista että kaikki tiedot ovat oikein, voit vielä muuttaa asetuksia yllä ja kun olet tyytyväinen paina Lataa Excel -painiketta sivun lopussa."
         >
-          {loading ? "Muunnetaan..." : "Muunna tiedosto"}
+          {loading ? "Käsitellään..." : "Esikatsele"}
         </Button>
-
-        {error && <div className={styles.error}>{error}</div>}
       </form>
+
+      {previewData.length > 0 && (
+        <>
+          <Preview data={previewData} />
+          <form onSubmit={handleDownloadSubmit} className={styles.downloadForm}>
+            <Button
+              type="submit"
+              disabled={loading}
+              Icon={LuDownload}
+              label="Lataa Excel"
+              description="Lataa muunnettu Excel-tiedosto"
+            >
+              {loading ? "Ladataan..." : "Lataa Excel"}
+            </Button>
+          </form>
+        </>
+      )}
+
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   )
 }

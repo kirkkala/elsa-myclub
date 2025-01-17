@@ -6,17 +6,17 @@ describe("UploadForm", () => {
   it("validates required fields and button state", () => {
     render(<UploadForm />)
 
-    const submitButton = screen.getByRole("button", { name: /muunna tiedosto/i })
-    const groupInput = screen.getByLabelText(/ryhmä/i)
+    const previewButton = screen.getByRole("button", { name: /esikatsele/i })
+    const groupInput = screen.getByLabelText(/joukkue/i)
 
-    expect(submitButton).toBeDisabled()
+    expect(previewButton).toBeDisabled()
     expect(groupInput).toBeRequired()
   })
 
   it("shows correct button state based on file selection", () => {
     render(<UploadForm />)
-    const submitButton = screen.getByRole("button", { name: /muunna tiedosto/i })
-    expect(submitButton).toBeDisabled()
+    const previewButton = screen.getByRole("button", { name: /esikatsele/i })
+    expect(previewButton).toBeDisabled()
 
     const fileInput = screen.getByTestId("file-input")
     fireEvent.change(fileInput, {
@@ -29,6 +29,24 @@ describe("UploadForm", () => {
       },
     })
 
-    expect(submitButton).not.toBeDisabled()
+    expect(previewButton).not.toBeDisabled()
+  })
+
+  it("does not show download button before preview", () => {
+    render(<UploadForm />)
+    const downloadButton = screen.queryByRole("button", { name: /lataa excel/i })
+    expect(downloadButton).not.toBeInTheDocument()
+  })
+
+  it("shows form fields with correct default values", () => {
+    render(<UploadForm />)
+
+    const currentYear = new Date().getFullYear().toString()
+
+    expect(screen.getByLabelText(/vuosi/i)).toHaveValue(currentYear)
+    expect(screen.getByLabelText(/kokoontumisaika/i)).toHaveValue("0")
+    expect(screen.getByLabelText(/tapahtuman kesto/i)).toHaveValue("90")
+    expect(screen.getByLabelText(/tapahtumatyyppi/i)).toHaveValue("GAME")
+    expect(screen.getByLabelText(/ilmoittautuminen/i)).toHaveValue("SELECTED")
   })
 })

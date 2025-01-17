@@ -55,7 +55,7 @@ export const sampleExcelData = {
     rows: [
       [
         "I div. Puhu Juniorit - HNMKY/Stadi",
-        "<p><strong>Game start</strong>: 12:30</p>",
+        "Game start: 12:30",
         "HNMKY Stadi 2014 Tytöt",
         "Ottelu",
         "Aurinkokiven koulu",
@@ -66,7 +66,7 @@ export const sampleExcelData = {
       ],
       [
         "I div. LePy - HNMKY/Stadi",
-        "<p><strong>Game start</strong>: 09:30</p>",
+        "Game start: 09:30",
         "HNMKY Stadi 2014 Tytöt",
         "Ottelu",
         "Karakallion koulu",
@@ -77,7 +77,7 @@ export const sampleExcelData = {
       ],
       [
         "III div. HNMKY/Stadi - Beat Basket Black",
-        "<p><strong>Game start</strong>: 12:15</p>",
+        "Game start: 12:15",
         "HNMKY Stadi 2014 Tytöt",
         "Ottelu	Malmin palloiluhalli 1",
         "26.01.2025 12:15:00",
