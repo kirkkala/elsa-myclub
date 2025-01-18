@@ -73,3 +73,35 @@ button {
   font-family: inherit;
   font-size: inherit;
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+
+  th,
+  td {
+    padding: 0.20rem 0.75rem;
+    border-right: 1px solid #e5e7eb;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+  }
+
+  th {
+    background-color: #f9fafb;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+    border-right: none;
+  }
+
+  tbody tr:hover {
+    background-color: #e2e6e6;
+  }
+}

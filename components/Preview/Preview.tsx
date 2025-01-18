@@ -1,5 +1,5 @@
 import type { MyClubExcelRow } from "@/utils/excel"
-import styles from "./Preview.module.css"
+import styles from "./Preview.module.scss"
 
 interface PreviewProps {
   data: MyClubExcelRow[]
@@ -16,10 +16,10 @@ export default function Preview({ data }: PreviewProps): React.ReactNode | null 
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.preview}>
       <h3>Esikatselu</h3>
       <p>Esikatselu eLSA:n excel-tiedostosta konvertoituna MyClub-tuontitiedostoksi.</p>
-      <div className={styles.tableContainer}>
+      <div className={styles.previewTableContainer}>
         <table className={styles.table}>
           <thead>
             <tr>
