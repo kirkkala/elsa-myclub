@@ -23,6 +23,7 @@ interface SelectOrInputProps {
       action: string
     }
   }
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
 }
 
 export default function SelectOrInput({
@@ -64,6 +65,7 @@ export default function SelectOrInput({
           options={displayOptions}
           required={props.required}
           suffix={switchLink}
+          onChange={props.onChange}
         />
       ) : (
         <TextInput
@@ -74,6 +76,7 @@ export default function SelectOrInput({
           placeholder={props.placeholder}
           required={props.required}
           suffix={switchLink}
+          onChange={props.onChange}
         />
       )}
     </div>

@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuWandSparkles, LuDownload } from "react-icons/lu"
+import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuDownload } from "react-icons/lu"
 import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
@@ -33,6 +33,7 @@ export default function UploadForm(): React.ReactElement {
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
+  const formRef = useRef<HTMLFormElement>(null)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
@@ -40,11 +41,27 @@ export default function UploadForm(): React.ReactElement {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
+
+    // Trigger preview if file is selected
+    if (file) {
+      const form = e.target.form
+      if (form) {
+        const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
+        void handlePreview(formEvent)
+      }
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    void handlePreview(e)
+  const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
+    if (!selectedFile) {
+      return
+    }
+
+    const form = e.target.form
+    if (form) {
+      const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
+      void handlePreview(formEvent)
+    }
   }
 
   const handlePreview = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -88,25 +105,21 @@ export default function UploadForm(): React.ReactElement {
 
     try {
       const fileInput = document.querySelector("input[type=\"file\"]") as HTMLInputElement
-      if (!fileInput?.files?.[0]) {
+      if (!fileInput.files?.[0]) {
         throw new Error("Tiedosto puuttuu")
       }
 
       const formData = new FormData()
       formData.append("file", fileInput.files[0])
 
-      // Type cast the form to our interface
-      const originalForm = document.querySelector("form") as FormElements
-      if (!originalForm) {
-        throw new Error("Lomaketta ei löytynyt")
-      }
+      const mainForm = formRef.current as FormElements
 
-      formData.append("year", originalForm.year.value)
-      formData.append("duration", originalForm.duration.value)
-      formData.append("meetingTime", originalForm.meetingTime.value)
-      formData.append("group", originalForm.group.value)
-      formData.append("eventType", originalForm.eventType.value)
-      formData.append("registration", originalForm.registration.value)
+      formData.append("year", mainForm.year.value)
+      formData.append("duration", mainForm.duration.value)
+      formData.append("meetingTime", mainForm.meetingTime.value)
+      formData.append("group", mainForm.group.value)
+      formData.append("eventType", mainForm.eventType.value)
+      formData.append("registration", mainForm.registration.value)
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -136,12 +149,14 @@ export default function UploadForm(): React.ReactElement {
 
   return (
     <div className={styles.formContainer}>
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef}>
         <FileUpload
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse tähän ELSA:sta lataamasi excel-tiedosto."
+          description="Valitse eLSA:sta lataamasi excel-tiedosto. Näet
+          esikatselun muunnoksesta sivun alalaidassa ja voit muuttaa asetuksia
+          saadaksesi haluamasi laisen tiedoston MyClub importia."
         />
 
         <SelectOrInput
@@ -149,8 +164,9 @@ export default function UploadForm(): React.ReactElement {
           Icon={LuUsers}
           label="Joukkue (MyClub ryhmä)"
           description={`Joukkueen nimen perusteella MyClub osaa yhdistää
-            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub ryhmä)
-            ei ole listalla, paina "Kirjoita nimi" ja voit antaa joukkueen nimen itse.`}
+            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub
+            ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
+            joukkueen nimen itse.`}
           switchText={{
             toInput: {
               action: "Kirjoita nimi",
@@ -164,6 +180,7 @@ export default function UploadForm(): React.ReactElement {
             label: option,
           }))}
           placeholder="esim. Harlem Globetrotters"
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -176,6 +193,7 @@ export default function UploadForm(): React.ReactElement {
             label: String(year),
           }))}
           defaultValue={String(currentYear)}
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -193,6 +211,7 @@ export default function UploadForm(): React.ReactElement {
             { value: "90", label: "1 h 30 min ennen ottelun alkua" },
           ]}
           defaultValue="0"
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -208,6 +227,7 @@ export default function UploadForm(): React.ReactElement {
             { value: "120", label: "2 tuntia" },
           ]}
           defaultValue="90"
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -220,6 +240,7 @@ export default function UploadForm(): React.ReactElement {
             { value: "Muu" },
           ]}
           defaultValue="GAME"
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -233,19 +254,8 @@ export default function UploadForm(): React.ReactElement {
             { value: "Seuralle" },
           ]}
           defaultValue="Valituille henkilöille"
+          onChange={handleFieldChange}
         />
-
-        <Button
-          type="submit"
-          disabled={loading || !selectedFile}
-          Icon={LuWandSparkles}
-          label="Esikatsele"
-          description="Esikatsele muunnoksen rivejä ennen lataamista. Tarkista
-          että kaikki tiedot ovat oikein, voit vielä muuttaa asetuksia yllä, kun
-          olet tyytyväinen paina Lataa Excel -painiketta"
-        >
-          {loading ? "Käsitellään..." : "Esikatsele"}
-        </Button>
       </form>
 
       {previewData.length > 0 && (
@@ -256,8 +266,8 @@ export default function UploadForm(): React.ReactElement {
               disabled={loading}
               Icon={LuDownload}
               label="Lataa Excel"
-              description={`Esikatsele muunnosta ja paina "Lataa excel"
-                tallentaaksesi rivit MyClubiin sopivaksi tuontitiedostoksi.`}
+              description={`Tallenna esikatselun mukainen excel-tiedosto omalle
+                koneellesi MyClubin importia varten.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>

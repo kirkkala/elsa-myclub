@@ -107,52 +107,45 @@ describe("Date and time conversions", () => {
 
   describe("calculateEventTimes", () => {
     it("calculates start and end times with no adjustments", () => {
-      expect(excelUtils.calculateEventTimes("12:30", 0, 0, 120)).toEqual({
+      expect(excelUtils.calculateEventTimes("12:30", 0, 120)).toEqual({
         startTime: "12:30",
         endTime: "14:30",
       })
     })
 
     it("handles meeting time adjustment", () => {
-      expect(excelUtils.calculateEventTimes("12:30", 30, 0, 120)).toEqual({
+      expect(excelUtils.calculateEventTimes("12:30", 30, 120)).toEqual({
         startTime: "12:00",
         endTime: "14:30",
       })
     })
 
-    it("handles warm-up time adjustment", () => {
-      expect(excelUtils.calculateEventTimes("12:30", 0, 15, 120)).toEqual({
-        startTime: "12:45",
-        endTime: "14:30",
-      })
-    })
-
-    it("handles both meeting and warm-up adjustments", () => {
-      expect(excelUtils.calculateEventTimes("12:30", 30, 15, 75)).toEqual({
-        startTime: "12:15",
-        endTime: "13:45",
-      })
-    })
-
-    it("handles hour rollover", () => {
-      expect(excelUtils.calculateEventTimes("23:30", 30, 15, 60)).toEqual({
-        startTime: "23:15",
+    it("handles hour rollover for end time", () => {
+      expect(excelUtils.calculateEventTimes("23:30", 0, 60)).toEqual({
+        startTime: "23:30",
         endTime: "00:30",
+      })
+    })
+
+    it("handles hour rollover for start time", () => {
+      expect(excelUtils.calculateEventTimes("00:30", 30, 60)).toEqual({
+        startTime: "00:00",
+        endTime: "01:30",
       })
     })
   })
 
   describe("adjustStartTime", () => {
-    it("adjusts time by given minutes", () => {
-      expect(excelUtils.adjustStartTime("12:30", 15)).toBe("12:45")
+    it("subtracts given minutes from time", () => {
+      expect(excelUtils.adjustStartTime("12:30", 15)).toBe("12:15")
     })
 
-    it("handles hour rollover when adjusting", () => {
-      expect(excelUtils.adjustStartTime("23:45", 30)).toBe("00:15")
+    it("handles hour rollover when subtracting", () => {
+      expect(excelUtils.adjustStartTime("00:15", 30)).toBe("23:45")
     })
 
     it("handles time with spaces", () => {
-      expect(excelUtils.adjustStartTime("12: 30", 15)).toBe("12:45")
+      expect(excelUtils.adjustStartTime("12: 30", 15)).toBe("12:15")
     })
 
     it("returns original time when no adjustment", () => {

@@ -54,13 +54,12 @@ export const excelUtils = {
   calculateEventTimes(
     gameTime: string,
     meetingMinutes: number,
-    warmupMinutes: number,
     durationMinutes: number
   ): { startTime: string; endTime: string } {
     const [hours, minutes] = gameTime.replace(" ", "").split(":").map(Number)
     const gameDate = new Date(2000, 0, 1, hours, minutes)
 
-    const startDate = new Date(gameDate.getTime() - meetingMinutes * 60000 + warmupMinutes * 60000)
+    const startDate = new Date(gameDate.getTime() - meetingMinutes * 60000)
     const startTime = `${startDate.getHours().toString().padStart(2, "0")}:${startDate.getMinutes().toString().padStart(2, "0")}`
 
     const endDate = new Date(gameDate.getTime() + durationMinutes * 60000)
@@ -76,7 +75,7 @@ export const excelUtils = {
 
     const [hours, minutes] = time.replace(" ", "").split(":").map(Number)
     const date = new Date(2000, 0, 1, hours, minutes)
-    date.setMinutes(date.getMinutes() + adjustment)
+    date.setMinutes(date.getMinutes() - adjustment)
 
     return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
   },
@@ -93,15 +92,14 @@ export const excelUtils = {
       : `${homeTeam} - ${awayTeam}`
   },
 
-  createDescription(originalTime: string, startAdjustment: number): string {
-    const gameStart = `Game start: ${originalTime}`
+  createDescription(originalTime: string, meetingTime: number): string {
+    const gameStart = `Peli alkaa: ${originalTime}`
 
-    if (startAdjustment === 0) {
+    if (meetingTime === 0) {
       return gameStart
     }
 
-    return `<br />Warm-up: ${this.adjustStartTime(originalTime, startAdjustment)}
-${gameStart}`
+    return `Lämppä: ${this.adjustStartTime(originalTime, meetingTime)}, ${gameStart}`
   },
 
   /**
@@ -123,7 +121,6 @@ ${gameStart}`
 
     const year = String(fields.year?.[0] || new Date().getFullYear())
     const duration = parseInt(fields.duration?.[0] || "75", 10)
-    const startAdjustment = parseInt(fields.startAdjustment?.[0] || "0", 10)
     const meetingTime = parseInt(fields.meetingTime?.[0] || "0", 10)
 
     const processedData: MyClubExcelRow[] = jsonData
@@ -137,7 +134,6 @@ ${gameStart}`
           const { startTime, endTime } = this.calculateEventTimes(
             row.Klo,
             meetingTime,
-            startAdjustment,
             duration
           )
           const startDateTime = this.formatDateTime(normalizedDate, startTime, year)
@@ -148,7 +144,7 @@ ${gameStart}`
             Alkaa: startDateTime,
             Päättyy: endDateTime,
             Ryhmä: String(fields.group?.[0]),
-            Kuvaus: this.createDescription(row.Klo, startAdjustment),
+            Kuvaus: this.createDescription(row.Klo, meetingTime),
             Tapahtumatyyppi: String(fields.eventType?.[0]),
             Tapahtumapaikka: row.Kenttä,
             Ilmoittautuminen: String(fields.registration?.[0]),
