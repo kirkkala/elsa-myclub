@@ -25,7 +25,7 @@ interface FormElements extends HTMLFormElement {
   meetingTime: HTMLSelectElement
   group: HTMLInputElement | HTMLSelectElement
   eventType: HTMLSelectElement
-  participants: HTMLSelectElement
+  registration: HTMLSelectElement
 }
 
 export default function UploadForm(): React.ReactElement {
@@ -106,7 +106,7 @@ export default function UploadForm(): React.ReactElement {
       formData.append("meetingTime", originalForm.meetingTime.value)
       formData.append("group", originalForm.group.value)
       formData.append("eventType", originalForm.eventType.value)
-      formData.append("participants", originalForm.participants.value)
+      formData.append("registration", originalForm.registration.value)
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -164,7 +164,6 @@ export default function UploadForm(): React.ReactElement {
             label: option,
           }))}
           placeholder="esim. Harlem Globetrotters"
-          required
         />
 
         <SelectField
@@ -217,23 +216,23 @@ export default function UploadForm(): React.ReactElement {
           description="Valitse tapahtuman tyyppi MyClubissa."
           Icon={LuCalendarClock}
           options={[
-            { value: "GAME", label: "Ottelu" },
-            { value: "OTHER", label: "Muu" },
+            { value: "Ottelu" },
+            { value: "Muu" },
           ]}
           defaultValue="GAME"
         />
 
         <SelectField
-          id="participants"
+          id="registration"
           label="Ilmoittautuminen"
           description="Valitse kenelle tapahtuma näkyy MyClubissa."
           Icon={LuUsers}
           options={[
-            { value: "SELECTED", label: "Valituille henkilöille" },
-            { value: "GROUP", label: "Ryhmän jäsenille" },
-            { value: "CLUB", label: "Seuralle" },
+            { value: "Valituille henkilöille" },
+            { value: "Ryhmän jäsenille" },
+            { value: "Seuralle" },
           ]}
-          defaultValue="SELECTED"
+          defaultValue="Valituille henkilöille"
         />
 
         <Button
@@ -241,7 +240,9 @@ export default function UploadForm(): React.ReactElement {
           disabled={loading || !selectedFile}
           Icon={LuWandSparkles}
           label="Esikatsele"
-          description="Esikatsele muunnoksen rivejä ennen lataamista. Tarkista että kaikki tiedot ovat oikein, voit vielä muuttaa asetuksia yllä ja kun olet tyytyväinen paina Lataa Excel -painiketta sivun lopussa."
+          description="Esikatsele muunnoksen rivejä ennen lataamista. Tarkista
+          että kaikki tiedot ovat oikein, voit vielä muuttaa asetuksia yllä, kun
+          olet tyytyväinen paina Lataa Excel -painiketta"
         >
           {loading ? "Käsitellään..." : "Esikatsele"}
         </Button>
@@ -249,18 +250,20 @@ export default function UploadForm(): React.ReactElement {
 
       {previewData.length > 0 && (
         <>
-          <Preview data={previewData} />
           <form onSubmit={handleDownloadSubmit} className={styles.downloadForm}>
             <Button
               type="submit"
               disabled={loading}
               Icon={LuDownload}
               label="Lataa Excel"
-              description="Lataa muunnettu Excel-tiedosto"
+              description={`Esikatsele muunnosta ja paina "Lataa excel"
+                tallentaaksesi rivit MyClubiin sopivaksi tuontitiedostoksi.`}
             >
-              {loading ? "Ladataan..." : "Lataa Excel"}
+              {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
           </form>
+
+          <Preview data={previewData} />
         </>
       )}
 

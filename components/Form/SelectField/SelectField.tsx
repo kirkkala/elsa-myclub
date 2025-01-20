@@ -8,7 +8,7 @@ interface SelectFieldProps {
   Icon: IconType
   options: Array<{
     value: string
-    label: string
+    label?: string
   }>
   required?: boolean
   defaultValue?: string
@@ -28,8 +28,8 @@ export default function SelectField({
   className,
 }: SelectFieldProps): React.ReactElement {
   const optionElements = options.map((option) => (
-    <option key={option.value} value={option.value}>
-      {option.label}
+    <option key={`${option.value}`} value={option.value}>
+      {option.label ?? option.value}
     </option>
   ))
 

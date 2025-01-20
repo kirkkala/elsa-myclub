@@ -93,23 +93,6 @@ export const excelUtils = {
       : `${homeTeam} - ${awayTeam}`
   },
 
-  getMyclubGroupValue(fields: Fields): string {
-    return String(fields.group?.[0] || "MyClub ryhmän nimi")
-  },
-
-  getMyclubEventType(fields: Fields): string {
-    const eventType = fields.eventType?.[0]
-    return eventType === "Muu" ? "Muu" : "Ottelu"
-  },
-
-  getMyclubRegistration(fields: Fields): string {
-    const registration = fields.registration?.[0]
-    const validOptions = ["Ryhmän jäsenille", "Seuralle", "Valituille henkilöille"]
-    return validOptions.includes(String(registration))
-      ? String(registration)
-      : "Valituille henkilöille"
-  },
-
   createDescription(originalTime: string, startAdjustment: number): string {
     const gameStart = `Game start: ${originalTime}`
 
@@ -164,11 +147,11 @@ ${gameStart}`
             Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
             Alkaa: startDateTime,
             Päättyy: endDateTime,
-            Ryhmä: this.getMyclubGroupValue(fields),
+            Ryhmä: String(fields.group?.[0]),
             Kuvaus: this.createDescription(row.Klo, startAdjustment),
-            Tapahtumatyyppi: this.getMyclubEventType(fields),
+            Tapahtumatyyppi: String(fields.eventType?.[0]),
             Tapahtumapaikka: row.Kenttä,
-            Ilmoittautuminen: this.getMyclubRegistration(fields),
+            Ilmoittautuminen: String(fields.registration?.[0]),
             Näkyvyys: "Näkyy ryhmälle",
           }
         } catch (err) {
