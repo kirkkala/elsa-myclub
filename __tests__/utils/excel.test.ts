@@ -46,19 +46,27 @@ describe("Excel conversion utils", () => {
 
   describe("formatSeriesName", () => {
     it("extracts 1st division from full series name", () => {
-      expect(excelUtils.formatSeriesName("11-vuotiaat tytöt I divisioona Eteläinen alue")).toBe("I div.")
+      expect(excelUtils.formatSeriesName("11-vuotiaat tytöt I divisioona Eteläinen alue")).toBe(
+        "I div."
+      )
     })
 
     it("extracts 1st division from full series name", () => {
-      expect(excelUtils.formatSeriesName("13-vuotiaat pojat I divisioona Eteläinen alue")).toBe("I div.")
+      expect(excelUtils.formatSeriesName("13-vuotiaat pojat I divisioona Eteläinen alue")).toBe(
+        "I div."
+      )
     })
 
     it("extracts 2nd division from full series name", () => {
-      expect(excelUtils.formatSeriesName("13-vuotiaat pojat II divisioona Eteläinen alue")).toBe("II div.")
+      expect(excelUtils.formatSeriesName("13-vuotiaat pojat II divisioona Eteläinen alue")).toBe(
+        "II div."
+      )
     })
 
     it("extracts 3rd division from full series name", () => {
-      expect(excelUtils.formatSeriesName("9-vuotiaat tytöt III divisioona Eteläinen alue")).toBe("III div.")
+      expect(excelUtils.formatSeriesName("9-vuotiaat tytöt III divisioona Eteläinen alue")).toBe(
+        "III div."
+      )
     })
 
     it("returns empty string for series we don't expect", () => {

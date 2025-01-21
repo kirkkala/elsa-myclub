@@ -11,7 +11,14 @@ describe("UploadForm", () => {
     jest.resetAllMocks()
     ;(global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ data: [{ /* mock data structure */ }] })
+      json: () =>
+        Promise.resolve({
+          data: [
+            {
+              /* mock data structure */
+            },
+          ],
+        }),
     })
   })
 

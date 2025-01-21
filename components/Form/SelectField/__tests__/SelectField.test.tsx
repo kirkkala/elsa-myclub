@@ -8,10 +8,7 @@ describe("SelectField", () => {
     label: "Test Label",
     description: "Test description",
     Icon: LuUser,
-    options: [
-      { value: "option1", label: "Option 1" },
-      { value: "option2" },
-    ],
+    options: [{ value: "option1", label: "Option 1" }, { value: "option2" }],
   }
 
   it("renders select with all elements", () => {

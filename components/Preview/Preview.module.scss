@@ -1,3 +1,5 @@
+@use "../../styles/variables.scss" as v;
+
 .preview {
   margin: 2rem 0.5rem;
   position: relative;
@@ -10,9 +12,10 @@
     border-radius: 5px;
     -webkit-overflow-scrolling: touch;
     width: calc(100vw - 2rem);
-    max-width: 1600px;
+    max-width: 1900px;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    scrollbar-color: v.$color-primary v.$color-bg-light;
   }
 }

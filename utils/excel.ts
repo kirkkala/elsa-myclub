@@ -131,11 +131,7 @@ export const excelUtils = {
 
         try {
           const normalizedDate = this.normalizeDate(row.Pvm)
-          const { startTime, endTime } = this.calculateEventTimes(
-            row.Klo,
-            meetingTime,
-            duration
-          )
+          const { startTime, endTime } = this.calculateEventTimes(row.Klo, meetingTime, duration)
           const startDateTime = this.formatDateTime(normalizedDate, startTime, year)
           const endDateTime = this.formatDateTime(normalizedDate, endTime, year)
 
@@ -167,5 +163,5 @@ export const excelUtils = {
     }
 
     return processedData
-  }
+  },
 }

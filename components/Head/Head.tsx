@@ -13,9 +13,9 @@ interface HeadProps {
 
 export default function Head(props: HeadProps): React.ReactElement {
   const { pathname } = useRouter()
-  const pageType = (pathname.slice(1) || "home") as PageType
-  // Add fallback to home page meta if current page type not found
-  const pageMeta = SEO_CONFIG.pages[pageType] || SEO_CONFIG.pages.home
+  const path = pathname.slice(1) || "home"
+  const pageMeta =
+    path in SEO_CONFIG.pages ? SEO_CONFIG.pages[path as PageType] : SEO_CONFIG.pages.home
 
   return (
     <NextSeo

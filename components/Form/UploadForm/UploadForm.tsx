@@ -104,7 +104,7 @@ export default function UploadForm(): React.ReactElement {
     setError("")
 
     try {
-      const fileInput = document.querySelector("input[type=\"file\"]") as HTMLInputElement
+      const fileInput = document.querySelector("input[type='file']") as HTMLInputElement
       if (!fileInput.files?.[0]) {
         throw new Error("Tiedosto puuttuu")
       }
@@ -127,7 +127,7 @@ export default function UploadForm(): React.ReactElement {
       })
 
       if (!response.ok) {
-        const errorData = await response.json() as ApiErrorResponse
+        const errorData = (await response.json()) as ApiErrorResponse
         throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
       }
 
@@ -235,10 +235,7 @@ export default function UploadForm(): React.ReactElement {
           label="Tapahtumatyyppi"
           description="Valitse tapahtuman tyyppi MyClubissa."
           Icon={LuCalendarClock}
-          options={[
-            { value: "Ottelu" },
-            { value: "Muu" },
-          ]}
+          options={[{ value: "Ottelu" }, { value: "Muu" }]}
           defaultValue="GAME"
           onChange={handleFieldChange}
         />

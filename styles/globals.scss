@@ -85,12 +85,12 @@ table {
 
   th,
   td {
-    padding: 0.20rem 0.75rem;
+    padding: 0.2rem 0.75rem;
     border-right: 1px solid #e5e7eb;
     text-align: left;
     border-bottom: 1px solid #e5e7eb;
     white-space: nowrap;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
     font-size: 0.8rem;
   }
 
@@ -100,9 +100,15 @@ table {
     color: #374151;
   }
 
+  th,
+  td {
+    &:last-child {
+      border-right: none;
+    }
+  }
+
   tr:last-child td {
     border-bottom: none;
-    border-right: none;
   }
 
   tbody tr:hover {
