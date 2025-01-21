@@ -1,20 +1,39 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuWandSparkles } from "react-icons/lu"
+import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuDownload } from "react-icons/lu"
 import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
+import Preview from "../../Preview/Preview"
+import type { MyClubExcelRow } from "@/utils/excel"
 
 interface ApiErrorResponse {
   message: string
+}
+
+interface PreviewApiResponse {
+  data: MyClubExcelRow[]
+}
+
+type ApiResponse = PreviewApiResponse | ApiErrorResponse
+
+interface FormElements extends HTMLFormElement {
+  year: HTMLSelectElement
+  duration: HTMLSelectElement
+  meetingTime: HTMLSelectElement
+  group: HTMLInputElement | HTMLSelectElement
+  eventType: HTMLSelectElement
+  registration: HTMLSelectElement
 }
 
 export default function UploadForm(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
+  const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
+  const formRef = useRef<HTMLFormElement>(null)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
@@ -22,19 +41,86 @@ export default function UploadForm(): React.ReactElement {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
+
+    // Trigger preview if file is selected
+    if (file) {
+      const form = e.target.form
+      if (form) {
+        const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
+        void handlePreview(formEvent)
+      }
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    void handleFormSubmit(e)
+  const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
+    if (!selectedFile) {
+      return
+    }
+
+    const form = e.target.form
+    if (form) {
+      const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
+      void handlePreview(formEvent)
+    }
   }
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handlePreview = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     setLoading(true)
     setError("")
 
     try {
       const formData = new FormData(e.currentTarget)
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        body: formData,
+      })
+
+      const result = (await response.json()) as ApiResponse
+
+      if (!response.ok) {
+        throw new Error("message" in result ? result.message : "Tiedoston esikatselu epäonnistui")
+      }
+
+      if (!("data" in result)) {
+        throw new Error("Virheellinen vastaus palvelimelta")
+      }
+
+      setPreviewData(result.data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An unknown error occurred")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownloadSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+    void handleDownload(e)
+  }
+
+  const handleDownload = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault()
+    setLoading(true)
+    setError("")
+
+    try {
+      const fileInput = document.querySelector("input[type='file']") as HTMLInputElement
+      if (!fileInput.files?.[0]) {
+        throw new Error("Tiedosto puuttuu")
+      }
+
+      const formData = new FormData()
+      formData.append("file", fileInput.files[0])
+
+      const mainForm = formRef.current as FormElements
+
+      formData.append("year", mainForm.year.value)
+      formData.append("duration", mainForm.duration.value)
+      formData.append("meetingTime", mainForm.meetingTime.value)
+      formData.append("group", mainForm.group.value)
+      formData.append("eventType", mainForm.eventType.value)
+      formData.append("registration", mainForm.registration.value)
+
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -45,16 +131,11 @@ export default function UploadForm(): React.ReactElement {
         throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
       }
 
-      const disposition = response.headers.get("Content-Disposition")
-      const filename = disposition
-        ? disposition.split("filename=")[1].replace(/"/g, "")
-        : "converted.xlsx"
-
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = filename
+      a.download = "elsa-myclub-import.xlsx"
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -68,12 +149,14 @@ export default function UploadForm(): React.ReactElement {
 
   return (
     <div className={styles.formContainer}>
-      <form onSubmit={handleSubmit}>
+      <form ref={formRef}>
         <FileUpload
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse tähän ELSA:sta lataamasi excel-tiedosto."
+          description="Valitse eLSA:sta lataamasi excel-tiedosto. Näet
+          esikatselun muunnoksesta sivun alalaidassa ja voit muuttaa asetuksia
+          saadaksesi haluamasi laisen tiedoston MyClub importia."
         />
 
         <SelectOrInput
@@ -81,8 +164,9 @@ export default function UploadForm(): React.ReactElement {
           Icon={LuUsers}
           label="Joukkue (MyClub ryhmä)"
           description={`Joukkueen nimen perusteella MyClub osaa yhdistää
-            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub ryhmä)
-            ei ole listalla, paina "Kirjoita nimi" ja voit antaa joukkueen nimen itse.`}
+            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub
+            ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
+            joukkueen nimen itse.`}
           switchText={{
             toInput: {
               action: "Kirjoita nimi",
@@ -96,7 +180,7 @@ export default function UploadForm(): React.ReactElement {
             label: option,
           }))}
           placeholder="esim. Harlem Globetrotters"
-          required
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -109,6 +193,7 @@ export default function UploadForm(): React.ReactElement {
             label: String(year),
           }))}
           defaultValue={String(currentYear)}
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -126,12 +211,13 @@ export default function UploadForm(): React.ReactElement {
             { value: "90", label: "1 h 30 min ennen ottelun alkua" },
           ]}
           defaultValue="0"
+          onChange={handleFieldChange}
         />
 
         <SelectField
           id="duration"
           label="Tapahtuman kesto"
-          description="Valinnan perusteella lasketaan tapahtuman päättymisaika, kokoontumisaika lisätään tähän."
+          description="Ottelun kesto, tämän perusteella lasketaan tapahtuman päättymisaika eli mahdollinen kokoontumisaika lisättynä."
           Icon={LuClock}
           options={[
             { value: "60", label: "1 tunti" },
@@ -141,6 +227,7 @@ export default function UploadForm(): React.ReactElement {
             { value: "120", label: "2 tuntia" },
           ]}
           defaultValue="90"
+          onChange={handleFieldChange}
         />
 
         <SelectField
@@ -148,42 +235,46 @@ export default function UploadForm(): React.ReactElement {
           label="Tapahtumatyyppi"
           description="Valitse tapahtuman tyyppi MyClubissa."
           Icon={LuCalendarClock}
-          options={[
-            { value: "GAME", label: "Ottelu" },
-            { value: "OTHER", label: "Muu" },
-          ]}
+          options={[{ value: "Ottelu" }, { value: "Muu" }]}
           defaultValue="GAME"
+          onChange={handleFieldChange}
         />
 
         <SelectField
-          id="participants"
+          id="registration"
           label="Ilmoittautuminen"
           description="Valitse kenelle tapahtuma näkyy MyClubissa."
           Icon={LuUsers}
           options={[
-            { value: "SELECTED", label: "Valituille henkilöille" },
-            { value: "GROUP", label: "Ryhmän jäsenille" },
-            { value: "CLUB", label: "Seuralle" },
+            { value: "Valituille henkilöille" },
+            { value: "Ryhmän jäsenille" },
+            { value: "Seuralle" },
           ]}
-          defaultValue="SELECTED"
+          defaultValue="Valituille henkilöille"
+          onChange={handleFieldChange}
         />
-
-        <Button
-          type="submit"
-          disabled={loading || !selectedFile}
-          Icon={LuWandSparkles}
-          label="Muunna tiedosto"
-          description={
-            selectedFile
-              ? "Paina nappia muutaaksesi eLSA:n excel tiedosto MyClub yhteensopivaksi"
-              : "Lisää ensin eLSA excel tiedosto jonka haluat muuntaa"
-          }
-        >
-          {loading ? "Muunnetaan..." : "Muunna tiedosto"}
-        </Button>
-
-        {error && <div className={styles.error}>{error}</div>}
       </form>
+
+      {previewData.length > 0 && (
+        <>
+          <form onSubmit={handleDownloadSubmit} className={styles.downloadForm}>
+            <Button
+              type="submit"
+              disabled={loading}
+              Icon={LuDownload}
+              label="Lataa Excel"
+              description={`Tallenna esikatselun mukainen excel-tiedosto omalle
+                koneellesi MyClubin importia varten.`}
+            >
+              {loading ? "Käsitellään..." : "Lataa Excel"}
+            </Button>
+          </form>
+
+          <Preview data={previewData} />
+        </>
+      )}
+
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   )
 }

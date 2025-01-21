@@ -8,12 +8,13 @@ interface SelectFieldProps {
   Icon: IconType
   options: Array<{
     value: string
-    label: string
+    label?: string
   }>
   required?: boolean
   defaultValue?: string
   suffix?: React.ReactNode
   className?: string
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function SelectField({
@@ -26,10 +27,11 @@ export default function SelectField({
   defaultValue,
   suffix,
   className,
+  onChange,
 }: SelectFieldProps): React.ReactElement {
   const optionElements = options.map((option) => (
-    <option key={option.value} value={option.value}>
-      {option.label}
+    <option key={`${option.value}`} value={option.value}>
+      {option.label ?? option.value}
     </option>
   ))
 
@@ -54,6 +56,7 @@ export default function SelectField({
           required={required}
           defaultValue={defaultValue}
           aria-describedby={description ? `${id}-description` : undefined}
+          onChange={onChange}
         >
           {optionElements}
         </select>

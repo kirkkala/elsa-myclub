@@ -8,10 +8,7 @@ describe("SelectField", () => {
     label: "Test Label",
     description: "Test description",
     Icon: LuUser,
-    options: [
-      { value: "option1", label: "Option 1" },
-      { value: "option2", label: "Option 2" },
-    ],
+    options: [{ value: "option1", label: "Option 1" }, { value: "option2" }],
   }
 
   it("renders select with all elements", () => {
@@ -20,7 +17,13 @@ describe("SelectField", () => {
     expect(screen.getByLabelText(/Test Label/i)).toBeInTheDocument()
     expect(screen.getByText("Test description")).toBeInTheDocument()
     expect(screen.getByText("Option 1")).toBeInTheDocument()
-    expect(screen.getByText("Option 2")).toBeInTheDocument()
+  })
+
+  it("renders select option withou label", () => {
+    render(<SelectField {...mockProps} />)
+
+    expect(screen.getByLabelText(/Test Label/i)).toBeInTheDocument()
+    expect(screen.getByText("option2")).toBeInTheDocument()
   })
 
   it("renders suffix when provided", () => {

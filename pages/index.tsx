@@ -40,11 +40,7 @@ export default function Home(): React.ReactElement {
           </a>
           .
         </p>
-        <p>
-          Sovellus on yhä betaversiossa eikä vielä ihan täydellinen. Tavoitteena on tehdä tästä
-          &ldquo;bulletproof&rdquo; syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään
-          otteluita ELSA:sta MyClub:iin.
-        </p>
+        <h3>Kenelle sovellus on tarkoitettu?</h3>
         <p>
           <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
             HNMKY
@@ -57,6 +53,21 @@ export default function Home(): React.ReactElement {
           Toivottavasti sovelluksesta on apua, tsemppiä peleihin sekä koko tämän ruljanssin
           pyörittämiseen, HOS! 💪🏀
         </p>
+        <h3>Betaversio</h3>
+        <p>
+          Sovellus on betaversiossa eikä välttämättä ihan täydellinen. Tavoitteena on tehdä tästä
+          &ldquo;bulletproof&rdquo; syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään
+          otteluita ELSA:sta MyClub:iin.
+        </p>
+        <h3>Selainvaatimukset</h3>
+        <p style={{ marginBottom: "0.25rem" }}>Sovellus toimii parhaiten uusimmilla selaimilla:</p>
+        <ul className="compact-list">
+          <li>Google Chrome</li>
+          <li>Microsoft Edge</li>
+          <li>Mozilla Firefox</li>
+          <li>Safari</li>
+        </ul>
+        <p>Huom! Sovellus tuskin toimii Internet Explorer -selaimella.</p>
         <h3>Tietosuojaseloste</h3>
         <p>
           Sovellus ei kerää tietoa käyttäjästä, ainoastaan vähän statistiikkaa kävijämääristä.
@@ -76,6 +87,7 @@ export default function Home(): React.ReactElement {
           </li>
         </ul>
       </Info>
+      <h2 className="visually-hidden">Konversiolomake</h2>
       <UploadForm />
       <Footer />
     </Layout>

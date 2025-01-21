@@ -21,12 +21,9 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  margin: 0 0 1rem;
-  line-height: 1.2;
-}
-
-p {
+h6,
+p,
+ul {
   margin: 0 0 1rem;
 }
 
@@ -42,6 +39,13 @@ ul {
       content: "•";
       position: absolute;
       left: -1.5rem;
+    }
+  }
+
+  &.compact-list {
+    margin-bottom: 0.5rem !important;
+    li {
+      margin-bottom: 0;
     }
   }
 
@@ -72,4 +76,55 @@ a {
 button {
   font-family: inherit;
   font-size: inherit;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+
+  th,
+  td {
+    padding: 0.2rem 0.75rem;
+    border-right: 1px solid #e5e7eb;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.8rem;
+  }
+
+  th {
+    background-color: #f9fafb;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  th,
+  td {
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background-color: #e2e6e6;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
 }

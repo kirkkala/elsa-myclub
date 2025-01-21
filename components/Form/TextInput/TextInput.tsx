@@ -10,6 +10,7 @@ interface TextInputProps {
   defaultValue?: string
   required?: boolean
   suffix?: React.ReactNode
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function TextInput({
@@ -21,6 +22,7 @@ export default function TextInput({
   defaultValue,
   required = false,
   suffix,
+  onChange,
 }: TextInputProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
@@ -41,6 +43,7 @@ export default function TextInput({
           defaultValue={defaultValue}
           required={required}
           aria-describedby={description ? `${id}-description` : undefined}
+          onChange={onChange}
         />
         {suffix && <div className={styles.suffix}>{suffix}</div>}
       </div>

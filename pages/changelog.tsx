@@ -10,10 +10,7 @@ import matter from "gray-matter"
 import { remark } from "remark"
 import html from "remark-html"
 import Head from "../components/Head/Head"
-import { SEO_CONFIG, SITE_CONFIG } from "../config"
-import { useRouter } from "next/router"
 
-type PageType = keyof typeof SEO_CONFIG.pages
 interface ChangelogProps {
   contentHtml: string
 }
@@ -35,19 +32,9 @@ export async function getStaticProps(): Promise<{ props: ChangelogProps }> {
 }
 
 export default function Changelog({ contentHtml }: ChangelogProps): React.ReactElement {
-  const { pathname } = useRouter()
-  const pageType = pathname === "/" ? "home" : pathname.substring(1)
-  const pageMeta = SEO_CONFIG.pages[pageType as PageType]
-  const title = `${SITE_CONFIG.name as string} - Versiohistoria`
-
   return (
     <>
-      <Head
-        title={title}
-        description={pageMeta.description}
-        ogTitle={pageMeta.openGraph.title}
-        ogDescription={pageMeta.openGraph.description}
-      />
+      <Head />
       <Layout>
         <Header />
         <BackLink />

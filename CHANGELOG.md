@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v0.2.0-beta (UNRELEASED)
+
+- Automaattisesti päivittyvä esikatselu! 🎉
+
 ## v0.1.5-beta (2025-01-18)
 
 - Lisää vaihtoehtoja kokoontumisajalle ±🕒
