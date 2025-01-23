@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v0.2.0-beta (UNRELEASED)
+## v0.2.0-beta (2025-01-23)
 
 - Automaattisesti päivittyvä esikatselu! 🎉
 
