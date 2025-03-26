@@ -25,22 +25,23 @@ export default function Home(): React.ReactElement {
       </p>
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          ELSA → MyClub Excel Muuntaja on HNMKY Stadi 2014 tyttöjen jokukkueenjohtajan,
-          Timo Kirkkalan koodaama sovellus jolla vähennetään manuaalisen työn määrää
-          pelien siirtämisessä {" "}
+          ELSA → MyClub Excel Muuntaja on HNMKY Stadi 2014 tyttöjen jokukkueenjohtajan, Timo
+          Kirkkalan koodaama sovellus jolla vähennetään manuaalisen työn määrää pelien siirtämisessä{" "}
           <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
             eLSA
           </a>
-          :sta {" "}
+          :sta{" "}
           <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
             MyClub
           </a>
           :n tapahtumahallintaan.
-          </p>
-          <p>Sovelluksen koodi on julkaistu avoimena lähdekoodina{" "}
+        </p>
+        <p>
+          Sovelluksen koodi on julkaistu avoimena lähdekoodina{" "}
           <a href={SITE_CONFIG.links.githubAppRepoUrl} target="_blank" rel="noopener noreferrer">
             GitHubissa
-          </a>.
+          </a>
+          .
         </p>
         <h3>Kenelle sovellus on tarkoitettu?</h3>
         <p>
@@ -53,12 +54,17 @@ export default function Home(): React.ReactElement {
         </p>
         <h3>Löysitkö bugin?</h3>
         <p>
-          Jos löysit bugin tai keksit parannusehdotuksen, laita Timolle sähköpostia: {" "}
-          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>{" "}
-          tai osallistu lähdekoodin kehittämiseen {" "}
-          <a href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer">
+          Jos löysit bugin tai keksit parannusehdotuksen, laita Timolle sähköpostia:{" "}
+          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a> tai osallistu
+          lähdekoodin kehittämiseen{" "}
+          <a
+            href="https://github.com/kirkkala/elsa-myclub"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             GitHubissa
-          </a>.
+          </a>
+          .
         </p>
         <h3>Tietosuojaseloste</h3>
         <p>
