@@ -13,11 +13,11 @@ export default function Home(): React.ReactElement {
     <Layout>
       <Header />
       <p>
-        Helpota jojotöitä ja muunna{" "}
+        Muunna{" "}
         <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
           eLSA
         </a>
-        :sta ladattu excel{" "}
+        :sta ladattu excel-tiedosto{" "}
         <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
           MyClub
         </a>
@@ -25,49 +25,41 @@ export default function Home(): React.ReactElement {
       </p>
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          Tämä on HNMKY Stadi 2014 tyttöjen jojon Timo Kirkkalan tekemä sovellus jolla vähennetään
-          manuaalisen työn määrää kun halutaan siirtää{" "}
+          ELSA → MyClub Excel Muuntaja on HNMKY Stadi 2014 tyttöjen jokukkueenjohtajan,
+          Timo Kirkkalan koodaama sovellus jolla vähennetään manuaalisen työn määrää
+          pelien siirtämisessä {" "}
           <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
             eLSA
           </a>
-          :sta pelejä{" "}
+          :sta {" "}
           <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
             MyClub
           </a>
-          :iin. Sovelluksen koodi on julkaistu avoimena lähdekoodina{" "}
+          :n tapahtumahallintaan.
+          </p>
+          <p>Sovelluksen koodi on julkaistu avoimena lähdekoodina{" "}
           <a href={SITE_CONFIG.links.githubAppRepoUrl} target="_blank" rel="noopener noreferrer">
             GitHubissa
-          </a>
-          .
+          </a>.
         </p>
         <h3>Kenelle sovellus on tarkoitettu?</h3>
         <p>
           <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
             HNMKY
           </a>
-          :n joukkueet voivat valita ryhmän nimen valintalistalta mutta hyvän pelihengen nimissä
-          myös muut kuin Namikan joukkueet on otettu huomioon sovellusta kehittäessä, MyClub ryhmän
-          nimen voi siis antaa myös käsin kirjoitettuna.
+          :n joukkueet voivat valita ryhmän nimen valintalistalta mutta myös muut kuin Namikan
+          joukkueet on otettu huomioon sovellusta kehittäessä, MyClub ryhmän nimen voi siis antaa
+          myös käsin kirjoitettuna.
         </p>
+        <h3>Löysitkö bugin?</h3>
         <p>
-          Toivottavasti sovelluksesta on apua, tsemppiä peleihin sekä koko tämän ruljanssin
-          pyörittämiseen, HOS! 💪🏀
+          Jos löysit bugin tai keksit parannusehdotuksen, laita Timolle sähköpostia: {" "}
+          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>{" "}
+          tai osallistu lähdekoodin kehittämiseen {" "}
+          <a href="https://github.com/kirkkala/elsa-myclub" target="_blank" rel="noopener noreferrer">
+            GitHubissa
+          </a>.
         </p>
-        <h3>Betaversio</h3>
-        <p>
-          Sovellus on betaversiossa eikä välttämättä ihan täydellinen. Tavoitteena on tehdä tästä
-          &ldquo;bulletproof&rdquo; syksylle 2025 kun jojot seuraavan kerran päääsevät siirtämään
-          otteluita ELSA:sta MyClub:iin.
-        </p>
-        <h3>Selainvaatimukset</h3>
-        <p style={{ marginBottom: "0.25rem" }}>Sovellus toimii parhaiten uusimmilla selaimilla:</p>
-        <ul className="compact-list">
-          <li>Google Chrome</li>
-          <li>Microsoft Edge</li>
-          <li>Mozilla Firefox</li>
-          <li>Safari</li>
-        </ul>
-        <p>Huom! Sovellus tuskin toimii Internet Explorer -selaimella.</p>
         <h3>Tietosuojaseloste</h3>
         <p>
           Sovellus ei kerää tietoa käyttäjästä, ainoastaan vähän statistiikkaa kävijämääristä.
