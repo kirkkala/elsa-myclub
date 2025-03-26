@@ -154,18 +154,18 @@ export default function UploadForm(): React.ReactElement {
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse eLSA:sta lataamasi excel-tiedosto. Näet
-          esikatselun muunnoksesta sivun alalaidassa ja voit muuttaa asetuksia
-          saadaksesi haluamasi laisen tiedoston MyClub importia."
+          description="Lisää tiedosto jonka jälkeen saat esikatselun
+          muunnoksesta sivun alaosaan. Muuta asetuksia saadaksesi
+          mieleisesi excel-tiedoston MyClub importia varten."
         />
 
         <SelectOrInput
           id="group"
           Icon={LuUsers}
           label="Joukkue (MyClub ryhmä)"
-          description={`Joukkueen nimen perusteella MyClub osaa yhdistää
-            tuontitiedoston oikeaan ryhmään. Mikäli joukkueesi nimi (MyClub
-            ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
+          description={`MyClub yhdistää joukkueen nimen perusteella
+            tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
+            (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
             joukkueen nimen itse.`}
           switchText={{
             toInput: {
@@ -186,7 +186,7 @@ export default function UploadForm(): React.ReactElement {
         <SelectField
           id="year"
           label="Vuosi"
-          description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten tämän pitää antaa manuaalisesti."
+          description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten se tulee antaa manuaalisesti."
           Icon={LuCalendar}
           options={years.map((year) => ({
             value: String(year),
