@@ -166,7 +166,7 @@ describe("UploadForm", () => {
       expect(fetchCall[0]).toBe("/api/preview")
       expect(fetchCall[1]).toEqual({
         method: "POST",
-        body: expect.any(FormData),
+        body: expect.any(FormData) as unknown as FormData,
       })
     })
   })
