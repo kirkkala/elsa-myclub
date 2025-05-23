@@ -158,10 +158,12 @@ export default function UploadForm(): React.ReactElement {
 
       const year = (mainForm.querySelector("[name='year']") as HTMLSelectElement).value
       const duration = (mainForm.querySelector("[name='duration']") as HTMLSelectElement).value
-      const meetingTime = (mainForm.querySelector("[name='meetingTime']") as HTMLSelectElement).value
+      const meetingTime = (mainForm.querySelector("[name='meetingTime']") as HTMLSelectElement)
+        .value
       const group = (mainForm.querySelector("[name='group']") as HTMLSelectElement).value
       const eventType = (mainForm.querySelector("[name='eventType']") as HTMLSelectElement).value
-      const registration = (mainForm.querySelector("[name='registration']") as HTMLSelectElement).value
+      const registration = (mainForm.querySelector("[name='registration']") as HTMLSelectElement)
+        .value
 
       if (year) {
         formData.append("year", year)
