@@ -223,7 +223,6 @@ export default function UploadForm(): React.ReactElement {
         />
 
         <div className={styles.messageContainer}>
-
           {error && (
             <div className={styles.errorMessage}>
               <p>
@@ -238,10 +237,10 @@ export default function UploadForm(): React.ReactElement {
                 <strong>Excelin lukeminen onnistui!</strong> 🎉
               </p>
               <p>
-                Säädä haluamiasi asetuksia ja esikatsele muunnosta sivun alalaidasta.
-                Kun olet tyytyväinen, lataa muunnettu excel omalle tietokoneellesi
-                MyClubiin siirtoa varten. Voit tarvittaessa muokata excel-tiedostoa
-                tallentamisen jälkeen omalla tietokoneellasi.
+                Säädä haluamiasi asetuksia ja esikatsele muunnosta sivun alalaidasta. Kun olet
+                tyytyväinen, lataa muunnettu excel omalle tietokoneellesi MyClubiin siirtoa varten.
+                Voit tarvittaessa muokata excel-tiedostoa tallentamisen jälkeen omalla
+                tietokoneellasi.
               </p>
             </div>
           )}
