@@ -14,7 +14,7 @@ export default function Home(): React.ReactElement {
       <Header />
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          <strong>{SITE_CONFIG.name}</strong> on sovellus, joka helpottaa excel-jumppaa pelien
+          <strong>{SITE_CONFIG.name}</strong> helpottaa excel-jumppaa pelien
           siirtämisessä{" "}
           <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
             eLSA
@@ -22,26 +22,29 @@ export default function Home(): React.ReactElement {
           :sta{" "}
           <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
             MyClub
-          </a>{" "}
-          tapahtumahallintajärjestelmään.
+          </a>:iin.
         </p>
         <h3>Kenelle sovellus on tarkoitettu?</h3>
-        <p>Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa.</p>
+        <p>Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
+          taustahenkilölle ketkä siirtävät pelejä eLSA:sta MyClub:iin.</p>
         <p>
           <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
             Helsingin NMKY
           </a>
-          :n joukkueet ovat valmiina valintalistalla mutta joukkueen nimen voi antaa myös käsin
-          kirjoitettuna eli muutkin seurayhteisöt voivat vapaasti hyödyntää sovellusta.
+          :n joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen
+          voi antaa myös käsin niin muidenkin seurojen joukkueet voivat hyödyntää
+          sovellusta.
         </p>
         <h3>Löysitkö bugin?</h3>
         <p>
-          Mikäli löysit bugin, keksit parannusehdotuksen tai haluat lähettää muuta palautetta, laita
-          kehittäjälle sähköpostia:{" "}
-          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
+          Löysitkö bugin tai keksit parannusehdotuksen? Tai haluat lähettää muuta
+          palautetta?
         </p>
         <p>
-          Voit myös osallistua lähdekoodin kehittämiseen{" "}
+          Laita viestiä kehittäjälle: <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
+        </p>
+        <p>
+          Tai osallistu lähdekoodin kehittämiseen{" "}
           <a
             href="https://github.com/kirkkala/elsa-myclub"
             target="_blank"
@@ -49,13 +52,13 @@ export default function Home(): React.ReactElement {
           >
             GitHubissa
           </a>
-          . Lähdekoodi on avoin ja vapaasti käytettävissä.
+          . Kyllä, lähdekoodi on avoin ja vapaasti käytettävissä.
         </p>
         <h3>Tietosuojaseloste</h3>
         <p>
-          Sovellus ei kerää tietoa käyttäjästä, ainoastaan yksilöimätöntä statistiikkaa
-          kävijämääristä. Sovellukseen ladattuja excel-tiedostoja ei tallenneta mihinkään muualle
-          kuin käyttäjän omalle tietokoneelle. Keksejä eli evästeitäkään ei täällä käytetä 🍪
+          Sovellus ei kerää tietoa käyttäjistä, ainoastaan yksilöimätöntä statistiikkaa
+          kävijämääristä. Sovellukseen ladattuja tiedostoja ei tallenneta mihinkään muualle
+          kuin käyttäjän omalle tietokoneelle. Keksejä eli evästeitäkään ei täällä käytetä.
         </p>
         <hr />
         <ul className="list-reset">

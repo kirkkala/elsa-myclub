@@ -29,6 +29,7 @@ export default function UploadForm(): React.ReactElement {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
     setShowSuccess(false)
+    setPreviewData([])
 
     // Trigger preview if file is selected
     if (file) {
@@ -217,15 +218,11 @@ export default function UploadForm(): React.ReactElement {
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse tähän eLSA:sta hakemasi excel -tiedosto."
+          description="Valitse eLSA:sta hakemasi excel -tiedosto, jonka pelit
+          haluat siirtää MyClub:iin."
         />
 
         <div className={styles.messageContainer}>
-          {!selectedFile && (
-            <div className={styles.disabledMessage}>
-              Aloita lisäämällä eLSA:sta haettu excel -tiedosto.
-            </div>
-          )}
 
           {error && (
             <div className={styles.errorMessage}>
@@ -241,8 +238,10 @@ export default function UploadForm(): React.ReactElement {
                 <strong>Excelin lukeminen onnistui!</strong> 🎉
               </p>
               <p>
-                Säädä haluamasi asetukset alta, esikatsele muunnosta sivun alalaidasta ja lataa
-                muunnettu excel omalle koneellesi MyClubiin siirtoa varten.
+                Säädä haluamiasi asetuksia ja esikatsele muunnosta sivun alalaidasta.
+                Kun olet tyytyväinen, lataa muunnettu excel omalle tietokoneellesi
+                MyClubiin siirtoa varten. Voit tarvittaessa muokata excel-tiedostoa
+                tallentamisen jälkeen omalla tietokoneellasi.
               </p>
             </div>
           )}
@@ -252,7 +251,7 @@ export default function UploadForm(): React.ReactElement {
           <SelectOrInput
             id="group"
             Icon={LuUsers}
-            label="Joukkue (MyClub ryhmä)"
+            label="1. Joukkue (MyClub ryhmä)"
             description={`MyClub yhdistää joukkueen nimen perusteella
               tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
               (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
@@ -276,8 +275,9 @@ export default function UploadForm(): React.ReactElement {
 
           <SelectField
             id="year"
-            label="Vuosi"
-            description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä joten se tulee antaa tässä."
+            label="2. Vuosi"
+            description="eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä
+            joten se tulee valita tässä."
             Icon={LuCalendar}
             options={years.map((year) => ({
               value: String(year),
@@ -290,10 +290,10 @@ export default function UploadForm(): React.ReactElement {
 
           <SelectField
             id="meetingTime"
-            label="Kokoontumisaika"
-            description="Kuinka monta minuuttia ennen ottelun alkua joukkueen
-            tulee olla paikalla esim lämppää varten. Valinta aikaistaa tapahtuman
-            alkuaikaa MyClubissa valitun minuuttimäärän verran."
+            label="3. Kokoontumisaika"
+            description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen
+            tulee olla paikalla lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa
+            MyClubissa valinnan verran."
             Icon={LuClock}
             options={[
               { value: "0", label: "Ei aikaistusta" },
@@ -311,7 +311,7 @@ export default function UploadForm(): React.ReactElement {
 
           <SelectField
             id="duration"
-            label="Tapahtuman kesto"
+            label="4. Tapahtuman kesto"
             description="Valinnan perusteella lasketaan tapahtuman alkamis- ja
             päättymisaika, kokoontumisaika huomioiden."
             Icon={LuClock}
@@ -329,7 +329,7 @@ export default function UploadForm(): React.ReactElement {
 
           <SelectField
             id="eventType"
-            label="Tapahtumatyyppi"
+            label="5. Tapahtumatyyppi"
             description="Valitse tapahtuman tyyppi MyClubiin."
             Icon={LuCalendarClock}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
@@ -340,7 +340,7 @@ export default function UploadForm(): React.ReactElement {
 
           <SelectField
             id="registration"
-            label="Ilmoittautuminen"
+            label="6. Ilmoittautuminen"
             description="Valitse kenelle ilmoittautuminen tapahtumaan MyClubissa
             on sallittu."
             Icon={LuUsers}
@@ -365,7 +365,8 @@ export default function UploadForm(): React.ReactElement {
               Icon={LuDownload}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen excel-tiedosto omalle
-                koneellesi MyClubiin tuontia varten.`}
+                tietokoneellesi, siirry MyClubin tapahtumien hallintaan ja valitse
+                "Tuo tapahtumia" välilehti vasemmassa sivupalkissa.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
