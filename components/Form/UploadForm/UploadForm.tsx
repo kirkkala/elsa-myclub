@@ -8,6 +8,7 @@ import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
 import type { MyClubExcelRow } from "@/utils/excel"
+import { API_INVALID_RESPONSE, API_PREVIEW_FAILED, API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 
 interface ApiErrorResponse {
   message: string
@@ -80,11 +81,11 @@ export default function UploadForm(): React.ReactElement {
       const result = (await response.json()) as ApiResponse
 
       if (!response.ok) {
-        throw new Error("message" in result ? result.message : "Tiedoston esikatselu epäonnistui")
+        throw new Error("message" in result ? result.message : API_PREVIEW_FAILED)
       }
 
       if (!("data" in result)) {
-        throw new Error("Virheellinen vastaus palvelimelta")
+        throw new Error(API_INVALID_RESPONSE)
       }
 
       setPreviewData(result.data)
@@ -112,7 +113,7 @@ export default function UploadForm(): React.ReactElement {
     try {
       const fileInput = document.querySelector("input[type='file']") as HTMLInputElement
       if (!fileInput.files?.[0]) {
-        throw new Error("Tiedosto puuttuu")
+        throw new Error(API_FILE_MISSING)
       }
 
       const formData = new FormData()
@@ -134,7 +135,7 @@ export default function UploadForm(): React.ReactElement {
 
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse
-        throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
+        throw new Error(errorData.message || API_CONVERSION_FAILED)
       }
 
       const blob = await response.blob()
@@ -186,7 +187,7 @@ export default function UploadForm(): React.ReactElement {
           )}
         </div>
 
-        <div className={!selectedFile ? styles.disabledFields : undefined}>
+        <div className={(!selectedFile || error) ? styles.disabledFields : undefined}>
           <SelectOrInput
             id="group"
             Icon={LuUsers}
@@ -209,7 +210,7 @@ export default function UploadForm(): React.ReactElement {
             }))}
             placeholder="esim. Harlem Globetrotters"
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
 
           <SelectField
@@ -223,7 +224,7 @@ export default function UploadForm(): React.ReactElement {
             }))}
             defaultValue={String(currentYear)}
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
 
           <SelectField
@@ -244,7 +245,7 @@ export default function UploadForm(): React.ReactElement {
             ]}
             defaultValue="0"
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
 
           <SelectField
@@ -262,7 +263,7 @@ export default function UploadForm(): React.ReactElement {
             ]}
             defaultValue="90"
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
 
           <SelectField
@@ -273,7 +274,7 @@ export default function UploadForm(): React.ReactElement {
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue="GAME"
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
 
           <SelectField
@@ -289,7 +290,7 @@ export default function UploadForm(): React.ReactElement {
             ]}
             defaultValue="Valituille henkilöille"
             onChange={handleFieldChange}
-            disabled={!selectedFile}
+            disabled={!selectedFile || !!error}
           />
         </div>
       </form>

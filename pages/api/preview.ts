@@ -1,6 +1,7 @@
 import { IncomingForm, Fields, Files } from "formidable"
 import type { NextApiHandler } from "next"
 import { excelUtils } from "@/utils/excel"
+import { formatErrorMessage, API_METHOD_NOT_ALLOWED, logError } from "@/utils/error"
 
 export const config = {
   api: {
@@ -10,7 +11,7 @@ export const config = {
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" })
+    return res.status(405).json({ message: API_METHOD_NOT_ALLOWED })
   }
 
   try {
@@ -29,9 +30,9 @@ const handler: NextApiHandler = async (req, res) => {
     res.setHeader("Content-Type", "application/json")
     return res.status(200).json({ data: processedData })
   } catch (error) {
-    console.error("Detailed error:", error)
+    logError(error)
     return res.status(500).json({
-      message: `Virhe tiedoston prosessoinnissa: ${error instanceof Error ? error.message : String(error)}`,
+      message: formatErrorMessage(error),
     })
   }
 }

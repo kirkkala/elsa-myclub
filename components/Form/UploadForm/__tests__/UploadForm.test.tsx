@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import userEvent from "@testing-library/user-event"
 import UploadForm from "../UploadForm"
+import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 
 // Mock fetch globally
 global.fetch = jest.fn()
@@ -166,8 +167,7 @@ describe("UploadForm", () => {
       ok: false,
       json: () =>
         Promise.resolve({
-          message:
-            "Tarkista että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).",
+          message: EXCEL_VALIDATION_ERROR,
         }),
     })
 
@@ -187,9 +187,7 @@ describe("UploadForm", () => {
     // Wait for the error message to appear
     await waitFor(() => {
       expect(
-        screen.getByText(
-          /Tarkista että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa/
-        )
+        screen.getByText(EXCEL_VALIDATION_ERROR)
       ).toBeInTheDocument()
     })
 

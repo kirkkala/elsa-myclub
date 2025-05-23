@@ -7,7 +7,7 @@ This changelog is printed on the application at /changelog
 ## v0.2.1-beta [UNRELEASED]
 - UX: Asetukset disabloitu ennen excelin lisäystä ✨
 - Virheviestien parannukset 🐞
-- Tietoturvapäivitykset ja testiautomaatiom lisäys
+- Tietoturvapäivitykset, testiautomaation lisäys
 
 ## v0.2.0-beta (2025-01-23)
 
