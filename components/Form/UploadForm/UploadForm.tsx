@@ -61,7 +61,9 @@ export default function UploadForm(): React.ReactElement {
     }
   }
 
-  const handlePreview = async (e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const handlePreview = async (
+    e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     // Only call preventDefault if it's a form event
     if ("preventDefault" in e) {
       e.preventDefault()
@@ -124,7 +126,7 @@ export default function UploadForm(): React.ReactElement {
         body: formData,
       })
 
-      const data = await response.json() as { data: MyClubExcelRow[]; message?: string }
+      const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
 
       if (!response.ok) {
         setShowSuccess(false) // Hide success message on error
@@ -212,21 +214,26 @@ export default function UploadForm(): React.ReactElement {
 
           {error && (
             <div className={styles.errorMessage}>
-              <p><strong>Virhe:</strong> {error}</p>
+              <p>
+                <strong>Virhe:</strong> {error}
+              </p>
             </div>
           )}
 
           {showSuccess && !error && (
             <div className={styles.successMessage}>
-              <p><strong>Excelin lukeminen onnistui!</strong> 🎉</p>
-              <p>Säädä haluamasi asetukset alta, esikatsele muunnosta sivun
-                alalaidasta ja lataa muunnettu excel omalle koneellesi MyClubiin
-                siirtoa varten.</p>
+              <p>
+                <strong>Excelin lukeminen onnistui!</strong> 🎉
+              </p>
+              <p>
+                Säädä haluamasi asetukset alta, esikatsele muunnosta sivun alalaidasta ja lataa
+                muunnettu excel omalle koneellesi MyClubiin siirtoa varten.
+              </p>
             </div>
           )}
         </div>
 
-        <div className={(!selectedFile || error) ? styles.disabledFields : undefined}>
+        <div className={!selectedFile || error ? styles.disabledFields : undefined}>
           <SelectOrInput
             id="group"
             Icon={LuUsers}

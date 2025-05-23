@@ -1,18 +1,13 @@
 import { useState } from "react"
-import { IconType } from "react-icons"
 import { LuPencil, LuList } from "react-icons/lu"
 import SelectField from "../SelectField/SelectField"
 import TextInput from "../TextInput/TextInput"
 import styles from "./SelectOrInput.module.scss"
+import { BaseFormFieldProps, SelectOption } from "../types"
 
-interface SelectOrInputProps {
-  id: string
-  label: string
-  description?: string
-  Icon: IconType
-  options: Array<{ value: string; label: string }>
+interface SelectOrInputProps extends BaseFormFieldProps {
+  options: SelectOption[]
   placeholder?: string
-  required?: boolean
   switchText: {
     toInput: {
       text?: string
@@ -23,8 +18,6 @@ interface SelectOrInputProps {
       action: string
     }
   }
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
-  disabled?: boolean
 }
 
 export default function SelectOrInput({

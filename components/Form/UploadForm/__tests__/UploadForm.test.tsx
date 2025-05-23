@@ -196,9 +196,7 @@ describe("UploadForm", () => {
 
     // Wait for the error message to appear
     await waitFor(() => {
-      expect(
-        screen.getByText(EXCEL_VALIDATION_ERROR)
-      ).toBeInTheDocument()
+      expect(screen.getByText(EXCEL_VALIDATION_ERROR)).toBeInTheDocument()
     })
 
     // Verify the error message is in the correct container

@@ -1,17 +1,10 @@
-import { IconType } from "react-icons"
 import styles from "./TextInput.module.scss"
+import { BaseFormFieldProps } from "../types"
 
-interface TextInputProps {
-  id: string
-  label: string
-  description?: string
-  Icon: IconType
+interface TextInputProps extends BaseFormFieldProps {
   placeholder?: string
   defaultValue?: string
-  required?: boolean
   suffix?: React.ReactNode
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  disabled?: boolean
 }
 
 export default function TextInput({
