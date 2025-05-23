@@ -14,15 +14,6 @@ interface ApiErrorResponse {
   message: string
 }
 
-interface FormElements extends HTMLFormElement {
-  year: HTMLSelectElement
-  duration: HTMLSelectElement
-  meetingTime: HTMLSelectElement
-  group: HTMLInputElement | HTMLSelectElement
-  eventType: HTMLSelectElement
-  registration: HTMLSelectElement
-}
-
 export default function UploadForm(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
@@ -68,7 +59,7 @@ export default function UploadForm(): React.ReactElement {
     if ("preventDefault" in e) {
       e.preventDefault()
     }
-    setError(null)
+    setError("")
 
     const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
     if (!fileInput) {
@@ -129,14 +120,14 @@ export default function UploadForm(): React.ReactElement {
       const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
 
       if (!response.ok) {
-        setShowSuccess(false) // Hide success message on error
+        setShowSuccess(false)
         throw new Error(data.message || "Excelin lukeminen epäonnistui")
       }
 
       setPreviewData(data.data)
       setShowSuccess(true)
     } catch (err) {
-      setShowSuccess(false) // Hide success message on error
+      setShowSuccess(false)
       setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
     }
   }
@@ -153,21 +144,43 @@ export default function UploadForm(): React.ReactElement {
 
     try {
       const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
-      if (!fileInput.files?.[0]) {
+      if (!fileInput?.files?.[0]) {
         throw new Error(API_FILE_MISSING)
       }
 
       const formData = new FormData()
       formData.append("file", fileInput.files[0])
 
-      const mainForm = formRef.current as FormElements
+      const mainForm = formRef.current
+      if (!mainForm) {
+        throw new Error("Form not found")
+      }
 
-      formData.append("year", mainForm.year.value)
-      formData.append("duration", mainForm.duration.value)
-      formData.append("meetingTime", mainForm.meetingTime.value)
-      formData.append("group", mainForm.group.value)
-      formData.append("eventType", mainForm.eventType.value)
-      formData.append("registration", mainForm.registration.value)
+      const year = (mainForm.querySelector("[name='year']") as HTMLSelectElement).value
+      const duration = (mainForm.querySelector("[name='duration']") as HTMLSelectElement).value
+      const meetingTime = (mainForm.querySelector("[name='meetingTime']") as HTMLSelectElement).value
+      const group = (mainForm.querySelector("[name='group']") as HTMLSelectElement).value
+      const eventType = (mainForm.querySelector("[name='eventType']") as HTMLSelectElement).value
+      const registration = (mainForm.querySelector("[name='registration']") as HTMLSelectElement).value
+
+      if (year) {
+        formData.append("year", year)
+      }
+      if (duration) {
+        formData.append("duration", duration)
+      }
+      if (meetingTime) {
+        formData.append("meetingTime", meetingTime)
+      }
+      if (group) {
+        formData.append("group", group)
+      }
+      if (eventType) {
+        formData.append("eventType", eventType)
+      }
+      if (registration) {
+        formData.append("registration", registration)
+      }
 
       const response = await fetch("/api/upload", {
         method: "POST",
