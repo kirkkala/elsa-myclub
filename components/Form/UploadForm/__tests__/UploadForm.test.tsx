@@ -153,7 +153,7 @@ describe("UploadForm", () => {
         expect.stringContaining("/api/preview"),
         expect.objectContaining({
           method: "POST",
-          body: expect.any(FormData),
+          body: expect.any(FormData) as unknown as FormData,
         })
       )
     })
