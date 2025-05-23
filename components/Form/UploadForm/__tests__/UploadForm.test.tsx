@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
+import userEvent from "@testing-library/user-event"
 import UploadForm from "../UploadForm"
 
 // Mock fetch globally
@@ -114,7 +115,7 @@ describe("UploadForm", () => {
     await waitFor(() => {
       const errorElement = screen.getByText("Test error message")
       expect(errorElement).toBeInTheDocument()
-      expect(errorElement).toHaveClass("error")
+      expect(errorElement.closest("div")).toHaveClass("errorMessage")
     })
   })
 
@@ -157,5 +158,103 @@ describe("UploadForm", () => {
         })
       )
     })
+  })
+
+  it("displays error message when Excel file has incorrect format", async () => {
+    // Mock the fetch response for an error case
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: () =>
+        Promise.resolve({
+          message:
+            "Tarkista että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras).",
+        }),
+    })
+
+    render(<UploadForm />)
+
+    // Create a file object
+    const file = new File(["dummy content"], "test.xlsx", {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    })
+
+    // Get the file input using the correct selector
+    const fileInput = screen.getByTestId("file-input")
+
+    // Upload the file
+    await userEvent.upload(fileInput, file)
+
+    // Wait for the error message to appear
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          /Tarkista että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa/
+        )
+      ).toBeInTheDocument()
+    })
+
+    // Verify the error message is in the correct container
+    const errorMessage = screen.getByText(/Virhe:/i).closest("div")
+    expect(errorMessage).toHaveClass("errorMessage")
+  })
+
+  it("clears error message when new file is selected", async () => {
+    // First mock an error response
+    ;(global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: false,
+        json: () =>
+          Promise.resolve({
+            message: "Excel-tiedoston prosessointi epäonnistui.",
+          }),
+      })
+      // Then mock a successful response
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            data: [
+              {
+                Nimi: "Test Event",
+                Ryhmä: "Test Group",
+                Tapahtumatyyppi: "Ottelu",
+                Tapahtumapaikka: "Test Venue",
+                Alkaa: "2024-01-01 10:00:00",
+                Päättyy: "2024-01-01 11:00:00",
+                Ilmoittautuminen: "Valituille henkilöille",
+                Näkyvyys: "Näkyy ryhmälle",
+                Kuvaus: "Test Description",
+              },
+            ],
+          }),
+      })
+
+    render(<UploadForm />)
+
+    // Upload first file (error case)
+    const file1 = new File(["dummy content"], "test1.xlsx", {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    })
+    const fileInput = screen.getByTestId("file-input")
+    await userEvent.upload(fileInput, file1)
+
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/Virhe:/i)).toBeInTheDocument()
+    })
+
+    // Upload second file (success case)
+    const file2 = new File(["dummy content"], "test2.xlsx", {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    })
+    await userEvent.upload(fileInput, file2)
+
+    // Wait for success message
+    await waitFor(() => {
+      expect(screen.getByText(/Excelin lukeminen onnistui!/i)).toBeInTheDocument()
+    })
+
+    // Verify error message is gone
+    expect(screen.queryByText(/Virhe:/i)).not.toBeInTheDocument()
   })
 })

@@ -93,6 +93,7 @@ export default function UploadForm(): React.ReactElement {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred")
+      setPreviewData([]) // Clear preview data on error
     } finally {
       setLoading(false)
     }
@@ -169,7 +170,13 @@ export default function UploadForm(): React.ReactElement {
             </div>
           )}
 
-          {showSuccess && (
+          {error && (
+            <div className={styles.errorMessage}>
+              <p><strong>Virhe:</strong> {error}</p>
+            </div>
+          )}
+
+          {showSuccess && !error && (
             <div className={styles.successMessage}>
               <p><strong>Excelin lukeminen onnistui!</strong> 🎉</p>
               <p>Säädä haluamasi asetukset alta, esikatsele muunnosta sivun
@@ -305,8 +312,6 @@ export default function UploadForm(): React.ReactElement {
           <Preview data={previewData} />
         </>
       )}
-
-      {error && <div className={styles.error}>{error}</div>}
     </div>
   )
 }
