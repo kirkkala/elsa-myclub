@@ -24,10 +24,12 @@ interface SelectOrInputProps {
     }
   }
   onChange?: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
+  disabled?: boolean
 }
 
 export default function SelectOrInput({
   options,
+  disabled,
   ...props
 }: SelectOrInputProps): React.ReactElement {
   const [useCustomInput, setUseCustomInput] = useState(false)
@@ -45,8 +47,11 @@ export default function SelectOrInput({
       href="#"
       onClick={(e) => {
         e.preventDefault()
-        setUseCustomInput(!useCustomInput)
+        if (!disabled) {
+          setUseCustomInput(!useCustomInput)
+        }
       }}
+      className={disabled ? styles.disabled : ""}
     >
       {useCustomInput ? <LuList /> : <LuPencil />}{" "}
       {useCustomInput ? props.switchText.toList.action : props.switchText.toInput.action}
@@ -66,6 +71,7 @@ export default function SelectOrInput({
           required={props.required}
           suffix={switchLink}
           onChange={props.onChange}
+          disabled={disabled}
         />
       ) : (
         <TextInput
@@ -77,6 +83,7 @@ export default function SelectOrInput({
           required={props.required}
           suffix={switchLink}
           onChange={props.onChange}
+          disabled={disabled}
         />
       )}
     </div>

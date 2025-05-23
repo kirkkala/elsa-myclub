@@ -4,6 +4,13 @@
 This changelog is printed on the application at /changelog
 -->
 
+## [Unreleased]
+
+## v0.2.1-beta (2025-05-23)
+- UX: Asetukset disabloitu ennen excelin lisäystä ✨
+- Virheviestien parannukset 🐞
+- Tietoturvapäivitykset ja testien parannukset 🔒
+
 ## v0.2.0-beta (2025-01-23)
 
 - Automaattisesti päivittyvä esikatselu! 🎉

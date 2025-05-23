@@ -9,12 +9,14 @@ interface SelectFieldProps {
   options: Array<{
     value: string
     label?: string
+    disabled?: boolean
   }>
   required?: boolean
   defaultValue?: string
   suffix?: React.ReactNode
   className?: string
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  disabled?: boolean
 }
 
 export default function SelectField({
@@ -28,9 +30,14 @@ export default function SelectField({
   suffix,
   className,
   onChange,
+  disabled,
 }: SelectFieldProps): React.ReactElement {
   const optionElements = options.map((option) => (
-    <option key={`${option.value}`} value={option.value}>
+    <option
+      key={`${option.value}`}
+      value={option.value}
+      disabled={option.disabled}
+    >
       {option.label ?? option.value}
     </option>
   ))
@@ -57,6 +64,7 @@ export default function SelectField({
           defaultValue={defaultValue}
           aria-describedby={description ? `${id}-description` : undefined}
           onChange={onChange}
+          disabled={disabled}
         >
           {optionElements}
         </select>

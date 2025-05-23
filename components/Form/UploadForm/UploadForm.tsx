@@ -33,6 +33,7 @@ export default function UploadForm(): React.ReactElement {
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
+  const [showSuccess, setShowSuccess] = useState<boolean>(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   const currentYear = new Date().getFullYear()
@@ -41,6 +42,7 @@ export default function UploadForm(): React.ReactElement {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
+    setShowSuccess(false)
 
     // Trigger preview if file is selected
     if (file) {
@@ -86,6 +88,9 @@ export default function UploadForm(): React.ReactElement {
       }
 
       setPreviewData(result.data)
+      if (!previewData.length) {
+        setShowSuccess(true)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unknown error occurred")
     } finally {
@@ -154,11 +159,27 @@ export default function UploadForm(): React.ReactElement {
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Lisää tiedosto jonka jälkeen saat esikatselun
-          muunnoksesta sivun alaosaan. Muuta asetuksia saadaksesi
-          mieleisesi excel-tiedoston MyClub importia varten."
+          description="Valitse tähän eLSA:sta hakemasi excel -tiedosto."
         />
 
+        <div className={styles.messageContainer}>
+          {!selectedFile && (
+            <div className={styles.disabledMessage}>
+              Aloita lisäämällä eLSA:sta haettu excel -tiedosto.
+            </div>
+          )}
+
+          {showSuccess && (
+            <div className={styles.successMessage}>
+              <p><strong>Excelin lukeminen onnistui!</strong> 🎉</p>
+              <p>Säädä haluamasi asetukset alta, esikatsele muunnosta sivun
+                alalaidasta ja lataa muunnettu excel omalle koneellesi MyClubiin
+                siirtoa varten.</p>
+            </div>
+          )}
+        </div>
+
+        {/*<div className={!selectedFile ? styles.disabledFields : undefined}>*/}
         <SelectOrInput
           id="group"
           Icon={LuUsers}
@@ -181,6 +202,7 @@ export default function UploadForm(): React.ReactElement {
           }))}
           placeholder="esim. Harlem Globetrotters"
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
 
         <SelectField
@@ -194,6 +216,7 @@ export default function UploadForm(): React.ReactElement {
           }))}
           defaultValue={String(currentYear)}
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
 
         <SelectField
@@ -212,6 +235,7 @@ export default function UploadForm(): React.ReactElement {
           ]}
           defaultValue="0"
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
 
         <SelectField
@@ -228,6 +252,7 @@ export default function UploadForm(): React.ReactElement {
           ]}
           defaultValue="90"
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
 
         <SelectField
@@ -238,6 +263,7 @@ export default function UploadForm(): React.ReactElement {
           options={[{ value: "Ottelu" }, { value: "Muu" }]}
           defaultValue="GAME"
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
 
         <SelectField
@@ -252,7 +278,9 @@ export default function UploadForm(): React.ReactElement {
           ]}
           defaultValue="Valituille henkilöille"
           onChange={handleFieldChange}
+          disabled={!selectedFile}
         />
+        {/*</div>*/}
       </form>
 
       {previewData.length > 0 && (
