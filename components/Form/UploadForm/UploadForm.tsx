@@ -179,108 +179,112 @@ export default function UploadForm(): React.ReactElement {
           )}
         </div>
 
-        {/*<div className={!selectedFile ? styles.disabledFields : undefined}>*/}
-        <SelectOrInput
-          id="group"
-          Icon={LuUsers}
-          label="Joukkue (MyClub ryhmä)"
-          description={`MyClub yhdistää joukkueen nimen perusteella
-            tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
-            (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
-            joukkueen nimen itse.`}
-          switchText={{
-            toInput: {
-              action: "Kirjoita nimi",
-            },
-            toList: {
-              action: "Näytä listavalitsin (HNMKY)",
-            },
-          }}
-          options={groupsData.groups.map((option) => ({
-            value: option,
-            label: option,
-          }))}
-          placeholder="esim. Harlem Globetrotters"
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
+        <div className={!selectedFile ? styles.disabledFields : undefined}>
+          <SelectOrInput
+            id="group"
+            Icon={LuUsers}
+            label="Joukkue (MyClub ryhmä)"
+            description={`MyClub yhdistää joukkueen nimen perusteella
+              tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
+              (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
+              joukkueen nimen itse. Nimen tulee olla tismalleen sama kuin MyClubissa.`}
+            switchText={{
+              toInput: {
+                action: "Kirjoita nimi",
+              },
+              toList: {
+                action: "Näytä listavalitsin (HNMKY)",
+              },
+            }}
+            options={groupsData.groups.map((option) => ({
+              value: option,
+              label: option,
+            }))}
+            placeholder="esim. Harlem Globetrotters"
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
 
-        <SelectField
-          id="year"
-          label="Vuosi"
-          description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten se tulee antaa manuaalisesti."
-          Icon={LuCalendar}
-          options={years.map((year) => ({
-            value: String(year),
-            label: String(year),
-          }))}
-          defaultValue={String(currentYear)}
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
+          <SelectField
+            id="year"
+            label="Vuosi"
+            description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä joten se tulee antaa tässä."
+            Icon={LuCalendar}
+            options={years.map((year) => ({
+              value: String(year),
+              label: String(year),
+            }))}
+            defaultValue={String(currentYear)}
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
 
-        <SelectField
-          id="meetingTime"
-          label="Kokoontumisaika"
-          description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen tulee olla paikalla esim lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa valitun minuuttimäärän verran."
-          Icon={LuClock}
-          options={[
-            { value: "0", label: "Ei aikaistusta" },
-            { value: "15", label: "15 min ennen ottelun alkua" },
-            { value: "30", label: "30 min ennen ottelun alkua" },
-            { value: "45", label: "45 min ennen ottelun alkua" },
-            { value: "60", label: "60 min ennen ottelun alkua" },
-            { value: "75", label: "1 h 15 min ennen ottelun alkua" },
-            { value: "90", label: "1 h 30 min ennen ottelun alkua" },
-          ]}
-          defaultValue="0"
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
+          <SelectField
+            id="meetingTime"
+            label="Kokoontumisaika"
+            description="Kuinka monta minuuttia ennen ottelun alkua joukkueen
+            tulee olla paikalla esim lämppää varten. Valinta aikaistaa tapahtuman
+            alkuaikaa MyClubissa valitun minuuttimäärän verran."
+            Icon={LuClock}
+            options={[
+              { value: "0", label: "Ei aikaistusta" },
+              { value: "15", label: "15 min ennen ottelun alkua" },
+              { value: "30", label: "30 min ennen ottelun alkua" },
+              { value: "45", label: "45 min ennen ottelun alkua" },
+              { value: "60", label: "60 min ennen ottelun alkua" },
+              { value: "75", label: "1 h 15 min ennen ottelun alkua" },
+              { value: "90", label: "1 h 30 min ennen ottelun alkua" },
+            ]}
+            defaultValue="0"
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
 
-        <SelectField
-          id="duration"
-          label="Tapahtuman kesto"
-          description="Ottelun kesto, tämän perusteella lasketaan tapahtuman päättymisaika eli mahdollinen kokoontumisaika lisättynä."
-          Icon={LuClock}
-          options={[
-            { value: "60", label: "1 tunti" },
-            { value: "75", label: "1 tunti 15 minuuttia" },
-            { value: "90", label: "1 tunti 30 minuuttia" },
-            { value: "105", label: "1 tunti 45 minuuttia" },
-            { value: "120", label: "2 tuntia" },
-          ]}
-          defaultValue="90"
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
+          <SelectField
+            id="duration"
+            label="Tapahtuman kesto"
+            description="Tämän perusteella lasketaan tapahtuman päättymisaika,
+            kokoontumisaika (mikäli valittuna), lisättynä ottelun kestooon."
+            Icon={LuClock}
+            options={[
+              { value: "60", label: "1 tunti" },
+              { value: "75", label: "1 tunti 15 minuuttia" },
+              { value: "90", label: "1 tunti 30 minuuttia" },
+              { value: "105", label: "1 tunti 45 minuuttia" },
+              { value: "120", label: "2 tuntia" },
+            ]}
+            defaultValue="90"
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
 
-        <SelectField
-          id="eventType"
-          label="Tapahtumatyyppi"
-          description="Valitse tapahtuman tyyppi MyClubissa."
-          Icon={LuCalendarClock}
-          options={[{ value: "Ottelu" }, { value: "Muu" }]}
-          defaultValue="GAME"
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
+          <SelectField
+            id="eventType"
+            label="Tapahtumatyyppi"
+            description="Valitse tapahtuman tyyppi MyClubiin."
+            Icon={LuCalendarClock}
+            options={[{ value: "Ottelu" }, { value: "Muu" }]}
+            defaultValue="GAME"
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
 
-        <SelectField
-          id="registration"
-          label="Ilmoittautuminen"
-          description="Valitse kenelle tapahtuma näkyy MyClubissa."
-          Icon={LuUsers}
-          options={[
-            { value: "Valituille henkilöille" },
-            { value: "Ryhmän jäsenille" },
-            { value: "Seuralle" },
-          ]}
-          defaultValue="Valituille henkilöille"
-          onChange={handleFieldChange}
-          disabled={!selectedFile}
-        />
-        {/*</div>*/}
+          <SelectField
+            id="registration"
+            label="Ilmoittautuminen"
+            description="Valitse kenelle ilmoittautuminen tapahtumaan MyClubissa
+            on sallittu."
+            Icon={LuUsers}
+            options={[
+              { value: "Valituille henkilöille" },
+              { value: "Ryhmän jäsenille" },
+              { value: "Seuralle" },
+            ]}
+            defaultValue="Valituille henkilöille"
+            onChange={handleFieldChange}
+            disabled={!selectedFile}
+          />
+        </div>
       </form>
 
       {previewData.length > 0 && (
@@ -292,7 +296,7 @@ export default function UploadForm(): React.ReactElement {
               Icon={LuDownload}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen excel-tiedosto omalle
-                koneellesi MyClubin importia varten.`}
+                koneellesi MyClubiin tuontia varten.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
