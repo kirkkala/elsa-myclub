@@ -1,16 +1,10 @@
-import { IconType } from "react-icons"
 import styles from "./TextInput.module.scss"
+import { BaseFormFieldProps } from "../types"
 
-interface TextInputProps {
-  id: string
-  label: string
-  description?: string
-  Icon: IconType
+interface TextInputProps extends BaseFormFieldProps {
   placeholder?: string
   defaultValue?: string
-  required?: boolean
   suffix?: React.ReactNode
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export default function TextInput({
@@ -23,6 +17,7 @@ export default function TextInput({
   required = false,
   suffix,
   onChange,
+  disabled,
 }: TextInputProps): React.ReactElement {
   return (
     <div className={styles.formGroup}>
@@ -44,6 +39,7 @@ export default function TextInput({
           required={required}
           aria-describedby={description ? `${id}-description` : undefined}
           onChange={onChange}
+          disabled={disabled}
         />
         {suffix && <div className={styles.suffix}>{suffix}</div>}
       </div>

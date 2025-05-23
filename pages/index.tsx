@@ -12,21 +12,9 @@ export default function Home(): React.ReactElement {
   return (
     <Layout>
       <Header />
-      <p>
-        Muunna{" "}
-        <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
-          eLSA
-        </a>
-        :sta ladattu excel-tiedosto{" "}
-        <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
-          MyClub
-        </a>
-        :iin soveltuvaksi tuontitiedostoksi.
-      </p>
       <Info title="Tietoja sovelluksesta" expandable>
         <p>
-          ELSA → MyClub Excel Muuntaja on HNMKY Stadi 2014 tyttöjen jokukkueenjohtajan, Timo
-          Kirkkalan koodaama sovellus jolla vähennetään manuaalisen työn määrää pelien siirtämisessä{" "}
+          <strong>{SITE_CONFIG.name}</strong> helpottaa excel-jumppaa pelien siirtämisessä{" "}
           <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
             eLSA
           </a>
@@ -34,29 +22,28 @@ export default function Home(): React.ReactElement {
           <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
             MyClub
           </a>
-          :n tapahtumahallintaan.
-        </p>
-        <p>
-          Sovelluksen koodi on julkaistu avoimena lähdekoodina{" "}
-          <a href={SITE_CONFIG.links.githubAppRepoUrl} target="_blank" rel="noopener noreferrer">
-            GitHubissa
-          </a>
-          .
+          :iin.
         </p>
         <h3>Kenelle sovellus on tarkoitettu?</h3>
         <p>
+          Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
+          taustahenkilölle ketkä siirtävät pelejä eLSA:sta MyClub:iin.
+        </p>
+        <p>
           <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
-            HNMKY
+            Helsingin NMKY
           </a>
-          :n joukkueet voivat valita ryhmän nimen valintalistalta mutta myös muut kuin Namikan
-          joukkueet on otettu huomioon sovellusta kehittäessä, MyClub ryhmän nimen voi siis antaa
-          myös käsin kirjoitettuna.
+          :n joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös käsin
+          niin muidenkin seurojen joukkueet voivat hyödyntää sovellusta.
         </p>
         <h3>Löysitkö bugin?</h3>
+        <p>Löysitkö bugin tai keksit parannusehdotuksen? Tai haluat lähettää muuta palautetta?</p>
         <p>
-          Jos löysit bugin tai keksit parannusehdotuksen, laita Timolle sähköpostia:{" "}
-          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a> tai osallistu
-          lähdekoodin kehittämiseen{" "}
+          Laita viestiä kehittäjälle:{" "}
+          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
+        </p>
+        <p>
+          Tai osallistu lähdekoodin kehittämiseen{" "}
           <a
             href="https://github.com/kirkkala/elsa-myclub"
             target="_blank"
@@ -64,13 +51,13 @@ export default function Home(): React.ReactElement {
           >
             GitHubissa
           </a>
-          .
+          . Kyllä, lähdekoodi on avoin ja vapaasti käytettävissä.
         </p>
         <h3>Tietosuojaseloste</h3>
         <p>
-          Sovellus ei kerää tietoa käyttäjästä, ainoastaan vähän statistiikkaa kävijämääristä.
-          Sovellukseen ladattuja excel-tiedostoja ei tallenneta mihinkään muualle kuin käyttäjän
-          omalle tietokoneelle. Keksejä eli niitä herkullisia evästeitäkään ei täällä käytetä 🍪
+          Sovellus ei kerää tietoa käyttäjistä, ainoastaan yksilöimätöntä statistiikkaa
+          kävijämääristä. Sovellukseen ladattuja tiedostoja ei tallenneta mihinkään muualle kuin
+          käyttäjän omalle tietokoneelle. Keksejä eli evästeitäkään ei täällä käytetä.
         </p>
         <hr />
         <ul className="list-reset">

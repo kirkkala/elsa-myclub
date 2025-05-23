@@ -1,20 +1,11 @@
-import { IconType } from "react-icons"
 import styles from "./SelectField.module.scss"
+import { BaseFormFieldProps, SelectOption } from "../types"
 
-interface SelectFieldProps {
-  id: string
-  label: string
-  description?: string
-  Icon: IconType
-  options: Array<{
-    value: string
-    label?: string
-  }>
-  required?: boolean
+interface SelectFieldProps extends BaseFormFieldProps {
+  options: SelectOption[]
   defaultValue?: string
   suffix?: React.ReactNode
   className?: string
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 export default function SelectField({
@@ -28,9 +19,10 @@ export default function SelectField({
   suffix,
   className,
   onChange,
+  disabled,
 }: SelectFieldProps): React.ReactElement {
   const optionElements = options.map((option) => (
-    <option key={`${option.value}`} value={option.value}>
+    <option key={`${option.value}`} value={option.value} disabled={option.disabled}>
       {option.label ?? option.value}
     </option>
   ))
@@ -57,6 +49,7 @@ export default function SelectField({
           defaultValue={defaultValue}
           aria-describedby={description ? `${id}-description` : undefined}
           onChange={onChange}
+          disabled={disabled}
         >
           {optionElements}
         </select>

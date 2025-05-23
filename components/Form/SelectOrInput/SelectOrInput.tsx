@@ -1,33 +1,51 @@
 import { useState } from "react"
-import { IconType } from "react-icons"
 import { LuPencil, LuList } from "react-icons/lu"
 import SelectField from "../SelectField/SelectField"
 import TextInput from "../TextInput/TextInput"
 import styles from "./SelectOrInput.module.scss"
+import { BaseFormFieldProps, SelectOption } from "../types"
 
-interface SelectOrInputProps {
-  id: string
-  label: string
-  description?: string
-  Icon: IconType
-  options: Array<{ value: string; label: string }>
-  placeholder?: string
-  required?: boolean
-  switchText: {
-    toInput: {
-      text?: string
-      action: string
-    }
-    toList: {
-      text?: string
-      action: string
-    }
-  }
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void
+interface SwitchText {
+  toInput: { action: string }
+  toList: { action: string }
 }
+
+interface SelectOrInputProps extends BaseFormFieldProps {
+  options: SelectOption[]
+  placeholder?: string
+  switchText: SwitchText
+}
+
+const SwitchLink = ({
+  isInput,
+  disabled,
+  switchText,
+  onToggle,
+}: {
+  isInput: boolean
+  disabled: boolean
+  switchText: SwitchText
+  onToggle: () => void
+}): React.ReactElement => (
+  <a
+    href="#"
+    onClick={(e) => {
+      e.preventDefault()
+      if (!disabled) {
+        onToggle()
+      }
+    }}
+    className={disabled ? styles.disabled : ""}
+  >
+    {isInput ? <LuList /> : <LuPencil />}{" "}
+    {isInput ? switchText.toList.action : switchText.toInput.action}
+  </a>
+)
 
 export default function SelectOrInput({
   options,
+  disabled,
+  switchText,
   ...props
 }: SelectOrInputProps): React.ReactElement {
   const [useCustomInput, setUseCustomInput] = useState(false)
@@ -41,42 +59,30 @@ export default function SelectOrInput({
   ]
 
   const switchLink = (
-    <a
-      href="#"
-      onClick={(e) => {
-        e.preventDefault()
-        setUseCustomInput(!useCustomInput)
-      }}
-    >
-      {useCustomInput ? <LuList /> : <LuPencil />}{" "}
-      {useCustomInput ? props.switchText.toList.action : props.switchText.toInput.action}
-    </a>
+    <SwitchLink
+      isInput={useCustomInput}
+      disabled={disabled ?? false}
+      switchText={switchText}
+      onToggle={() => setUseCustomInput(!useCustomInput)}
+    />
   )
 
   return (
     <div className={styles.selectOrInput}>
       {!useCustomInput ? (
         <SelectField
-          id={props.id}
-          label={props.label}
+          {...props}
           className={styles.nestedField}
-          description={props.description}
-          Icon={props.Icon}
           options={displayOptions}
-          required={props.required}
           suffix={switchLink}
-          onChange={props.onChange}
+          disabled={disabled}
         />
       ) : (
         <TextInput
-          id={props.id}
-          label={props.label}
-          description={props.description}
-          Icon={props.Icon}
+          {...props}
           placeholder={props.placeholder}
-          required={props.required}
           suffix={switchLink}
-          onChange={props.onChange}
+          disabled={disabled}
         />
       )}
     </div>

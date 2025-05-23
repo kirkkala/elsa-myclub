@@ -20,33 +20,44 @@ A tool to convert ELSA basketball schedule Excel files to MyClub format.
 
 ```
 elsa-myclub/
-├── __tests__/          # Tests and test data
-│   ├── mocks/          # Mock data for tests
+├── __tests__/                # Tests and test data
+│   ├── mocks/                # Mock data for tests
 │   │   └── test-data.ts
-│   └── utils/          # Utility function tests
+│   └── utils/                # Utility function tests
 │       └── excel.test.ts
-├── components/         # React components with their styles and tests
+├── components/               # React components with their styles and tests
 │   └── Form/
-│       └── *          # Reusable form components
+│       ├── UploadForm/       # Upload form component, styles, and tests
+│       │   ├── UploadForm.tsx
+│       │   ├── UploadForm.module.scss
+│       │   └── __tests__/
+│       │       └── UploadForm.test.tsx
+│       ├── FileUpload/      # File upload field component
+│       ├── SelectField/     # Select field component
+│       └── SelectOrInput/   # Select or input switchable field
 ├── config/
-│   ├── groups.json    # MyClub group names
-│   └── index.ts       # Other site configurations
+│   ├── groups.json          # MyClub group names
+│   └── index.ts             # Other site configurations
 ├── pages/
-│   ├── index.tsx      # Main page
-│   ├── changelog.tsx  # Changelog page
+│   ├── index.tsx            # Main page
+│   ├── changelog.tsx        # Changelog page
 │   └── api/
-│       └── upload.ts  # File conversion handler
+│       ├── preview.ts       # File preview API handler
+│       └── upload.ts        # File conversion handler
 ├── public/
-│   └── images/        # App icons and logos
+│   └── images/              # App icons and logos
 ├── styles/
-│   ├── shared/        # Shared style modules
-│   ├── globals.scss   # Global styles
-│   └── variables.scss # Variables for styles
-├── jest.config.js     # Jest test configuration
-├── jest.setup.js      # Test environment setup
+│   ├── shared/              # Shared style modules
+│   ├── globals.scss         # Global styles
+│   └── variables.scss       # Variables for styles
+├── utils/                   # Shared utility functions
+│   ├── excel.ts             # Excel parsing and conversion utilities
+│   └── error.ts             # Centralized error messages and logging
+├── jest.config.js           # Jest test configuration
+├── jest.setup.js            # Test environment setup
 └── .github/
-    └── workflows/     # CI/CD configurations
-        └── test.yml   # GitHub Actions test workflow
+    └── workflows/           # CI/CD configurations
+        └── test.yml         # GitHub Actions test workflow
 ```
 
 ### Excel File Requirements

@@ -1,6 +1,7 @@
 import { Fields, Files } from "formidable"
 import * as XLSX from "xlsx"
 import { promises as fs } from "fs"
+import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
 
 /**
  * Represents a row from ELSA Excel file
@@ -38,7 +39,7 @@ export const excelUtils = {
     const parts = cleanDate.split(".")
 
     if (parts.length !== 2) {
-      throw new Error(`Odottamaton päivämäärämuoto: ${date}`)
+      throw new Error(EXCEL_DATE_FORMAT_ERROR(date))
     }
 
     const day = parts[0].padStart(2, "0")
@@ -111,7 +112,7 @@ export const excelUtils = {
   async parseExcelFile(fields: Fields, files: Files): Promise<MyClubExcelRow[]> {
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
     if (!uploadedFile) {
-      throw new Error("Ei lisättyä tiedostoa")
+      throw new Error(EXCEL_FILE_MISSING_ERROR)
     }
 
     const fileData = await fs.readFile(uploadedFile.filepath)
@@ -119,9 +120,9 @@ export const excelUtils = {
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
 
-    const year = String(fields.year?.[0] || new Date().getFullYear())
-    const duration = parseInt(fields.duration?.[0] || "75", 10)
-    const meetingTime = parseInt(fields.meetingTime?.[0] || "0", 10)
+    const year = String(fields.year || new Date().getFullYear())
+    const duration = parseInt(String(fields.duration || "75"), 10)
+    const meetingTime = parseInt(String(fields.meetingTime || "0"), 10)
 
     const processedData: MyClubExcelRow[] = jsonData
       .map((row: ElsaxcelRow): MyClubExcelRow | null => {
@@ -139,11 +140,11 @@ export const excelUtils = {
             Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
             Alkaa: startDateTime,
             Päättyy: endDateTime,
-            Ryhmä: String(fields.group?.[0]),
+            Ryhmä: String(fields.group || ""),
             Kuvaus: this.createDescription(row.Klo, meetingTime),
-            Tapahtumatyyppi: String(fields.eventType?.[0]),
+            Tapahtumatyyppi: String(fields.eventType || ""),
             Tapahtumapaikka: row.Kenttä,
-            Ilmoittautuminen: String(fields.registration?.[0]),
+            Ilmoittautuminen: String(fields.registration || ""),
             Näkyvyys: "Näkyy ryhmälle",
           }
         } catch (err) {
@@ -157,9 +158,7 @@ export const excelUtils = {
       .filter((row): row is MyClubExcelRow => row !== null)
 
     if (processedData.length === 0) {
-      throw new Error(
-        "Excel-tiedoston prosessointi epäonnistui. Tarkistathan että ELSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras)."
-      )
+      throw new Error(EXCEL_VALIDATION_ERROR)
     }
 
     return processedData

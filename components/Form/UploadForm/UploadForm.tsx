@@ -8,24 +8,10 @@ import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
 import type { MyClubExcelRow } from "@/utils/excel"
+import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 
 interface ApiErrorResponse {
   message: string
-}
-
-interface PreviewApiResponse {
-  data: MyClubExcelRow[]
-}
-
-type ApiResponse = PreviewApiResponse | ApiErrorResponse
-
-interface FormElements extends HTMLFormElement {
-  year: HTMLSelectElement
-  duration: HTMLSelectElement
-  meetingTime: HTMLSelectElement
-  group: HTMLInputElement | HTMLSelectElement
-  eventType: HTMLSelectElement
-  registration: HTMLSelectElement
 }
 
 export default function UploadForm(): React.ReactElement {
@@ -33,6 +19,7 @@ export default function UploadForm(): React.ReactElement {
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
+  const [showSuccess, setShowSuccess] = useState<boolean>(false)
   const formRef = useRef<HTMLFormElement>(null)
 
   const currentYear = new Date().getFullYear()
@@ -41,6 +28,8 @@ export default function UploadForm(): React.ReactElement {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     setSelectedFile(file ? file.name : "")
+    setShowSuccess(false)
+    setPreviewData([])
 
     // Trigger preview if file is selected
     if (file) {
@@ -64,32 +53,83 @@ export default function UploadForm(): React.ReactElement {
     }
   }
 
-  const handlePreview = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    setLoading(true)
+  const handlePreview = async (
+    e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    // Only call preventDefault if it's a form event
+    if ("preventDefault" in e) {
+      e.preventDefault()
+    }
     setError("")
 
+    const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
+    if (!fileInput) {
+      setError("Lomaketta ei löydy")
+      setShowSuccess(false)
+      return
+    }
+
+    const file = fileInput.files?.[0]
+    if (!file) {
+      setError("Valitse ensin excel-tiedosto")
+      setShowSuccess(false)
+      return
+    }
+
     try {
-      const formData = new FormData(e.currentTarget)
+      const formData = new FormData()
+      formData.append("file", file)
+
+      // Get form values from the form element
+      const form = fileInput.form
+      if (!form) {
+        throw new Error("Form not found")
+      }
+
+      const year = (form.querySelector("[name='year']") as HTMLSelectElement).value
+      const duration = (form.querySelector("[name='duration']") as HTMLSelectElement).value
+      const meetingTime = (form.querySelector("[name='meetingTime']") as HTMLSelectElement).value
+      const group = (form.querySelector("[name='group']") as HTMLSelectElement).value
+      const eventType = (form.querySelector("[name='eventType']") as HTMLSelectElement).value
+      const registration = (form.querySelector("[name='registration']") as HTMLSelectElement).value
+
+      // Only append values if they exist
+      if (year) {
+        formData.append("year", year)
+      }
+      if (duration) {
+        formData.append("duration", duration)
+      }
+      if (meetingTime) {
+        formData.append("meetingTime", meetingTime)
+      }
+      if (group) {
+        formData.append("group", group)
+      }
+      if (eventType) {
+        formData.append("eventType", eventType)
+      }
+      if (registration) {
+        formData.append("registration", registration)
+      }
+
       const response = await fetch("/api/preview", {
         method: "POST",
         body: formData,
       })
 
-      const result = (await response.json()) as ApiResponse
+      const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
 
       if (!response.ok) {
-        throw new Error("message" in result ? result.message : "Tiedoston esikatselu epäonnistui")
+        setShowSuccess(false)
+        throw new Error(data.message || "Excelin lukeminen epäonnistui")
       }
 
-      if (!("data" in result)) {
-        throw new Error("Virheellinen vastaus palvelimelta")
-      }
-
-      setPreviewData(result.data)
+      setPreviewData(data.data)
+      setShowSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred")
-    } finally {
-      setLoading(false)
+      setShowSuccess(false)
+      setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
     }
   }
 
@@ -104,22 +144,46 @@ export default function UploadForm(): React.ReactElement {
     setError("")
 
     try {
-      const fileInput = document.querySelector("input[type='file']") as HTMLInputElement
-      if (!fileInput.files?.[0]) {
-        throw new Error("Tiedosto puuttuu")
+      const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
+      if (!fileInput?.files?.[0]) {
+        throw new Error(API_FILE_MISSING)
       }
 
       const formData = new FormData()
       formData.append("file", fileInput.files[0])
 
-      const mainForm = formRef.current as FormElements
+      const mainForm = formRef.current
+      if (!mainForm) {
+        throw new Error("Form not found")
+      }
 
-      formData.append("year", mainForm.year.value)
-      formData.append("duration", mainForm.duration.value)
-      formData.append("meetingTime", mainForm.meetingTime.value)
-      formData.append("group", mainForm.group.value)
-      formData.append("eventType", mainForm.eventType.value)
-      formData.append("registration", mainForm.registration.value)
+      const year = (mainForm.querySelector("[name='year']") as HTMLSelectElement).value
+      const duration = (mainForm.querySelector("[name='duration']") as HTMLSelectElement).value
+      const meetingTime = (mainForm.querySelector("[name='meetingTime']") as HTMLSelectElement)
+        .value
+      const group = (mainForm.querySelector("[name='group']") as HTMLSelectElement).value
+      const eventType = (mainForm.querySelector("[name='eventType']") as HTMLSelectElement).value
+      const registration = (mainForm.querySelector("[name='registration']") as HTMLSelectElement)
+        .value
+
+      if (year) {
+        formData.append("year", year)
+      }
+      if (duration) {
+        formData.append("duration", duration)
+      }
+      if (meetingTime) {
+        formData.append("meetingTime", meetingTime)
+      }
+      if (group) {
+        formData.append("group", group)
+      }
+      if (eventType) {
+        formData.append("eventType", eventType)
+      }
+      if (registration) {
+        formData.append("registration", registration)
+      }
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -128,7 +192,7 @@ export default function UploadForm(): React.ReactElement {
 
       if (!response.ok) {
         const errorData = (await response.json()) as ApiErrorResponse
-        throw new Error(errorData.message || "Tiedoston muunnos epäonnistui")
+        throw new Error(errorData.message || API_CONVERSION_FAILED)
       }
 
       const blob = await response.blob()
@@ -154,105 +218,141 @@ export default function UploadForm(): React.ReactElement {
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Lisää tiedosto jonka jälkeen saat esikatselun
-          muunnoksesta sivun alaosaan. Muuta asetuksia saadaksesi
-          mieleisesi excel-tiedoston MyClub importia varten."
+          description="Valitse eLSA:sta hakemasi excel -tiedosto, jonka pelit
+          haluat siirtää MyClub:iin."
         />
 
-        <SelectOrInput
-          id="group"
-          Icon={LuUsers}
-          label="Joukkue (MyClub ryhmä)"
-          description={`MyClub yhdistää joukkueen nimen perusteella
-            tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
-            (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
-            joukkueen nimen itse.`}
-          switchText={{
-            toInput: {
-              action: "Kirjoita nimi",
-            },
-            toList: {
-              action: "Näytä listavalitsin (HNMKY)",
-            },
-          }}
-          options={groupsData.groups.map((option) => ({
-            value: option,
-            label: option,
-          }))}
-          placeholder="esim. Harlem Globetrotters"
-          onChange={handleFieldChange}
-        />
+        <div className={styles.messageContainer}>
+          {error && (
+            <div className={styles.errorMessage}>
+              <p>
+                <strong>Virhe:</strong> {error}
+              </p>
+            </div>
+          )}
 
-        <SelectField
-          id="year"
-          label="Vuosi"
-          description="eLSA:n exportissa ei ole vuotta päivämäärien yhteydessä, joten se tulee antaa manuaalisesti."
-          Icon={LuCalendar}
-          options={years.map((year) => ({
-            value: String(year),
-            label: String(year),
-          }))}
-          defaultValue={String(currentYear)}
-          onChange={handleFieldChange}
-        />
+          {showSuccess && !error && (
+            <div className={styles.successMessage}>
+              <p>
+                <strong>Excelin lukeminen onnistui!</strong> 🎉
+              </p>
+              <p>
+                Säädä haluamiasi asetuksia ja esikatsele muunnosta sivun alalaidasta. Kun olet
+                tyytyväinen, lataa muunnettu excel omalle tietokoneellesi MyClubiin siirtoa varten.
+                Voit tarvittaessa muokata excel-tiedostoa tallentamisen jälkeen omalla
+                tietokoneellasi.
+              </p>
+            </div>
+          )}
+        </div>
 
-        <SelectField
-          id="meetingTime"
-          label="Kokoontumisaika"
-          description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen tulee olla paikalla esim lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa valitun minuuttimäärän verran."
-          Icon={LuClock}
-          options={[
-            { value: "0", label: "Ei aikaistusta" },
-            { value: "15", label: "15 min ennen ottelun alkua" },
-            { value: "30", label: "30 min ennen ottelun alkua" },
-            { value: "45", label: "45 min ennen ottelun alkua" },
-            { value: "60", label: "60 min ennen ottelun alkua" },
-            { value: "75", label: "1 h 15 min ennen ottelun alkua" },
-            { value: "90", label: "1 h 30 min ennen ottelun alkua" },
-          ]}
-          defaultValue="0"
-          onChange={handleFieldChange}
-        />
+        <div className={!selectedFile || error ? styles.disabledFields : undefined}>
+          <SelectOrInput
+            id="group"
+            Icon={LuUsers}
+            label="1. Joukkue (MyClub ryhmä)"
+            description={`MyClub yhdistää joukkueen nimen perusteella
+              tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
+              (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
+              joukkueen nimen itse. Nimen tulee olla tismalleen sama kuin MyClubissa.`}
+            switchText={{
+              toInput: {
+                action: "Kirjoita nimi",
+              },
+              toList: {
+                action: "Näytä listavalitsin (HNMKY)",
+              },
+            }}
+            options={groupsData.groups.map((option) => ({
+              value: option,
+              label: option,
+            }))}
+            placeholder="esim. Harlem Globetrotters"
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
 
-        <SelectField
-          id="duration"
-          label="Tapahtuman kesto"
-          description="Ottelun kesto, tämän perusteella lasketaan tapahtuman päättymisaika eli mahdollinen kokoontumisaika lisättynä."
-          Icon={LuClock}
-          options={[
-            { value: "60", label: "1 tunti" },
-            { value: "75", label: "1 tunti 15 minuuttia" },
-            { value: "90", label: "1 tunti 30 minuuttia" },
-            { value: "105", label: "1 tunti 45 minuuttia" },
-            { value: "120", label: "2 tuntia" },
-          ]}
-          defaultValue="90"
-          onChange={handleFieldChange}
-        />
+          <SelectField
+            id="year"
+            label="2. Vuosi"
+            description="eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä
+            joten se tulee valita tässä."
+            Icon={LuCalendar}
+            options={years.map((year) => ({
+              value: String(year),
+              label: String(year),
+            }))}
+            defaultValue={String(currentYear)}
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
 
-        <SelectField
-          id="eventType"
-          label="Tapahtumatyyppi"
-          description="Valitse tapahtuman tyyppi MyClubissa."
-          Icon={LuCalendarClock}
-          options={[{ value: "Ottelu" }, { value: "Muu" }]}
-          defaultValue="GAME"
-          onChange={handleFieldChange}
-        />
+          <SelectField
+            id="meetingTime"
+            label="3. Kokoontumisaika"
+            description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen
+            tulee olla paikalla lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa
+            MyClubissa valinnan verran."
+            Icon={LuClock}
+            options={[
+              { value: "0", label: "Ei aikaistusta" },
+              { value: "15", label: "15 min ennen ottelun alkua" },
+              { value: "30", label: "30 min ennen ottelun alkua" },
+              { value: "45", label: "45 min ennen ottelun alkua" },
+              { value: "60", label: "60 min ennen ottelun alkua" },
+              { value: "75", label: "1 h 15 min ennen ottelun alkua" },
+              { value: "90", label: "1 h 30 min ennen ottelun alkua" },
+            ]}
+            defaultValue="0"
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
 
-        <SelectField
-          id="registration"
-          label="Ilmoittautuminen"
-          description="Valitse kenelle tapahtuma näkyy MyClubissa."
-          Icon={LuUsers}
-          options={[
-            { value: "Valituille henkilöille" },
-            { value: "Ryhmän jäsenille" },
-            { value: "Seuralle" },
-          ]}
-          defaultValue="Valituille henkilöille"
-          onChange={handleFieldChange}
-        />
+          <SelectField
+            id="duration"
+            label="4. Tapahtuman kesto"
+            description="Valinnan perusteella lasketaan tapahtuman alkamis- ja
+            päättymisaika, kokoontumisaika huomioiden."
+            Icon={LuClock}
+            options={[
+              { value: "60", label: "1 tunti" },
+              { value: "75", label: "1 tunti 15 minuuttia" },
+              { value: "90", label: "1 tunti 30 minuuttia" },
+              { value: "105", label: "1 tunti 45 minuuttia" },
+              { value: "120", label: "2 tuntia" },
+            ]}
+            defaultValue="90"
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
+
+          <SelectField
+            id="eventType"
+            label="5. Tapahtumatyyppi"
+            description="Valitse tapahtuman tyyppi MyClubiin."
+            Icon={LuCalendarClock}
+            options={[{ value: "Ottelu" }, { value: "Muu" }]}
+            defaultValue="GAME"
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
+
+          <SelectField
+            id="registration"
+            label="6. Ilmoittautuminen"
+            description="Valitse kenelle ilmoittautuminen tapahtumaan MyClubissa
+            on sallittu."
+            Icon={LuUsers}
+            options={[
+              { value: "Valituille henkilöille" },
+              { value: "Ryhmän jäsenille" },
+              { value: "Seuralle" },
+            ]}
+            defaultValue="Valituille henkilöille"
+            onChange={handleFieldChange}
+            disabled={!selectedFile || !!error}
+          />
+        </div>
       </form>
 
       {previewData.length > 0 && (
@@ -264,7 +364,8 @@ export default function UploadForm(): React.ReactElement {
               Icon={LuDownload}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen excel-tiedosto omalle
-                koneellesi MyClubin importia varten.`}
+                tietokoneellesi, siirry MyClubin tapahtumien hallintaan ja valitse
+                "Tuo tapahtumia" välilehti vasemmassa sivupalkissa.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
@@ -273,8 +374,6 @@ export default function UploadForm(): React.ReactElement {
           <Preview data={previewData} />
         </>
       )}
-
-      {error && <div className={styles.error}>{error}</div>}
     </div>
   )
 }
