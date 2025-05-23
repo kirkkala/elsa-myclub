@@ -35,10 +35,15 @@ describe("UploadForm", () => {
         Promise.resolve({
           data: [
             {
-              date: "2024-01-01",
-              time: "10:00",
-              opponent: "Test Team",
-              location: "Test Location",
+              Nimi: "Test Event",
+              Ryhmä: "Test Group",
+              Tapahtumatyyppi: "Ottelu",
+              Tapahtumapaikka: "Test Venue",
+              Alkaa: "2024-01-01 10:00:00",
+              Päättyy: "2024-01-01 11:00:00",
+              Ilmoittautuminen: "Valituille henkilöille",
+              Näkyvyys: "Näkyy ryhmälle",
+              Kuvaus: "Test Description",
             },
           ],
         }),
@@ -151,13 +156,18 @@ describe("UploadForm", () => {
 
     // Verify that the preview API was called with the updated values
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining("/api/preview"),
-        expect.objectContaining({
-          method: "POST",
-          body: expect.any(FormData) as unknown as FormData,
-        })
-      )
+      interface FetchCallParams {
+        method: "POST"
+        body: FormData
+      }
+      type FetchCall = [string, FetchCallParams]
+      const mockFetch = global.fetch as jest.Mock<Promise<Response>, [string, FetchCallParams]>
+      const fetchCall = mockFetch.mock.calls[1] as FetchCall
+      expect(fetchCall[0]).toBe("/api/preview")
+      expect(fetchCall[1]).toEqual({
+        method: "POST",
+        body: expect.any(FormData),
+      })
     })
   })
 

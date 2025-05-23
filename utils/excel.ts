@@ -120,9 +120,9 @@ export const excelUtils = {
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
     const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
 
-    const year = String(fields.year?.[0] || new Date().getFullYear())
-    const duration = parseInt(fields.duration?.[0] || "75", 10)
-    const meetingTime = parseInt(fields.meetingTime?.[0] || "0", 10)
+    const year = String(fields.year || new Date().getFullYear())
+    const duration = parseInt(String(fields.duration || "75"), 10)
+    const meetingTime = parseInt(String(fields.meetingTime || "0"), 10)
 
     const processedData: MyClubExcelRow[] = jsonData
       .map((row: ElsaxcelRow): MyClubExcelRow | null => {
@@ -140,11 +140,11 @@ export const excelUtils = {
             Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
             Alkaa: startDateTime,
             Päättyy: endDateTime,
-            Ryhmä: String(fields.group?.[0]),
+            Ryhmä: String(fields.group || ""),
             Kuvaus: this.createDescription(row.Klo, meetingTime),
-            Tapahtumatyyppi: String(fields.eventType?.[0]),
+            Tapahtumatyyppi: String(fields.eventType || ""),
             Tapahtumapaikka: row.Kenttä,
-            Ilmoittautuminen: String(fields.registration?.[0]),
+            Ilmoittautuminen: String(fields.registration || ""),
             Näkyvyys: "Näkyy ryhmälle",
           }
         } catch (err) {

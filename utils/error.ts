@@ -5,8 +5,6 @@ export const EXCEL_FILE_MISSING_ERROR = "Ei lisättyä tiedostoa"
 
 // API response errors
 export const API_METHOD_NOT_ALLOWED = "Method not allowed"
-export const API_INVALID_RESPONSE = "Virheellinen vastaus palvelimelta"
-export const API_PREVIEW_FAILED = "Tiedoston esikatselu epäonnistui"
 export const API_CONVERSION_FAILED = "Tiedoston muunnos epäonnistui"
 export const API_FILE_MISSING = "Tiedosto puuttuu"
 

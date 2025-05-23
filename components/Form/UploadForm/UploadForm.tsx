@@ -8,17 +8,11 @@ import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
 import type { MyClubExcelRow } from "@/utils/excel"
-import { API_INVALID_RESPONSE, API_PREVIEW_FAILED, API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 
 interface ApiErrorResponse {
   message: string
 }
-
-interface PreviewApiResponse {
-  data: MyClubExcelRow[]
-}
-
-type ApiResponse = PreviewApiResponse | ApiErrorResponse
 
 interface FormElements extends HTMLFormElement {
   year: HTMLSelectElement
@@ -67,36 +61,81 @@ export default function UploadForm(): React.ReactElement {
     }
   }
 
-  const handlePreview = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    setLoading(true)
-    setError("")
+  const handlePreview = async (e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    // Only call preventDefault if it's a form event
+    if ("preventDefault" in e) {
+      e.preventDefault()
+    }
+    setError(null)
+
+    const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
+    if (!fileInput) {
+      setError("Lomaketta ei löydy")
+      setShowSuccess(false)
+      return
+    }
+
+    const file = fileInput.files?.[0]
+    if (!file) {
+      setError("Valitse ensin excel-tiedosto")
+      setShowSuccess(false)
+      return
+    }
 
     try {
-      const formData = new FormData(e.currentTarget)
+      const formData = new FormData()
+      formData.append("file", file)
+
+      // Get form values from the form element
+      const form = fileInput.form
+      if (!form) {
+        throw new Error("Form not found")
+      }
+
+      const year = (form.querySelector("[name='year']") as HTMLSelectElement).value
+      const duration = (form.querySelector("[name='duration']") as HTMLSelectElement).value
+      const meetingTime = (form.querySelector("[name='meetingTime']") as HTMLSelectElement).value
+      const group = (form.querySelector("[name='group']") as HTMLSelectElement).value
+      const eventType = (form.querySelector("[name='eventType']") as HTMLSelectElement).value
+      const registration = (form.querySelector("[name='registration']") as HTMLSelectElement).value
+
+      // Only append values if they exist
+      if (year) {
+        formData.append("year", year)
+      }
+      if (duration) {
+        formData.append("duration", duration)
+      }
+      if (meetingTime) {
+        formData.append("meetingTime", meetingTime)
+      }
+      if (group) {
+        formData.append("group", group)
+      }
+      if (eventType) {
+        formData.append("eventType", eventType)
+      }
+      if (registration) {
+        formData.append("registration", registration)
+      }
+
       const response = await fetch("/api/preview", {
         method: "POST",
         body: formData,
       })
 
-      const result = (await response.json()) as ApiResponse
+      const data = await response.json() as { data: MyClubExcelRow[]; message?: string }
 
       if (!response.ok) {
-        throw new Error("message" in result ? result.message : API_PREVIEW_FAILED)
+        setShowSuccess(false) // Hide success message on error
+        throw new Error(data.message || "Excelin lukeminen epäonnistui")
       }
 
-      if (!("data" in result)) {
-        throw new Error(API_INVALID_RESPONSE)
-      }
-
-      setPreviewData(result.data)
-      if (!previewData.length) {
-        setShowSuccess(true)
-      }
+      setPreviewData(data.data)
+      setShowSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred")
-      setPreviewData([]) // Clear preview data on error
-    } finally {
-      setLoading(false)
+      setShowSuccess(false) // Hide success message on error
+      setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
     }
   }
 
@@ -111,7 +150,7 @@ export default function UploadForm(): React.ReactElement {
     setError("")
 
     try {
-      const fileInput = document.querySelector("input[type='file']") as HTMLInputElement
+      const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
       if (!fileInput.files?.[0]) {
         throw new Error(API_FILE_MISSING)
       }
@@ -251,8 +290,8 @@ export default function UploadForm(): React.ReactElement {
           <SelectField
             id="duration"
             label="Tapahtuman kesto"
-            description="Tämän perusteella lasketaan tapahtuman päättymisaika,
-            kokoontumisaika (mikäli valittuna), lisättynä ottelun kestooon."
+            description="Valinnan perusteella lasketaan tapahtuman alkamis- ja
+            päättymisaika, kokoontumisaika huomioiden."
             Icon={LuClock}
             options={[
               { value: "60", label: "1 tunti" },
