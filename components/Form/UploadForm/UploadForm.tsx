@@ -2,7 +2,8 @@ import { useState, useRef } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuCalendarClock, LuClock, LuUsers, LuDownload } from "react-icons/lu"
+import { LuCalendar, LuClock, LuUsers, LuDownload } from "react-icons/lu"
+import { CiBasketball } from "react-icons/ci"
 import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
@@ -234,13 +235,11 @@ export default function UploadForm(): React.ReactElement {
           {showSuccess && !error && (
             <div className={styles.successMessage}>
               <p>
-                <strong>Excelin lukeminen onnistui!</strong> 🎉
+                <strong>Excelin luku onnistui!</strong> 🎉
               </p>
               <p>
-                Säädä haluamiasi asetuksia ja esikatsele muunnosta sivun alalaidasta. Kun olet
-                tyytyväinen, lataa muunnettu excel omalle tietokoneellesi MyClubiin siirtoa varten.
-                Voit tarvittaessa muokata excel-tiedostoa tallentamisen jälkeen omalla
-                tietokoneellasi.
+                Säädä joukkueellesi sopivat asetukset ja esikatsele muunnosta sivun lopussa. Kun
+                olet valmis, lataa muuunnettu excel omalle tietokoneellesi MyClubiin siirtoa varten.
               </p>
             </div>
           )}
@@ -330,7 +329,7 @@ export default function UploadForm(): React.ReactElement {
             id="eventType"
             label="5. Tapahtumatyyppi"
             description="Valitse tapahtuman tyyppi MyClubiin."
-            Icon={LuCalendarClock}
+            Icon={CiBasketball}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue="GAME"
             onChange={handleFieldChange}

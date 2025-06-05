@@ -257,7 +257,7 @@ describe("UploadForm", () => {
 
     // Wait for success message
     await waitFor(() => {
-      expect(screen.getByText(/Excelin lukeminen onnistui!/i)).toBeInTheDocument()
+      expect(screen.getByText(/Excelin luku onnistui!/i)).toBeInTheDocument()
     })
 
     // Verify error message is gone
