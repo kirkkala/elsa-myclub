@@ -48,9 +48,9 @@ jest.mock("remark", () => ({
               .replace(/^# (.*$)/gm, "<h2>$1</h2>")
               .replace(/^- (.*$)/gm, "<li>$1</li>")
               .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-              .replace(/`([^`]+)`/g, '<code>$1</code>')
-              .replace(/\n\n/g, '</p><p>')
-              .replace(/^(.+)$/gm, '<p>$1</p>')
+              .replace(/`([^`]+)`/g, "<code>$1</code>")
+              .replace(/\n\n/g, "</p><p>")
+              .replace(/^(.+)$/gm, "<p>$1</p>")
           },
         }),
     }),
@@ -85,7 +85,9 @@ describe("Changelog page", () => {
     render(<Changelog {...props} />)
 
     // Test that version headings exist
-    const versionHeadings = screen.getAllByRole("heading", { name: /v\d+\.\d+\.\d+-beta \(\d{4}-\d{2}-\d{2}\)/ })
+    const versionHeadings = screen.getAllByRole("heading", {
+      name: /v\d+\.\d+\.\d+-beta \(\d{4}-\d{2}-\d{2}\)/,
+    })
     expect(versionHeadings.length).toBeGreaterThan(0)
 
     // Test specific known content
@@ -127,7 +129,7 @@ describe("Changelog page", () => {
     // Test back link
     const backLinks = screen.getAllByRole("link", { name: /Takaisin/ })
     expect(backLinks.length).toBeGreaterThan(0)
-    const homeLink = backLinks.find(link => link.getAttribute("href") === "/")
+    const homeLink = backLinks.find((link) => link.getAttribute("href") === "/")
     expect(homeLink).toBeInTheDocument()
 
     // Test footer content
