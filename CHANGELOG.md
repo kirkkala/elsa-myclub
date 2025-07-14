@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v0.2.2-beta (2025-07-14)
+
+- npm tietoturvapäivitykset 🔒
+- CHANCELOG testiautomaation parannus 🤖
+
 ## v0.2.1-beta (2025-05-23)
 
 - UX: Asetukset disabloitu ennen excelin lisäystä ✨
