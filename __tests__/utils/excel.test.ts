@@ -39,7 +39,7 @@ describe("Excel conversion utils", () => {
         "Beat Basket Black",
         "III div. HNMKY/Stadi - Beat Basket Black",
       ],
-    ])("converts \"%s\" game correctly", (sarja, koti, vieras, expected) => {
+    ])('converts "%s" game correctly', (sarja, koti, vieras, expected) => {
       expect(excelUtils.formatEventName(sarja, koti, vieras)).toBe(expected)
     })
   })

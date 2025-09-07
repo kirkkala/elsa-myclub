@@ -8,7 +8,7 @@ const nextConfig = {
   },
   // Next.js 15 optimizations
   experimental: {
-    optimizePackageImports: ['react-icons'],
+    optimizePackageImports: ["react-icons"],
   },
 }
 

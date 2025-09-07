@@ -47,7 +47,7 @@ jest.mock("remark", () => ({
               .replace(/^## (.*$)/gm, "<h3>$1</h3>")
               .replace(/^# (.*$)/gm, "<h2>$1</h2>")
               .replace(/^- (.*$)/gm, "<li>$1</li>")
-              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href=\"$2\">$1</a>")
+              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
               .replace(/`([^`]+)`/g, "<code>$1</code>")
               .replace(/\n\n/g, "</p><p>")
               .replace(/^(.+)$/gm, "<p>$1</p>")
