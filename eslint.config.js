@@ -47,7 +47,7 @@ export default [
       "@typescript-eslint/no-unnecessary-condition": "warn",
 
       // General strict rules
-      quotes: ["error", "double"],
+      // quotes: ["error", "double"], // Disabled to avoid conflict with Prettier
       "no-console": ["error", { allow: ["warn", "error"] }],
       eqeqeq: "error",
       curly: "error",
