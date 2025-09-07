@@ -14,7 +14,7 @@ export default [
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        ecmaVersion: 'latest',
+        ecmaVersion: 2024,
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
@@ -23,7 +23,7 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.es2022,
+        ...globals.es2024,
         React: 'readonly',
         JSX: 'readonly',
       },
