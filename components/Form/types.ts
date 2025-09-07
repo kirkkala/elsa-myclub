@@ -7,6 +7,7 @@ export interface BaseFormFieldProps {
   Icon: IconType
   required?: boolean
   disabled?: boolean
+  // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }
 

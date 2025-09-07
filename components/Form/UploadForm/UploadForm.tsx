@@ -15,7 +15,7 @@ interface ApiErrorResponse {
   message: string
 }
 
-export default function UploadForm(): React.ReactElement {
+export default function UploadForm() {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [selectedFile, setSelectedFile] = useState<string>("")

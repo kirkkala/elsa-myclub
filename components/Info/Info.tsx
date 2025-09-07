@@ -11,7 +11,7 @@ export default function Info({
   title,
   expandable = true,
   children,
-}: InfoProps): React.ReactElement {
+}: InfoProps) {
   if (expandable) {
     return (
       <details className={styles.info}>

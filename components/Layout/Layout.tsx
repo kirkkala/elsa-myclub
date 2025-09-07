@@ -4,6 +4,6 @@ interface LayoutProps {
   children: React.ReactNode
 }
 
-export default function Layout({ children }: LayoutProps): React.ReactElement {
+export default function Layout({ children }: LayoutProps) {
   return <main className={styles.container}>{children}</main>
 }

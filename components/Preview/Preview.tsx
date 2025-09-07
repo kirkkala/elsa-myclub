@@ -5,7 +5,7 @@ interface PreviewProps {
   data: MyClubExcelRow[]
 }
 
-export default function Preview({ data }: PreviewProps): React.ReactNode | null {
+export default function Preview({ data }: PreviewProps) {
   if (!data.length) {
     return null
   }

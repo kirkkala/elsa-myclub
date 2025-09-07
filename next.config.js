@@ -6,6 +6,10 @@ const nextConfig = {
   env: {
     APP_VERSION: packageJson.version,
   },
+  // Next.js 15 optimizations
+  experimental: {
+    optimizePackageImports: ['react-icons'],
+  },
 }
 
 module.exports = nextConfig

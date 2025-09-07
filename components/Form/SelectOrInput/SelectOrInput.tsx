@@ -26,7 +26,7 @@ const SwitchLink = ({
   disabled: boolean
   switchText: SwitchText
   onToggle: () => void
-}): React.ReactElement => (
+}) => (
   <a
     href="#"
     onClick={(e) => {
@@ -47,7 +47,7 @@ export default function SelectOrInput({
   disabled,
   switchText,
   ...props
-}: SelectOrInputProps): React.ReactElement {
+}: SelectOrInputProps) {
   const [useCustomInput, setUseCustomInput] = useState(false)
 
   const displayOptions = [

@@ -20,7 +20,7 @@ export default function SelectField({
   className,
   onChange,
   disabled,
-}: SelectFieldProps): React.ReactElement {
+}: SelectFieldProps) {
   const optionElements = options.map((option) => (
     <option key={`${option.value}`} value={option.value} disabled={option.disabled}>
       {option.label ?? option.value}
