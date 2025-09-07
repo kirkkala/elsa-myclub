@@ -36,6 +36,14 @@ const SEO_CONFIG = {
         description: "Katso sovelluksen versiohistoria ja viimeisimmät päivitykset",
       },
     },
+    docs: {
+      title: `Dokumentaatio - ${SITE_CONFIG.name}`,
+      description: "Ohjeet ja tietoa ELSA → MyClub sovelluksen käytöstä",
+      openGraph: {
+        title: `${SITE_CONFIG.name} - Dokumentaatio`,
+        description: "Lue käyttöohjeet ja tietoa sovelluksen käytöstä",
+      },
+    },
   },
   defaults: {
     openGraph: {
