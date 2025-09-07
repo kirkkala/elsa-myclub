@@ -2,6 +2,7 @@
   "name": "elsa-myclub",
   "version": "0.2.2-beta",
   "private": true,
+  "type": "module",
   "author": {
     "name": "Timo Kirkkala",
     "email": "timo.kirkkala@gmail.com",

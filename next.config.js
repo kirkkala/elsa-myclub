@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const packageJson = require("./package.json")
+import packageJson from "./package.json" with { type: "json" }
 
 const nextConfig = {
   reactStrictMode: true,
@@ -12,4 +12,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+export default nextConfig

@@ -112,22 +112,19 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'off', // Allow in tests
     },
   },
-  // Configuration for JavaScript config files (CommonJS)
+  // Configuration for next.config.js (ES modules)
   {
-    files: ['*.config.js', 'next.config.js'],
+    files: ['next.config.js'],
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         ...globals.node,
       },
     },
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-    },
   },
-  // Configuration for jest.setup.js (ES modules)
+  // Configuration for Jest files (ES modules)
   {
-    files: ['jest.setup.js'],
+    files: ['jest.setup.js', 'jest.config.js'],
     languageOptions: {
       sourceType: 'module',
       globals: {
