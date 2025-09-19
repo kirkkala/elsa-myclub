@@ -1,37 +1,41 @@
-import { LuInfo, LuX } from "react-icons/lu"
+import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import styles from "./Info.module.scss"
 
 interface InfoProps {
   title: string
   expandable?: boolean
+  defaultOpen?: boolean
   children: React.ReactNode
 }
 
-export default function Info({ title, expandable = true, children }: InfoProps) {
+export default function Info({
+  title,
+  expandable = true,
+  defaultOpen = false,
+  children,
+}: InfoProps) {
   if (expandable) {
     return (
-      <details className={styles.info}>
+      <details className={styles.info} open={defaultOpen}>
         <summary
           role="button"
-          aria-label="Näytä lisää"
-          aria-expanded="false"
+          aria-label={defaultOpen ? "Piilota" : "Näytä lisää"}
+          aria-expanded={defaultOpen ? "true" : "false"}
           onClick={(e) => {
             const details = e.currentTarget.parentElement as HTMLDetailsElement
             e.currentTarget.setAttribute("aria-label", details.open ? "Näytä lisää" : "Piilota")
             e.currentTarget.setAttribute("aria-expanded", details.open ? "false" : "true")
           }}
         >
+          <h2 className={styles.summaryTitle}>{title}</h2>
           <span className={styles.summaryClosed}>
-            <LuInfo className={styles.icon} /> {title}
+            <LuChevronRight className={styles.icon} />
           </span>
           <span className={styles.summaryOpen}>
-            <LuX />
+            <LuChevronDown className={styles.icon} />
           </span>
         </summary>
-        <div className={`${styles.infoContent} ${styles.expandable}`}>
-          <h2>{title}</h2>
-          {children}
-        </div>
+        <div className={`${styles.infoContent} ${styles.expandable}`}>{children}</div>
       </details>
     )
   }

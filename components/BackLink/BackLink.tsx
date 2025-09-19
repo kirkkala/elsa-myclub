@@ -5,7 +5,7 @@ import styles from "./BackLink.module.scss"
 export default function BackLink() {
   return (
     <Link href="/" className={styles.backLink}>
-      <LuArrowLeft /> Takaisin
+      <LuArrowLeft /> Etusivulle
     </Link>
   )
 }

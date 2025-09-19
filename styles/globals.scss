@@ -120,30 +120,32 @@ table {
 .btn-info {
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #f3f4f6;
-  color: #374151;
+  padding: 0.75rem 1rem;
+  background-color: v.$color-bg-light;
+  color: v.$color-text;
   text-decoration: none;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
+  border-radius: v.$border-radius;
+  border: 1px solid v.$color-border;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: v.$transition-base;
   cursor: pointer;
+  min-width: 280px;
 
   &:hover {
-    background-color: #e5e7eb;
-    border-color: #9ca3af;
-    color: #1f2937;
+    background-color: v.$color-bg-light;
+    border-color: v.$color-border;
+    color: v.$color-primary;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
 }
 

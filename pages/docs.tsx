@@ -20,17 +20,17 @@ export default function Docs() {
       <Layout>
         <Header />
         <BackLink />
-        <Info title="Tietoja sovelluksesta" expandable={false}>
+        <Info title="Tietoja sovelluksesta" expandable defaultOpen={false}>
           <p>
-            <strong>{SITE_CONFIG.name}</strong> helpottaa excel-jumppaa pelien siirtämisessä{" "}
+            {SITE_CONFIG.name}n avulla siirrät pelit helposti{" "}
             <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
               eLSA
             </a>
             :sta{" "}
             <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
               MyClub
-            </a>
-            :iin.
+            </a>:in{" "}
+            tapahtumahallintajärjestelmään.
           </p>
           <h3>Kenelle sovellus on tarkoitettu?</h3>
           <p>
@@ -44,8 +44,15 @@ export default function Docs() {
             :n joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös
             käsin niin muidenkin seurojen joukkueet voivat hyödyntää sovellusta.
           </p>
+          <h3>Tietosuojaseloste</h3>
+          <p>
+            Sovellus ei kerää tietoa käyttäjistä, ainoastaan yksilöimätöntä statistiikkaa
+            kävijämääristä. Sovellukseen ladattuja tiedostoja ei tallenneta mihinkään muualle kuin
+            käyttäjän omalle tietokoneelle. Keksejä eli evästeitäkään ei täällä käytetä.
+          </p>
+        </Info>
 
-          <h3>Käyttöohjeet</h3>
+        <Info title="Käyttöohjeet" expandable defaultOpen={false}>
           <ol>
             <li>
               <strong>Lataa excel-tiedosto eLSA:sta</strong>
@@ -80,32 +87,28 @@ export default function Docs() {
               </p>
             </li>
           </ol>
+        </Info>
 
-          <h3>Löysitkö bugin?</h3>
-          <p>Löysitkö bugin tai keksit parannusehdotuksen? Tai haluat lähettää muuta palautetta?</p>
+        <Info title="Lisätietoja ja palaute" expandable defaultOpen={false}>
           <p>
-            Laita viestiä kehittäjälle:{" "}
+            Löysitkö bugin tai keksit parannusehdotuksen?
+            <br />
+            Laita viestiä Timolle osoitteeseen{" "}
             <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
           </p>
           <p>
-            Tai osallistu lähdekoodin kehittämiseen{" "}
+            Haluatko osallistua lähdekoodin kehittämiseen?
+            <br />
+            Katso koodit{" "}
             <a
               href="https://github.com/kirkkala/elsa-myclub"
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHubissa
-            </a>
-            . Kyllä, lähdekoodi on avoin ja vapaasti käytettävissä.
+            </a>{" "}
+            ja tee pull request.
           </p>
-
-          <h3>Tietosuojaseloste</h3>
-          <p>
-            Sovellus ei kerää tietoa käyttäjistä, ainoastaan yksilöimätöntä statistiikkaa
-            kävijämääristä. Sovellukseen ladattuja tiedostoja ei tallenneta mihinkään muualle kuin
-            käyttäjän omalle tietokoneelle. Keksejä eli evästeitäkään ei täällä käytetä.
-          </p>
-
           <hr />
           <ul className="list-reset">
             <li>

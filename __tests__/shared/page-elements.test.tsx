@@ -84,7 +84,7 @@ export const testPageElements = (
     it("renders back navigation links", () => {
       render(<PageComponent {...props} />)
 
-      const backLinks = screen.getAllByRole("link", { name: /Takaisin/ })
+      const backLinks = screen.getAllByRole("link", { name: /Etusivulle/ })
       expect(backLinks.length).toBeGreaterThan(0)
 
       // At least one back link should go to home
