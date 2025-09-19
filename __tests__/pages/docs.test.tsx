@@ -92,18 +92,12 @@ describe("Docs Page", () => {
 
   it("contains usage instructions", () => {
     setupDocsTest()
-    expectElementsToBePresent([
-      EXPECTED_CONTENT.usageTitle,
-      EXPECTED_CONTENT.usageInstructions,
-    ])
+    expectElementsToBePresent([EXPECTED_CONTENT.usageTitle, EXPECTED_CONTENT.usageInstructions])
   })
 
   it("contains privacy policy information", () => {
     setupDocsTest()
-    expectElementsToBePresent([
-      EXPECTED_CONTENT.privacyTitle,
-      EXPECTED_CONTENT.privacyInfo,
-    ])
+    expectElementsToBePresent([EXPECTED_CONTENT.privacyTitle, EXPECTED_CONTENT.privacyInfo])
   })
 
   it("has links to external resources", () => {
