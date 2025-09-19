@@ -9,16 +9,61 @@ jest.mock("next/router", () => ({
 
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>
 
+// Test constants and patterns
+const EXPECTED_CONTENT = {
+  pageTitle: "Tietoja sovelluksesta",
+  appDescription: /helpottaa excel-jumppaa pelien siirtämisessä/,
+  usageTitle: "Käyttöohjeet",
+  usageInstructions: /Lataa excel-tiedosto eLSA:sta/,
+  privacyTitle: "Tietosuojaseloste",
+  privacyInfo: /Sovellus ei kerää tietoa käyttäjistä/,
+} as const
+
+const EXPECTED_LINKS = {
+  elsa: { name: /eLSA/, href: "elsa" },
+  myclub: { name: /MyClub/, href: "myclub" },
+  changelog: { name: /versiohistoria/, href: "/changelog" },
+  github: { name: /GitHubissa/, href: "github" },
+  backLink: { name: /Takaisin/, count: 2 },
+} as const
+
+// Test helper functions
+const setupDocsTest = () => {
+  return render(<Docs />)
+}
+
+const expectElementsToBePresent = (patterns: readonly (string | RegExp)[]) => {
+  patterns.forEach((pattern) => {
+    if (typeof pattern === "string") {
+      expect(screen.getByText(pattern)).toBeInTheDocument()
+    } else {
+      expect(screen.getByText(pattern)).toBeInTheDocument()
+    }
+  })
+}
+
+const expectLinkWithHref = (linkPattern: RegExp, hrefContains: string) => {
+  const links = screen.getAllByRole("link", { name: linkPattern })
+  expect(links[0]).toHaveAttribute("href", expect.stringContaining(hrefContains))
+}
+
+const expectLinkCount = (linkPattern: RegExp, expectedCount: number) => {
+  expect(screen.getAllByRole("link", { name: linkPattern })).toHaveLength(expectedCount)
+}
+
 describe("Docs Page", () => {
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
       pathname: "/docs",
+      route: "/docs",
       query: {},
       asPath: "/docs",
+      basePath: "",
       push: jest.fn(),
       replace: jest.fn(),
       reload: jest.fn(),
       back: jest.fn(),
+      forward: jest.fn(),
       prefetch: jest.fn(),
       beforePopState: jest.fn(),
       events: {
@@ -36,54 +81,50 @@ describe("Docs Page", () => {
   })
 
   it("renders the docs page", () => {
-    render(<Docs />)
-    expect(screen.getByText("Tietoja sovelluksesta")).toBeInTheDocument()
+    setupDocsTest()
+    expectElementsToBePresent([EXPECTED_CONTENT.pageTitle])
   })
 
   it("contains application information", () => {
-    render(<Docs />)
-    expect(screen.getByText(/helpottaa excel-jumppaa pelien siirtämisessä/)).toBeInTheDocument()
+    setupDocsTest()
+    expectElementsToBePresent([EXPECTED_CONTENT.appDescription])
   })
 
   it("contains usage instructions", () => {
-    render(<Docs />)
-    expect(screen.getByText("Käyttöohjeet")).toBeInTheDocument()
-    expect(screen.getByText(/Lataa excel-tiedosto eLSA:sta/)).toBeInTheDocument()
+    setupDocsTest()
+    expectElementsToBePresent([
+      EXPECTED_CONTENT.usageTitle,
+      EXPECTED_CONTENT.usageInstructions,
+    ])
   })
 
   it("contains privacy policy information", () => {
-    render(<Docs />)
-    expect(screen.getByText("Tietosuojaseloste")).toBeInTheDocument()
-    expect(screen.getByText(/Sovellus ei kerää tietoa käyttäjistä/)).toBeInTheDocument()
+    setupDocsTest()
+    expectElementsToBePresent([
+      EXPECTED_CONTENT.privacyTitle,
+      EXPECTED_CONTENT.privacyInfo,
+    ])
   })
 
   it("has links to external resources", () => {
-    render(<Docs />)
-    const elsaLinks = screen.getAllByRole("link", { name: /eLSA/ })
-    expect(elsaLinks[0]).toHaveAttribute("href", expect.stringContaining("elsa"))
-
-    const myClubLinks = screen.getAllByRole("link", { name: /MyClub/ })
-    expect(myClubLinks[0]).toHaveAttribute("href", expect.stringContaining("myclub"))
+    setupDocsTest()
+    expectLinkWithHref(EXPECTED_LINKS.elsa.name, EXPECTED_LINKS.elsa.href)
+    expectLinkWithHref(EXPECTED_LINKS.myclub.name, EXPECTED_LINKS.myclub.href)
   })
 
   it("has a back link", () => {
-    render(<Docs />)
-    expect(screen.getAllByRole("link", { name: /Takaisin/ })).toHaveLength(2)
+    setupDocsTest()
+    expectLinkCount(EXPECTED_LINKS.backLink.name, EXPECTED_LINKS.backLink.count)
   })
 
   it("has navigation links", () => {
-    render(<Docs />)
-    const changelogLinks = screen.getAllByRole("link", { name: /versiohistoria/ })
-    expect(changelogLinks[0]).toHaveAttribute("href", "/changelog")
-
-    const githubLinks = screen.getAllByRole("link", { name: /GitHubissa/ })
-    expect(githubLinks[0]).toHaveAttribute("href", expect.stringContaining("github"))
+    setupDocsTest()
+    expectLinkWithHref(EXPECTED_LINKS.changelog.name, EXPECTED_LINKS.changelog.href)
+    expectLinkWithHref(EXPECTED_LINKS.github.name, EXPECTED_LINKS.github.href)
   })
 
   it("has proper page title and meta", () => {
-    render(<Docs />)
-    // The Head component sets the document title, but in tests we can't easily check it
-    // This test ensures the Head component is rendered with proper props
-    expect(screen.getByText("Tietoja sovelluksesta")).toBeInTheDocument()
+    setupDocsTest()
+    expectElementsToBePresent([EXPECTED_CONTENT.pageTitle])
   })
 })

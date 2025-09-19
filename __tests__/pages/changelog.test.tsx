@@ -170,7 +170,7 @@ describe("Changelog page", () => {
 
   it("handles edge cases gracefully", async () => {
     const mockFs = require("fs")
-    
+
     // Test file read errors
     mockFs.readFileSync.mockImplementationOnce(() => {
       throw new Error("File not found")
