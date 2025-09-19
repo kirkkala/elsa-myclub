@@ -4,11 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.0 (2025-09-19)
+## v1.0.0 (2025-09-19)
 
 - Käyttöohjeet siirretty omalle sivulle /docs 📔
 - Stackin modernisointi ja npm päivitykset 🤓
-- Betaversiosta poistuminen, koodin siistimistä 🧹
+- Betaversiosta poistuminen, testiautomaatio, koodin siistimistä 🧹
 
 ## v0.2.2-beta (2025-07-14)
 
