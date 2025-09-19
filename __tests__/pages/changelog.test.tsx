@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import Changelog, { getStaticProps } from "../../pages/changelog"
 import packageJson from "../../package.json"
-import { SITE_CONFIG } from "../../config"
+import { testPageElements } from "../shared/page-elements.test"
 
 // Mock Next.js router
 jest.mock("next/router", () => ({
@@ -69,13 +69,10 @@ const VERSION_PATTERNS = {
 } as const
 
 const EXPECTED_CONTENT = {
-  pageTitle: SITE_CONFIG.name,
   historyTitle: /Versiohistoria/,
-  historySubtitle: "(versiohistoria)",
   knownChangelogContent: [/Tekninen päivitys/, /Pelin lämppä/],
   markdownElements: ["<li>", "<h3>", "<p>"],
   emojis: ["💅", "🤖"],
-  footerContent: [/Made with/, /Timo Kirkkala/, /Source code published on/, /GitHub/],
 } as const
 
 // Test helper functions
@@ -108,15 +105,14 @@ const expectContentToContain = (content: string, patterns: readonly string[]) =>
 }
 
 describe("Changelog page", () => {
+  // Test generic page elements
+  testPageElements(Changelog, { contentHtml: "<h3>v1.0.0 (2023-01-01)</h3><p>Test content</p>" })
+
   it("renders changelog content with proper structure", async () => {
     await setupChangelogTest()
 
     // Test the main page elements
-    expectElementsToBePresent([
-      EXPECTED_CONTENT.pageTitle,
-      EXPECTED_CONTENT.historyTitle,
-      EXPECTED_CONTENT.historySubtitle,
-    ])
+    expectElementsToBePresent([EXPECTED_CONTENT.historyTitle])
 
     // Test that version numbers are displayed
     const versionElements = screen.getAllByText(VERSION_PATTERNS.flexible)
@@ -155,19 +151,6 @@ describe("Changelog page", () => {
     expectContentToContain(props.contentHtml, EXPECTED_CONTENT.emojis)
   })
 
-  it("renders navigation and footer correctly", async () => {
-    await setupChangelogTest()
-
-    // Test back link
-    const backLinks = screen.getAllByRole("link", { name: /Takaisin/ })
-    expect(backLinks.length).toBeGreaterThan(0)
-    const homeLink = backLinks.find((link) => link.getAttribute("href") === "/")
-    expect(homeLink).toBeInTheDocument()
-
-    // Test footer content
-    expectElementsToBePresent(EXPECTED_CONTENT.footerContent)
-  })
-
   it("handles edge cases gracefully", async () => {
     const mockFs = require("fs")
 
@@ -181,16 +164,5 @@ describe("Changelog page", () => {
     mockFs.readFileSync.mockImplementationOnce(() => "")
     const { props } = await getStaticProps()
     expect(props.contentHtml).toBe("")
-  })
-
-  it("renders with proper page structure", async () => {
-    await setupChangelogTest()
-
-    // Test that the page has proper semantic structure
-    expect(screen.getByRole("main")).toBeInTheDocument()
-
-    // Test that headings exist
-    const headings = screen.getAllByRole("heading")
-    expect(headings.length).toBeGreaterThan(0)
   })
 })

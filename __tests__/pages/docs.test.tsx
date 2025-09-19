@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import { useRouter } from "next/router"
 import Docs from "../../pages/docs"
+import { testPageElements } from "../shared/page-elements.test"
 
 // Mock Next.js router
 jest.mock("next/router", () => ({
@@ -24,7 +25,6 @@ const EXPECTED_LINKS = {
   myclub: { name: /MyClub/, href: "myclub" },
   changelog: { name: /versiohistoria/, href: "/changelog" },
   github: { name: /GitHubissa/, href: "github" },
-  backLink: { name: /Takaisin/, count: 2 },
 } as const
 
 // Test helper functions
@@ -47,11 +47,10 @@ const expectLinkWithHref = (linkPattern: RegExp, hrefContains: string) => {
   expect(links[0]).toHaveAttribute("href", expect.stringContaining(hrefContains))
 }
 
-const expectLinkCount = (linkPattern: RegExp, expectedCount: number) => {
-  expect(screen.getAllByRole("link", { name: linkPattern })).toHaveLength(expectedCount)
-}
-
 describe("Docs Page", () => {
+  // Test generic page elements
+  testPageElements(Docs)
+
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
       pathname: "/docs",
@@ -106,19 +105,9 @@ describe("Docs Page", () => {
     expectLinkWithHref(EXPECTED_LINKS.myclub.name, EXPECTED_LINKS.myclub.href)
   })
 
-  it("has a back link", () => {
-    setupDocsTest()
-    expectLinkCount(EXPECTED_LINKS.backLink.name, EXPECTED_LINKS.backLink.count)
-  })
-
   it("has navigation links", () => {
     setupDocsTest()
     expectLinkWithHref(EXPECTED_LINKS.changelog.name, EXPECTED_LINKS.changelog.href)
     expectLinkWithHref(EXPECTED_LINKS.github.name, EXPECTED_LINKS.github.href)
-  })
-
-  it("has proper page title and meta", () => {
-    setupDocsTest()
-    expectElementsToBePresent([EXPECTED_CONTENT.pageTitle])
   })
 })

@@ -1,5 +1,6 @@
 import BackLink from "../components/BackLink/BackLink"
 import Info from "../components/Info/Info"
+import { SITE_CONFIG } from "../config"
 import Header from "../components/Header/Header"
 import Footer from "../components/Footer/Footer"
 import Layout from "../components/Layout/Layout"
@@ -12,6 +13,28 @@ import Head from "../components/Head/Head"
 
 interface ChangelogProps {
   contentHtml: string
+}
+
+export default function Changelog({ contentHtml }: ChangelogProps) {
+  return (
+    <>
+      <Head
+        title={`Versiohistoria | ${SITE_CONFIG.name}`}
+        description={`${SITE_CONFIG.name} versiohistoria ja viimeisimmät päivitykset`}
+        ogTitle={`${SITE_CONFIG.name} - versiohistoria`}
+        ogDescription="Versiohistoria ja viimeisimmät päivitykset"
+      />
+      <Layout>
+        <Header />
+        <BackLink />
+        <Info title="Versiohistoria" expandable={false}>
+          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        </Info>
+        <BackLink />
+        <Footer />
+      </Layout>
+    </>
+  )
 }
 
 export async function getStaticProps(): Promise<{ props: ChangelogProps }> {
@@ -28,21 +51,4 @@ export async function getStaticProps(): Promise<{ props: ChangelogProps }> {
   return {
     props: { contentHtml },
   }
-}
-
-export default function Changelog({ contentHtml }: ChangelogProps) {
-  return (
-    <>
-      <Head />
-      <Layout>
-        <Header />
-        <BackLink />
-        <Info title="Versiohistoria" expandable={false}>
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-        </Info>
-        <BackLink />
-        <Footer />
-      </Layout>
-    </>
-  )
 }

@@ -12,8 +12,10 @@ export default function Docs() {
   return (
     <>
       <Head
-        title="Dokumentaatio - ELSA → MyClub"
+        title={`Dokumentaatio ${SITE_CONFIG.name}`}
         description="Ohjeet ja tietoa ELSA → MyClub sovelluksen käytöstä"
+        ogTitle={`${SITE_CONFIG.name} dokumentaatio`}
+        ogDescription="Lue käyttöohjeet ja tietoa sovelluksen käytöstä"
       />
       <Layout>
         <Header />

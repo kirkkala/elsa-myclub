@@ -28,22 +28,6 @@ const SEO_CONFIG = {
         description: "Muunna ELSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
       },
     },
-    changelog: {
-      title: `Versiohistoria - ${SITE_CONFIG.name}`,
-      description: "ELSA-MyClub muuntimen versiohistoria ja muutosloki",
-      openGraph: {
-        title: `${SITE_CONFIG.name} - Versiohistoria`,
-        description: "Katso sovelluksen versiohistoria ja viimeisimmät päivitykset",
-      },
-    },
-    docs: {
-      title: `Dokumentaatio - ${SITE_CONFIG.name}`,
-      description: "Ohjeet ja tietoa ELSA → MyClub sovelluksen käytöstä",
-      openGraph: {
-        title: `${SITE_CONFIG.name} - Dokumentaatio`,
-        description: "Lue käyttöohjeet ja tietoa sovelluksen käytöstä",
-      },
-    },
   },
   defaults: {
     openGraph: {
