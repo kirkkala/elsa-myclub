@@ -29,8 +29,8 @@ export default function Docs() {
             :sta{" "}
             <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
               MyClub
-            </a>:in{" "}
-            tapahtumahallintajärjestelmään.
+            </a>
+            :in tapahtumahallintajärjestelmään.
           </p>
           <h3>Kenelle sovellus on tarkoitettu?</h3>
           <p>

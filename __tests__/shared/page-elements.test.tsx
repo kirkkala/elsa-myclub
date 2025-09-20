@@ -15,7 +15,7 @@ const COMMON_ELEMENTS = {
   header: {
     title: SITE_CONFIG.name,
     logos: ["ELSA", "MyClub"],
-    versionLink: /versiohistoria/,
+    versionBadge: SITE_CONFIG.version,
   },
   footer: {
     author: SITE_CONFIG.author.name,
@@ -58,9 +58,8 @@ export const testPageElements = (
         expect(screen.getByAltText(logo)).toBeInTheDocument()
       })
 
-      // Test version history link (unless on changelog page)
-      const versionLinks = screen.queryAllByText(COMMON_ELEMENTS.header.versionLink)
-      expect(versionLinks.length).toBeGreaterThanOrEqual(1)
+      const versionBadgeLinks = screen.queryAllByText(COMMON_ELEMENTS.header.versionBadge)
+      expect(versionBadgeLinks.length).toBeGreaterThanOrEqual(1)
     })
 
     it("renders footer with author and GitHub links", () => {

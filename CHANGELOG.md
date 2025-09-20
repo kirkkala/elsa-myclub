@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.0.0 (2025-09-19)
+## v1.0.0 (2025-09-20)
 
 - Käyttöohjeet siirretty omalle sivulle /docs 📔
 - Stackin modernisointi ja npm päivitykset 🤓
