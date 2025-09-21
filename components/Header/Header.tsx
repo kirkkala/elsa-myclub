@@ -10,7 +10,7 @@ export default function Header() {
       <div className={styles.titleLogos}>
         <Image
           src="/images/elsa.png"
-          alt="ELSA"
+          alt="eLSA"
           width={25}
           height={20}
           className={`${styles.titleLogo} ${styles.elsaLogo}`}
@@ -26,11 +26,7 @@ export default function Header() {
       </div>
       <div className={styles.titleWithBadge}>
         <h1>{SITE_CONFIG.name}</h1>
-        <Link
-          href="/changelog"
-          title="Sovelluksen versiohistoria"
-          className={styles.versionBadge}
-        >
+        <Link href="/changelog" title="Sovelluksen versiohistoria" className={styles.versionBadge}>
           <small>{SITE_CONFIG.version}</small>
         </Link>
       </div>

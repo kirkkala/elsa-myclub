@@ -53,8 +53,8 @@ This changelog is printed on the application at /changelog
 ## v0.1.0-beta (2024-12-30)
 
 - Ensimmäinen beta-versio 🎉
-- ELSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla 📊
+- eLSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla 📊
 - Automaattinen divisioonanimen lisäys tapahtuman nimeen (Divisioona + koti/vierasjoukkue) 📊
-- Tuki eri päivämääräformaateille ELSA:n epästandeista päivämääräkentistä 📅
+- Tuki eri päivämääräformaateille eLSA:n epästandeista päivämääräkentistä 📅
 - Tuki pelin keston määrittämiselle = Tapahtuman loppuaika 🕒
 - Tuki tiedoston valintaan ja lataukseen 📂

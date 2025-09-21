@@ -14,7 +14,7 @@ jest.mock("next-seo", () => ({
 const COMMON_ELEMENTS = {
   header: {
     title: SITE_CONFIG.name,
-    logos: ["ELSA", "MyClub"],
+    logos: ["eLSA", "MyClub"],
     versionBadge: SITE_CONFIG.version,
   },
   footer: {

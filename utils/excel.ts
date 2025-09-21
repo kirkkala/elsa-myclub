@@ -4,7 +4,7 @@ import { promises as fs } from "fs"
 import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
 
 /**
- * Represents a row from ELSA Excel file
+ * Represents a row from eLSA Excel file
  * @interface ElsaxcelRow
  */
 export interface ElsaxcelRow {

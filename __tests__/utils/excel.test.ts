@@ -2,7 +2,7 @@ import { excelUtils } from "@/utils/excel"
 
 describe("Excel conversion utils", () => {
   describe("formatEventName", () => {
-    it("formats game title correctly from ELSA format", () => {
+    it("formats game title correctly from eLSA format", () => {
       const input = {
         sarja: "13-vuotiaat pojat I divisioona Eteläinen alue",
         koti: "Puhu Juniorit",

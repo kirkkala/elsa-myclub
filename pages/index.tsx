@@ -12,7 +12,7 @@ export default function Home() {
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <Link href="/docs" className="btn-info">
           <LuInfo size={20} />
-          <span>Tietoja sovelluksesta ja käyttöohjeet</span>
+          <span>Käyttöohjeet ja tietoja sovelluksesta</span>
         </Link>
       </div>
       <h2 className="visually-hidden">Konversiolomake</h2>

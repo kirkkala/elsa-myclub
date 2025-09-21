@@ -1,6 +1,6 @@
-# ELSA → MyClub Excel Converter
+# eLSA → MyClub Converter
 
-A tool to convert ELSA basketball schedule Excel files to MyClub format.
+A tool to convert eLSA basketball schedule Excel files to MyClub format.
 
 ## Tech Stack
 
@@ -62,7 +62,7 @@ elsa-myclub/
 
 ### Excel File Requirements
 
-Input file should have columns as they were in ELSA export file 2024-12-31:
+Input file should have columns as they were in eLSA export file 2024-12-31:
 
 - `Pvm` - Date (e.g., "22.09" or "29,09")
 - `Klo` - Time (e.g., "18:30")
@@ -71,7 +71,7 @@ Input file should have columns as they were in ELSA export file 2024-12-31:
 - `Vieras` - Away team
 - `Sarja` - Division/Series
 
-Output will be an excel file in the format of MyClub importable file, columns and rows combined and mutated from the provided ELSA excel file.
+Output will be an excel file in the format of MyClub importable file, columns and rows combined and mutated from the provided eLSA excel file.
 
 ### Development
 

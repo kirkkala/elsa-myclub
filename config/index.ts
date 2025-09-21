@@ -2,7 +2,7 @@ import packageJson from "../package.json"
 
 // Site Configuration
 const SITE_CONFIG = {
-  name: "ELSA → MyClub Excel Muuntaja",
+  name: "eLSA → MyClub Muuntaja",
   version: `v${packageJson.version}`,
   author: {
     name: packageJson.author.name,
@@ -25,7 +25,7 @@ const SEO_CONFIG = {
       description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
       openGraph: {
         title: `${SITE_CONFIG.name} - Helpota jojotöitä`,
-        description: "Muunna ELSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
+        description: "Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
       },
     },
   },
@@ -37,7 +37,7 @@ const SEO_CONFIG = {
     additionalMetaTags: [
       {
         name: "keywords",
-        content: "HNMKY, ELSA, MyClub, basketball, koripallo, excel, converter, muunnin",
+        content: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
       },
       {
         name: "author",

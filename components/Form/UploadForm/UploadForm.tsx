@@ -219,8 +219,7 @@ export default function UploadForm() {
           selectedFile={selectedFile}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse eLSA:sta hakemasi excel -tiedosto, jonka pelit
-          haluat siirtää MyClub:iin."
+          description="Valitse omalta tietokoneeltasi eLSA:sta haettu ottelutiedosto jonka haluat siirtää MyClub:iin."
         />
 
         <div className={styles.messageContainer}>
@@ -237,10 +236,13 @@ export default function UploadForm() {
               <p>
                 <strong>Excelin luku onnistui!</strong> 🎉
               </p>
-              <p>
-                Säädä joukkueellesi sopivat asetukset ja esikatsele muunnosta sivun lopussa. Kun
-                olet valmis, lataa muuunnettu excel omalle tietokoneellesi MyClubiin siirtoa varten.
-              </p>
+              <ol>
+                <li>Säädä asetukset haluamaksesi ja esikatsele muunnosta sivun lopussa.</li>
+                <li>
+                  Lataa muunnettu tiedosto "Lataa Excel" -painikkeella omalle tietokoneellesi
+                  MyClubiin siirtoa varten.
+                </li>
+              </ol>
             </div>
           )}
         </div>
