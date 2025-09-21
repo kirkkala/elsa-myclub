@@ -6,8 +6,8 @@ This changelog is printed on the application at /changelog
 
 ## v1.0.0 (2025-09-21)
 
-- Käyttöohjeet ja tiedot applikaatiosta omalle /docs -sivulle 📔
-- "Stable" release: toteutuksen ja koodin siistiminen, testiautomaation parannus 🧹✨
+- Käyttöohjeet ja tiedot applikaatiosta erilliselle [/docs](/docs) -sivulle 📔
+- Stable release: toteutuksen ja koodin siivous, testiautomaation parannus 🧹✨
 
 ## v0.2.3-beta (2025-09-21)
 
