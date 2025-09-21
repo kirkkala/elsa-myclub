@@ -226,7 +226,7 @@ export default function UploadForm() {
           {error && (
             <div className={styles.errorMessage}>
               <p>
-                <strong>Virhe:</strong> {error}
+                <strong>🥴 Virhe:</strong> {error}
               </p>
             </div>
           )}

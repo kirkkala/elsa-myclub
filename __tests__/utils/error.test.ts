@@ -15,7 +15,7 @@ const mockConsoleError = jest.spyOn(console, "error").mockImplementation(() => {
 describe("Error constants", () => {
   it("exports correct error messages", () => {
     expect(EXCEL_VALIDATION_ERROR).toBe(
-      "Tarkista että eLSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras)."
+      "Tarkista että eLSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras). Tarvittaessa ole yhteydessä ylläpitäjään."
     )
     expect(EXCEL_FILE_MISSING_ERROR).toBe("Ei lisättyä tiedostoa")
     expect(API_METHOD_NOT_ALLOWED).toBe("Method not allowed")
@@ -34,19 +34,21 @@ describe("Error constants", () => {
 describe("formatErrorMessage", () => {
   it("formats Error objects correctly", () => {
     const error = new Error("Test error message")
-    expect(formatErrorMessage(error)).toBe("Virhe tiedoston prosessoinnissa: Test error message")
+    expect(formatErrorMessage(error)).toBe("Tiedoston prosessointi epäonnistui. Test error message")
   })
 
   it("formats string errors correctly", () => {
-    expect(formatErrorMessage("String error")).toBe("Virhe tiedoston prosessoinnissa: String error")
+    expect(formatErrorMessage("String error")).toBe(
+      "Tiedoston prosessointi epäonnistui. String error"
+    )
   })
 
   it("formats unknown error types correctly", () => {
-    expect(formatErrorMessage(null)).toBe("Virhe tiedoston prosessoinnissa: null")
-    expect(formatErrorMessage(undefined)).toBe("Virhe tiedoston prosessoinnissa: undefined")
-    expect(formatErrorMessage(123)).toBe("Virhe tiedoston prosessoinnissa: 123")
+    expect(formatErrorMessage(null)).toBe("Tiedoston prosessointi epäonnistui. null")
+    expect(formatErrorMessage(undefined)).toBe("Tiedoston prosessointi epäonnistui. undefined")
+    expect(formatErrorMessage(123)).toBe("Tiedoston prosessointi epäonnistui. 123")
     expect(formatErrorMessage({ message: "object error" })).toBe(
-      "Virhe tiedoston prosessoinnissa: [object Object]"
+      "Tiedoston prosessointi epäonnistui. [object Object]"
     )
   })
 })
