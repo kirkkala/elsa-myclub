@@ -64,14 +64,13 @@ export default function Info({
     }
   }, [sectionId])
 
-  const handleToggle = (e: React.MouseEvent<HTMLDetailsElement>) => {
-    const details = e.currentTarget
-
+  const handleToggle = () => {
     // Update URL hash after the toggle
     setTimeout(() => {
       const openSections = getOpenSections()
+      const details = document.getElementById(sectionId) as HTMLDetailsElement | null
 
-      if (details.open) {
+      if (details?.open) {
         // Add section to hash if not already there
         if (!openSections.includes(sectionId)) {
           openSections.push(sectionId)
