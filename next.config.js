@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
-const packageJson = require("./package.json")
+import packageJson from "./package.json" with { type: "json" }
 
 const nextConfig = {
   reactStrictMode: true,
   env: {
     APP_VERSION: packageJson.version,
   },
+  // Next.js 15 optimizations
+  experimental: {
+    optimizePackageImports: ["react-icons"],
+  },
 }
 
-module.exports = nextConfig
+export default nextConfig

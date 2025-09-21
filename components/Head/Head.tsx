@@ -11,7 +11,7 @@ interface HeadProps {
   ogDescription?: string
 }
 
-export default function Head(props: HeadProps): React.ReactElement {
+export default function Head(props: HeadProps) {
   const { pathname } = useRouter()
   const path = pathname.slice(1) || "home"
   const pageMeta =

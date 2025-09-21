@@ -1,4 +1,3 @@
-import React from "react"
 import BackLink from "../components/BackLink/BackLink"
 import Info from "../components/Info/Info"
 import Header from "../components/Header/Header"
@@ -31,7 +30,7 @@ export async function getStaticProps(): Promise<{ props: ChangelogProps }> {
   }
 }
 
-export default function Changelog({ contentHtml }: ChangelogProps): React.ReactElement {
+export default function Changelog({ contentHtml }: ChangelogProps) {
   return (
     <>
       <Head />

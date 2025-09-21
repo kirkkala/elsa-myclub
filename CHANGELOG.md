@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v0.2.3-beta (2025-09-21)
+
+- Stackin modernisointi ja npm päivitykset 🤓
+
 ## v0.2.2-beta (2025-07-14)
 
 - npm tietoturvapäivitykset 🔒

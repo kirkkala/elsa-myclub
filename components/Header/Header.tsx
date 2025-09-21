@@ -1,4 +1,3 @@
-import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -6,7 +5,7 @@ import styles from "./Header.module.scss"
 import { SITE_CONFIG } from "../../config"
 import { LuWandSparkles } from "react-icons/lu"
 
-export default function Header(): React.ReactElement {
+export default function Header() {
   const { pathname } = useRouter()
 
   return (

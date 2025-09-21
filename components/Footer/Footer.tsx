@@ -2,7 +2,7 @@ import { LuHeart } from "react-icons/lu"
 import styles from "./Footer.module.scss"
 import { SITE_CONFIG } from "../../config"
 
-export default function Footer(): React.ReactElement {
+export default function Footer() {
   return (
     <footer className={styles.footer}>
       <p>
