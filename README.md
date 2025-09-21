@@ -5,7 +5,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 ## Tech Stack
 
 - **Next.js** 15.x - React framework
-- **React** 19.x - UI library  
+- **React** 19.x - UI library
 - **TypeScript** 5.x - Type safety
 - **SCSS** - Styling with CSS modules
 - **formidable** - File upload handling
@@ -74,8 +74,9 @@ elsa-myclub/
 The application converts eLSA basketball schedule Excel files to MyClub-compatible format:
 
 **Input**: eLSA Excel export with columns:
+
 - `Pvm` - Date (e.g., "22.09")
-- `Klo` - Time (e.g., "18:30") 
+- `Klo` - Time (e.g., "18:30")
 - `Kenttä` - Venue
 - `Koti` - Home team
 - `Vieras` - Away team
@@ -98,7 +99,7 @@ The app will be available at http://localhost:3000
 
 ```bash
 npm run dev          # Start development server
-npm run build        # Build for production  
+npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
 npm run test         # Run tests
@@ -149,11 +150,12 @@ Uses Jest and React Testing Library. Tests run automatically on GitHub Actions f
 
 ```bash
 npm test                # Run all tests
-npm run test:watch      # Watch mode  
+npm run test:watch      # Watch mode
 npm run test:coverage   # Coverage report
 ```
 
 Test locations:
+
 - `components/**/__tests__/` - Component tests
 - `__tests__/` - Page and utility tests
 
