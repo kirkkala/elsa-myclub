@@ -4,9 +4,9 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.0.0 (2025-09-20)
+## v1.0.0 (2025-09-21)
 
-- Käyttöohjeet siirretty omalle sivulle /docs 📔
+- Käyttöohjeet ja tiedot applikaatiosta omalle /docs -sivulle 📔
 - Stackin modernisointi ja npm päivitykset 🤓
 - Betaversiosta poistuminen, testiautomaatio, koodin siistimistä 🧹
 

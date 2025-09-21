@@ -58,23 +58,37 @@ describe("Info component", () => {
       expect(screen.queryByText("Toggle Content")).not.toBeVisible()
     })
 
-    it("shows correct aria labels", () => {
+    it("generates correct ID from title", () => {
       render(
-        <Info title="Expandable Info">
+        <Info title="Käyttöohjeet ja tietoja">
           <div>Content</div>
         </Info>
       )
 
-      const button = screen.getByRole("button")
+      const details = screen.getByRole("group")
+      expect(details).toHaveAttribute("id", "kayttoohjeet-ja-tietoja")
+    })
 
-      // Initially collapsed
-      expect(button).toHaveAttribute("aria-label", "Näytä lisää")
-      expect(button).toHaveAttribute("aria-expanded", "false")
+    it("uses custom ID when provided", () => {
+      render(
+        <Info title="Test Title" id="custom-id">
+          <div>Content</div>
+        </Info>
+      )
 
-      // After expanding
-      fireEvent.click(button)
-      expect(button).toHaveAttribute("aria-label", "Piilota")
-      expect(button).toHaveAttribute("aria-expanded", "true")
+      const details = screen.getByRole("group")
+      expect(details).toHaveAttribute("id", "custom-id")
+    })
+
+    it("handles Finnish characters in ID generation", () => {
+      render(
+        <Info title="Tietoja sovelluksesta ä ö å">
+          <div>Content</div>
+        </Info>
+      )
+
+      const details = screen.getByRole("group")
+      expect(details).toHaveAttribute("id", "tietoja-sovelluksesta-a-o-a")
     })
   })
 })
