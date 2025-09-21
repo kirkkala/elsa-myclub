@@ -252,10 +252,7 @@ export default function UploadForm() {
             id="group"
             Icon={LuUsers}
             label="1. Joukkue (MyClub ryhmä)"
-            description={`MyClub yhdistää joukkueen nimen perusteella
-              tuontitiedoston tiedot oikeaan ryhmään. Mikäli joukkueesi nimi
-              (MyClub ryhmä) ei ole listalla, paina "Kirjoita nimi" ja voit antaa
-              joukkueen nimen itse. Nimen tulee olla tismalleen sama kuin MyClubissa.`}
+            description={`Valitse joukkueesi listalta tai paina "Kirjoita nimi" ja anna kuten se on MyClubissa.`}
             switchText={{
               toInput: {
                 action: "Kirjoita nimi",
@@ -276,8 +273,7 @@ export default function UploadForm() {
           <SelectField
             id="year"
             label="2. Vuosi"
-            description="eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä
-            joten se tulee valita tässä."
+            description="Valitse vuosi, eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä."
             Icon={LuCalendar}
             options={years.map((year) => ({
               value: String(year),
@@ -291,9 +287,7 @@ export default function UploadForm() {
           <SelectField
             id="meetingTime"
             label="3. Kokoontumisaika"
-            description="Valitse kuinka monta minuuttia ennen ottelun alkua joukkueen
-            tulee olla paikalla lämppää varten. Valinta aikaistaa tapahtuman alkuaikaa
-            MyClubissa valinnan verran."
+            description="Voit valita kokoontumisajan lämppää varten, valinta aikaistaa tapahtuman alkamisaikaa."
             Icon={LuClock}
             options={[
               { value: "0", label: "Ei aikaistusta" },
@@ -312,8 +306,6 @@ export default function UploadForm() {
           <SelectField
             id="duration"
             label="4. Tapahtuman kesto"
-            description="Valinnan perusteella lasketaan tapahtuman alkamis- ja
-            päättymisaika, kokoontumisaika huomioiden."
             Icon={LuClock}
             options={[
               { value: "60", label: "1 tunti" },
@@ -330,7 +322,6 @@ export default function UploadForm() {
           <SelectField
             id="eventType"
             label="5. Tapahtumatyyppi"
-            description="Valitse tapahtuman tyyppi MyClubiin."
             Icon={CiBasketball}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue="GAME"
@@ -341,8 +332,7 @@ export default function UploadForm() {
           <SelectField
             id="registration"
             label="6. Ilmoittautuminen"
-            description="Valitse kenelle ilmoittautuminen tapahtumaan MyClubissa
-            on sallittu."
+            description="Valitse kenelle tapahtumaan ilmoittautuminen sallitaan MyClubissa."
             Icon={LuUsers}
             options={[
               { value: "Valituille henkilöille" },
@@ -364,9 +354,8 @@ export default function UploadForm() {
               disabled={loading}
               Icon={LuDownload}
               label="Lataa Excel"
-              description={`Tallenna esikatselun mukainen excel-tiedosto omalle
-                tietokoneellesi, siirry MyClubin tapahtumien hallintaan ja valitse
-                "Tuo tapahtumia" välilehti vasemmassa sivupalkissa.`}
+              description={`Tallenna esikatselun mukainen Excel-tiedosto omalle
+                tietokoneellesi, muokkaa tarvittaessa ja siirry MyClubiin tuomaan tapahtumat tiedostosta.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
