@@ -170,3 +170,13 @@ table {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
+// Embedded images
+.image-embed {
+  max-width: 100%;
+  height: auto;
+  margin: 0.5rem 0;
+  border-radius: v.$border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid v.$color-border;
+}

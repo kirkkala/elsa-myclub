@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { LuBookMarked, LuGithub } from "react-icons/lu"
 import { SITE_CONFIG } from "../config"
 import Layout from "../components/Layout/Layout"
@@ -61,8 +62,19 @@ export default function Docs() {
             <li>
               <strong>Hae ottelut eLSA:sta</strong>
               <p>
-                Kirjaudu https://elsa.basket.fi ja siirry "ottelut" -sivulle. Lataa ottelutiedosto
-                Excel-muodossa. [KUVA]
+                Kirjaudu{" "}
+                <a href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
+                  elsa.basket.fi
+                </a>
+                , siirry "Ottelut" -välilehdelle ja lataa ottelutiedosto Excel-muodossa omalle
+                tietokoneellesi.
+                <Image
+                  src="/images/docs/elsa-excel-download.png"
+                  alt="eLSA Excel-tiedoston lataaminen"
+                  width={887}
+                  height={346}
+                  className="image-embed"
+                />
               </p>
             </li>
             <li>
