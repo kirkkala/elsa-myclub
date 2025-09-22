@@ -23,14 +23,14 @@ export default function Docs() {
         <BackLink />
         <Info title="Tietoja sovelluksesta" expandable defaultOpen={false}>
           <p>
-            {SITE_CONFIG.name}n avulla voit tehdä{" "}
-            <a href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
+            {SITE_CONFIG.name}n avulla voit muuntaa{" "}
+            <Link href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
               eLSA
-            </a>
-            :sta ladatun joukkeen sarjapelien excel-tiedoston{" "}
-            <a href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
+            </Link>
+            :sta ladatun joukkeen sarjapelien Excel-tiedoston{" "}
+            <Link href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
               MyClub
-            </a>
+            </Link>
             :in kanssa yhteensopivaksi tuontitiedostoksi.
           </p>
           <h3>Kenelle sovellus on tarkoitettu?</h3>
@@ -39,9 +39,9 @@ export default function Docs() {
             taustahenkilölle ketkä siirtävät pelejä eLSA:sta MyClub:iin.
           </p>
           <p>
-            <a href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
+            <Link href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
               Helsingin NMKY
-            </a>
+            </Link>{" "}
             seuran joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös
             käsin niin myös muiden seurojen joukkueet voivat vapaasti hyödyntää sovellusta.
           </p>
@@ -63,11 +63,10 @@ export default function Docs() {
               <strong>Hae ottelut eLSA:sta</strong>
               <p>
                 Kirjaudu{" "}
-                <a href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
+                <Link href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
                   elsa.basket.fi
-                </a>
-                , siirry "Ottelut" -välilehdelle ja lataa ottelutiedosto Excel-muodossa omalle
-                tietokoneellesi.
+                </Link>
+                , siirry joukkueesi "Ottelut" -välilehdelle ja lataa ottelutiedosto Excel-muodossa.
                 <Image
                   src="/images/docs/elsa-excel-download.png"
                   alt="eLSA Excel-tiedoston lataaminen"
@@ -78,75 +77,74 @@ export default function Docs() {
               </p>
             </li>
             <li>
-              <strong>Valitse tiedosto sovelluksessa</strong>
+              <strong>Siirrä tiedosto sovellukseen</strong>
               <p>
-                Paina "Valitse tiedosto..." ja siirrä eLSA:sta ladattu Excel-tiedosto sivustolle
-                muunnosta varten.
+                Mene sovelluksen <Link href="/">etusivulle</Link>, "Valitse tiedosto..." ja valitse
+                eLSA:sta lataamasi Excel muunnosta varten.
               </p>
             </li>
             <li>
               <strong>Säädä asetukset</strong>
-              <br />
-              Säädä asetukset joukkueellesi sopiviksi:
               <ol>
                 <li>
-                  <strong>Joukkue (MyClub ryhmä)</strong>: Joukkueesi nimi kuten se on MyClubissa.
-                  Valitse joko listalta tai kirjoita nimi itse jos joukkueesi ei ole listalla. Tämän
-                  avulla pelien tuonti yhdistetään oikeaan ryhmään MyClubissa.
+                  <strong>Joukkue (MyClub ryhmä)</strong>: Tämän tiedon avulla pelien tuonti
+                  yhdistetään oikeaan ryhmään MyClubissa. Valitse joukkueesi listalta tai kirjoita
+                  nimi kuten se on MyClubissa mikäli joukkueesi ei ole valintalistalla.
                 </li>
                 <li>
                   <strong>Vuosi</strong>: eLSA tiedostosta puuttuu vuosiluku päivämäärien yhteydessä
-                  joten vuosi tulee asettaa tässä. Mikäli pelisi ovat eri vuosille, voit muokata
-                  tämän muunnostiedoston omalla koneellasi lataamisen.
+                  joten vuosi tulee valita. Mikäli tiedoston pelit osuvat ovat eri vuosille, voit
+                  muokata niitä excelissä omalla koneellasi tiedoston lataamisen jälkeen.
                 </li>
                 <li>
-                  <strong>Kokoontumisaika</strong>: Valitse kuinka monta minuuttia ennen ottelun
-                  alkua joukkueen tulee olla paikalla lämmittelyä varten. Valinta aikaistaa
-                  tapahtuman alkuaikaa MyClubissa valinnan verran ja lisää MyClub-tapahtuman
-                  kuvaukseen tiedon lämppä- ja otteluajan alusta.
+                  <strong>Kokoontumisaika</strong>: Valitse kuinka paljon ennen ottelun alkua
+                  joukkueen tulee olla paikalla lämmittelyä varten. Valinta aikaistaa tapahtuman
+                  alkuaikaa MyClubissa sekä lisää MyClub-tapahtuman kuvaukseen tiedon erikseen
+                  lämppä- ja otteluajan alusta.
                 </li>
                 <li>
                   <strong>Tapahtuman kesto</strong>: Valitse tapahtuman kesto. Tämän perusteella
-                  lasketaan tapahtuman alkamis- ja päättymisaika kokoontumisaika huomioiden.
+                  lasketaan tapahtuman alkamis- ja päättymisaika mahdollinen kokoontumisaika
+                  huomioiden.
                 </li>
                 <li>
-                  <strong>Tapahtumatyyppi</strong>: Valitse tapahtuman tyyppi MyClubiin. Yleensä
-                  "Ottelu" sarjapeleille.
+                  <strong>Tapahtumatyyppi</strong>: Valitse tapahtuman tyyppi MyClubiin. "Ottelu" on
+                  yleensä paras valinta sarjapelejä varten.
                 </li>
                 <li>
                   <strong>Ilmoittautuminen</strong>: Valitse kenelle ilmoittautuminen tapahtumaan
                   MyClubissa on sallittu. "Valituille henkilöille" on yleensä paras valinta
-                  joukkuepeleille. Näin valmentaja voi avata ilmoittautumisen vain kokoonpanoon
+                  sarjapeleille. Näin valmentaja voi avata ilmoittautumisen vain kokoonpanoon
                   lisätyille pelaajille.
                 </li>
               </ol>
             </li>
             <li>
-              <strong>Esikatsele tulosta</strong>
+              <strong>Esikatsele muunnosta</strong>
               <p>
-                Voit esikatsella muunnostiedoston sisältöä ennen lataamista omalle koneellesi.
+                Voit esikatsella muunnostiedoston sisältöä ennen sen lataamista omalle koneelle.
                 Esikatselu päivittyy reaaliaikaisesti kun muutat asetuksia.
               </p>
             </li>
             <li>
-              <strong>Lataa MyClub-tiedosto</strong>
+              <strong>Lataa tiedosto</strong>
               <p>
                 Kun näyttää hyvältä, painma "Lataa Excel" ja tallenna tiedosto tietokoneellesi.
                 Tarvittaessa voit muokata muunnostiedostoa omalla koneellasi lataamisen jälkeen.
               </p>
             </li>
             <li>
-              <strong>Tuo tiedosto MyClub:iin</strong>
+              <strong>Vie tiedosto MyClub:iin</strong>
               <p>Kirjaudu MyClub:iin, siirry tapahtumien hallintaan ja valitse "Tuo tapahtumia".</p>
               <p>
-                Katso tarkemmat ohjeet MyClubin dokumentaatiosta{" "}
-                <a
+                Ohjeet MyClubin dokumentaatiossa:{" "}
+                <Link
                   href="https://docs.myclub.fi/article/1213-tapahtumien-tuonti"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Tapahtumat → Tapahtumien tuonti
-                </a>
+                </Link>
                 .
               </p>
             </li>
@@ -161,17 +159,9 @@ export default function Docs() {
             <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
           </p>
           <p>
-            Haluatko osallistua lähdekoodin kehittämiseen?
+            Haluatko osallistua applikaation kehittämiseen?
             <br />
-            Katso koodit{" "}
-            <a
-              href="https://github.com/kirkkala/elsa-myclub"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHubissa
-            </a>{" "}
-            ja tee pull request.
+            Katso koodit GitHubissa ja tee pull request.
           </p>
           <hr />
           <ul className="list-reset">
@@ -180,13 +170,13 @@ export default function Docs() {
             </li>
             <li>
               <LuGithub /> Lähdekoodi{" "}
-              <a
+              <Link
                 href={SITE_CONFIG.links.githubAppRepoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 GitHubissa
-              </a>
+              </Link>
             </li>
           </ul>
         </Info>

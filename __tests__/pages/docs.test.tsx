@@ -13,7 +13,7 @@ const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>
 // Test constants and patterns
 const EXPECTED_CONTENT = {
   pageTitle: "Tietoja sovelluksesta",
-  appDescription: /avulla voit tehdä/,
+  appDescription: /eLSA → MyClub Muuntajan avulla voit muuntaa/,
   usageTitle: "Käyttöohjeet",
   usageInstructions: /Hae ottelut eLSA:sta/,
   privacyTitle: "Tietosuojaseloste",
