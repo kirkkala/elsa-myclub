@@ -4,7 +4,7 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.0.0 (2025-09-21)
+## v1.0.0 (2025-09-22)
 
 - Käyttöohjeet ja tiedot applikaatiosta erilliselle [/docs](/docs) -sivulle 📔
 - Stable release: toteutuksen ja koodin siivous, testiautomaation parannus 🧹✨
