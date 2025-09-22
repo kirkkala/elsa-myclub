@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import Changelog, { getStaticProps } from "../../pages/changelog"
 import packageJson from "../../package.json"
-import { SITE_CONFIG } from "../../config"
+import { testPageElements } from "../shared/page-elements.test"
 
 // Mock Next.js router
 jest.mock("next/router", () => ({
@@ -61,87 +61,100 @@ jest.mock("remark-html", () => ({
   default: () => ({}),
 }))
 
+// Test constants and patterns
+const VERSION_PATTERNS = {
+  flexible: /v\d+\.\d+(\.\d+)?/,
+  headingWithDate: /v\d+\.\d+(\.\d+)?(-beta)? \(\d{4}-\d{2}-\d{2}\)/,
+  htmlExtraction: /<h3>v(\d+\.\d+(\.\d+)?)/,
+} as const
+
+const EXPECTED_CONTENT = {
+  historyTitle: /Versiohistoria/,
+  knownChangelogContent: [/Tekninen päivitys/, /Pelin lämppä/],
+  markdownElements: ["<li>", "<h3>", "<p>"],
+  emojis: ["💅", "🤖"],
+} as const
+
+// Test helper functions
+const setupChangelogTest = async () => {
+  const { props } = await getStaticProps()
+  const renderResult = render(<Changelog {...props} />)
+  return { props, renderResult }
+}
+
+const getLatestVersionFromChangelog = (contentHtml: string) => {
+  const versionMatch = contentHtml.match(VERSION_PATTERNS.htmlExtraction)
+  expect(versionMatch).toBeTruthy()
+  return versionMatch![1]
+}
+
+const expectElementsToBePresent = (patterns: readonly (string | RegExp)[]) => {
+  patterns.forEach((pattern) => {
+    if (typeof pattern === "string") {
+      expect(screen.getByText(pattern)).toBeInTheDocument()
+    } else {
+      expect(screen.getByText(pattern)).toBeInTheDocument()
+    }
+  })
+}
+
+const expectContentToContain = (content: string, patterns: readonly string[]) => {
+  patterns.forEach((pattern) => {
+    expect(content).toContain(pattern)
+  })
+}
+
 describe("Changelog page", () => {
+  // Test generic page elements
+  testPageElements(Changelog, { contentHtml: "<h3>v1.0.0 (2023-01-01)</h3><p>Test content</p>" })
+
   it("renders changelog content with proper structure", async () => {
-    const { props } = await getStaticProps()
-    render(<Changelog {...props} />)
+    await setupChangelogTest()
 
-    // Test the main page title from config
-    expect(screen.getByText(SITE_CONFIG.name)).toBeInTheDocument()
-
-    // Test that the changelog content is rendered
-    expect(screen.getByText(/Versiohistoria/)).toBeInTheDocument()
+    // Test the main page elements
+    expectElementsToBePresent([EXPECTED_CONTENT.historyTitle])
 
     // Test that version numbers are displayed
-    const versionElements = screen.getAllByText(/v\d+\.\d+\.\d+-beta/)
+    const versionElements = screen.getAllByText(VERSION_PATTERNS.flexible)
     expect(versionElements.length).toBeGreaterThan(0)
-
-    // Test the version history text
-    expect(screen.getByText("(versiohistoria)")).toBeInTheDocument()
   })
 
   it("renders version headings and content correctly", async () => {
-    const { props } = await getStaticProps()
-    render(<Changelog {...props} />)
+    await setupChangelogTest()
 
     // Test that version headings exist
     const versionHeadings = screen.getAllByRole("heading", {
-      name: /v\d+\.\d+\.\d+-beta \(\d{4}-\d{2}-\d{2}\)/,
+      name: VERSION_PATTERNS.headingWithDate,
     })
     expect(versionHeadings.length).toBeGreaterThan(0)
 
     // Test specific known content
-    expect(screen.getByText(/Tekninen päivitys/)).toBeInTheDocument()
-    expect(screen.getByText(/Pelin lämppä/)).toBeInTheDocument()
+    expectElementsToBePresent(EXPECTED_CONTENT.knownChangelogContent)
   })
 
   it("ensures package.json version matches latest changelog version", async () => {
-    const { props } = await getStaticProps()
+    const { props } = await setupChangelogTest()
 
-    // Extract the latest version from CHANGELOG.md
-    const versionMatch = props.contentHtml.match(/<h3>v(\d+\.\d+\.\d+-beta)/)
-    expect(versionMatch).toBeTruthy()
-
-    const latestChangelogVersion = versionMatch![1]
+    const latestChangelogVersion = getLatestVersionFromChangelog(props.contentHtml)
     const packageVersion = packageJson.version
 
-    // Compare the versions
     expect(latestChangelogVersion).toBe(packageVersion)
   })
 
   it("preserves markdown formatting and emojis", async () => {
-    const { props } = await getStaticProps()
+    const { props } = await setupChangelogTest()
 
     // Test that markdown elements are preserved
-    expect(props.contentHtml).toContain("<li>")
-    expect(props.contentHtml).toContain("<h3>")
-    expect(props.contentHtml).toContain("<p>")
+    expectContentToContain(props.contentHtml, EXPECTED_CONTENT.markdownElements)
 
-    // Test few emojis from CHANGELOG.md that they are rendered
-    expect(props.contentHtml).toContain("💅")
-    expect(props.contentHtml).toContain("🤖")
-  })
-
-  it("renders navigation and footer correctly", async () => {
-    const { props } = await getStaticProps()
-    render(<Changelog {...props} />)
-
-    // Test back link
-    const backLinks = screen.getAllByRole("link", { name: /Takaisin/ })
-    expect(backLinks.length).toBeGreaterThan(0)
-    const homeLink = backLinks.find((link) => link.getAttribute("href") === "/")
-    expect(homeLink).toBeInTheDocument()
-
-    // Test footer content
-    expect(screen.getByText(/Made with/)).toBeInTheDocument()
-    expect(screen.getByText(/Timo Kirkkala/)).toBeInTheDocument()
-    expect(screen.getByText(/Source code published on/)).toBeInTheDocument()
-    expect(screen.getByText(/GitHub/)).toBeInTheDocument()
+    // Test that emojis are rendered
+    expectContentToContain(props.contentHtml, EXPECTED_CONTENT.emojis)
   })
 
   it("handles edge cases gracefully", async () => {
-    // Test file read errors
     const mockFs = require("fs")
+
+    // Test file read errors
     mockFs.readFileSync.mockImplementationOnce(() => {
       throw new Error("File not found")
     })
@@ -151,17 +164,5 @@ describe("Changelog page", () => {
     mockFs.readFileSync.mockImplementationOnce(() => "")
     const { props } = await getStaticProps()
     expect(props.contentHtml).toBe("")
-  })
-
-  it("renders with proper page structure", async () => {
-    const { props } = await getStaticProps()
-    render(<Changelog {...props} />)
-
-    // Test that the page has proper semantic structure
-    expect(screen.getByRole("main")).toBeInTheDocument()
-
-    // Test that headings exist
-    const headings = screen.getAllByRole("heading")
-    expect(headings.length).toBeGreaterThan(0)
   })
 })

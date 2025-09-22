@@ -26,9 +26,24 @@ const DEFAULT_VALUES = {
 } as const
 
 describe("UploadForm", () => {
+  // Mock URL methods
+  const mockCreateObjectURL = jest.fn()
+  const mockRevokeObjectURL = jest.fn()
+
   beforeEach(() => {
     // Reset all mocks before each test
     jest.resetAllMocks()
+
+    // Mock URL methods
+    Object.defineProperty(window, "URL", {
+      value: {
+        createObjectURL: mockCreateObjectURL,
+        revokeObjectURL: mockRevokeObjectURL,
+      },
+      writable: true,
+    })
+
+    mockCreateObjectURL.mockReturnValue("blob:test-url")
     ;(global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: () =>
@@ -38,7 +53,7 @@ describe("UploadForm", () => {
               Nimi: "Test Event",
               Ryhmä: "Test Group",
               Tapahtumatyyppi: "Ottelu",
-              Tapahtumapaikka: "Test Venue",
+              Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
               Alkaa: "2024-01-01 10:00:00",
               Päättyy: "2024-01-01 11:00:00",
               Ilmoittautuminen: "Valituille henkilöille",
@@ -224,7 +239,7 @@ describe("UploadForm", () => {
                 Nimi: "Test Event",
                 Ryhmä: "Test Group",
                 Tapahtumatyyppi: "Ottelu",
-                Tapahtumapaikka: "Test Venue",
+                Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
                 Alkaa: "2024-01-01 10:00:00",
                 Päättyy: "2024-01-01 11:00:00",
                 Ilmoittautuminen: "Valituille henkilöille",

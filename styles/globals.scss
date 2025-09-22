@@ -27,6 +27,11 @@ ul {
   margin: 0 0 1rem;
 }
 
+ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 ul {
   list-style: none;
   padding-left: 1.5rem;
@@ -39,6 +44,10 @@ ul {
       content: "•";
       position: absolute;
       left: -1.5rem;
+    }
+
+    li {
+      margin-top: 0rem;
     }
   }
 
@@ -116,6 +125,39 @@ table {
   }
 }
 
+// Button styles
+.btn-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: v.$color-bg-light;
+  color: v.$color-text;
+  text-decoration: none;
+  border-radius: v.$border-radius;
+  border: 1px solid v.$color-border;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: v.$transition-base;
+  cursor: pointer;
+  min-width: 280px;
+
+  &:hover {
+    background-color: v.$color-bg-light;
+    border-color: v.$color-border;
+    color: v.$color-primary;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -127,4 +169,14 @@ table {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+}
+
+// Embedded images
+.image-embed {
+  max-width: 100%;
+  height: auto;
+  margin: 0.5rem 0;
+  border-radius: v.$border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid v.$color-border;
 }

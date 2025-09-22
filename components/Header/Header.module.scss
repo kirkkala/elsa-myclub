@@ -27,6 +27,7 @@
 
 .headerWithLogos {
   composes: header;
+  position: relative;
 
   .titleLogos {
     @include ui.flex-center;
@@ -53,6 +54,40 @@
     .titleArrow {
       color: v.$color-text-light;
       font-size: 1.75rem;
+    }
+  }
+
+  .titleWithBadge {
+    @include ui.flex-center;
+    align-items: flex-start;
+    gap: 0.5rem;
+
+    h1 {
+      margin-bottom: 0;
+    }
+  }
+
+  .versionBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: v.$color-primary;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: rotate(8deg) translateY(-0.5rem);
+    transition: v.$transition-base;
+    text-decoration: none;
+
+    &:hover {
+      background-color: v.$color-primary-dark;
+      transform: rotate(8deg) translateY(-0.55rem);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
     }
   }
 }

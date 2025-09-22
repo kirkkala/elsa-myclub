@@ -18,10 +18,22 @@
     list-style: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
 
     &:hover {
       color: v.$color-primary;
+
+      .summaryTitle {
+        color: v.$color-primary;
+      }
+    }
+
+    .summaryTitle {
+      margin: 0;
+      font-size: 1.25rem;
+      color: v.$color-text;
+      flex: 1;
     }
   }
 
@@ -29,7 +41,7 @@
     padding: 1rem;
 
     &.expandable {
-      padding-top: 0;
+      padding-top: 0.5rem;
     }
 
     h2 {
@@ -53,15 +65,21 @@
   }
 
   .summaryClosed {
-    .icon {
-      transform: translate(-0.2rem, 0.1rem);
-    }
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: v.$transition-base;
   }
 
   &[open] {
     summary {
       .summaryOpen {
-        display: block;
+        display: flex;
+        align-items: center;
       }
       .summaryClosed {
         display: none;

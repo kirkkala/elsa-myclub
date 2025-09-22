@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v1.0.0 (2025-09-22)
+
+- Käyttöohjeet ja tiedot applikaatiosta erilliselle [/docs](/docs) -sivulle 📔
+- Stable release: toteutuksen ja koodin siivous, testiautomaation parannus 🧹✨
+
 ## v0.2.3-beta (2025-09-21)
 
 - Stackin modernisointi ja npm päivitykset 🤓
@@ -51,8 +56,8 @@ This changelog is printed on the application at /changelog
 ## v0.1.0-beta (2024-12-30)
 
 - Ensimmäinen beta-versio 🎉
-- ELSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla 📊
+- eLSA excel tiedostojen muuntamiseen, oleellisimmilla MyClub asetuksilla 📊
 - Automaattinen divisioonanimen lisäys tapahtuman nimeen (Divisioona + koti/vierasjoukkue) 📊
-- Tuki eri päivämääräformaateille ELSA:n epästandeista päivämääräkentistä 📅
+- Tuki eri päivämääräformaateille eLSA:n epästandeista päivämääräkentistä 📅
 - Tuki pelin keston määrittämiselle = Tapahtuman loppuaika 🕒
 - Tuki tiedoston valintaan ja lataukseen 📂
