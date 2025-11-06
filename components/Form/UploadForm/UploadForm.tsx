@@ -31,6 +31,9 @@ export default function UploadForm() {
     setSelectedFile(file ? file.name : "")
     setShowSuccess(false)
     setPreviewData([])
+    
+    // TODO: Remove this console.log before production
+    console.log("File selected:", file?.name)
 
     // Trigger preview if file is selected
     if (file) {
@@ -43,7 +46,7 @@ export default function UploadForm() {
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
-    if (selectedFile == "") {
+    if (!selectedFile) {
       return
     }
 
@@ -118,6 +121,9 @@ export default function UploadForm() {
         method: "POST",
         body: formData,
       })
+      
+      // Debug response status
+      console.log("API response status:", response.status)
 
       const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
 
@@ -130,6 +136,7 @@ export default function UploadForm() {
       setShowSuccess(true)
     } catch (err) {
       setShowSuccess(false)
+      console.error("Preview error:", err) // This should be proper error logging
       setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
     }
   }
