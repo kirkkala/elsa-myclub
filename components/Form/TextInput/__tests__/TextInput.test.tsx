@@ -1,34 +1,44 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, fireEvent } from "@testing-library/react"
 import { LuUser } from "react-icons/lu"
 import TextInput from "../TextInput"
 
+const mockProps = {
+  id: "test",
+  label: "Label",
+  description: "Description",
+  Icon: LuUser,
+  placeholder: "Placeholder",
+}
+
 describe("TextInput", () => {
-  const mockProps = {
-    id: "test-input",
-    label: "Test Label",
-    description: "Test description",
-    Icon: LuUser,
-    placeholder: "Enter value",
-  }
-
-  it("renders basic input with all elements", () => {
+  it("renders with all elements", () => {
     render(<TextInput {...mockProps} />)
-
-    expect(screen.getByLabelText(/Test Label/i)).toBeInTheDocument()
-    expect(screen.getByText("Test description")).toBeInTheDocument()
-    expect(screen.getByPlaceholderText("Enter value")).toBeInTheDocument()
+    expect(screen.getByLabelText("Label")).toBeInTheDocument()
+    expect(screen.getByText("Description")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("Placeholder")).toBeInTheDocument()
   })
 
-  it("renders suffix when provided", () => {
-    const suffix = <span>Test Suffix</span>
-    render(<TextInput {...mockProps} suffix={suffix} />)
-
-    expect(screen.getByText("Test Suffix")).toBeInTheDocument()
-    expect(screen.getByText("Test Suffix").parentElement).toHaveClass("suffix")
+  it("renders suffix", () => {
+    render(<TextInput {...mockProps} suffix={<span>Suffix</span>} />)
+    expect(screen.getByText("Suffix").parentElement).toHaveClass("suffix")
   })
 
-  it("handles required attribute", () => {
-    render(<TextInput {...mockProps} required />)
-    expect(screen.getByRole("textbox")).toHaveAttribute("required")
+  it("handles props correctly", () => {
+    const onChange = jest.fn()
+    render(<TextInput {...mockProps} required disabled defaultValue="test" onChange={onChange} />)
+
+    const input = screen.getByRole("textbox")
+    expect(input).toHaveAttribute("required")
+    expect(input).toBeDisabled()
+    expect(input).toHaveValue("test")
+
+    fireEvent.change(input, { target: { value: "new" } })
+    expect(onChange).toHaveBeenCalled()
+  })
+
+  it("handles missing description", () => {
+    render(<TextInput {...mockProps} description={undefined} />)
+    expect(screen.queryByText("Description")).not.toBeInTheDocument()
+    expect(screen.getByRole("textbox")).not.toHaveAttribute("aria-describedby")
   })
 })

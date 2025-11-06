@@ -2,45 +2,32 @@ import { render, screen } from "@testing-library/react"
 import { LuUser } from "react-icons/lu"
 import SelectField from "../SelectField"
 
+const mockProps = {
+  id: "test",
+  label: "Label",
+  description: "Description",
+  Icon: LuUser,
+  options: [
+    { value: "opt1", label: "Option 1" },
+    { value: "opt2", label: "Option 2" },
+    { value: "opt3" }, // No label - tests value fallback
+  ],
+}
+
 describe("SelectField", () => {
-  const mockProps = {
-    id: "test-select",
-    label: "Test Label",
-    description: "Test description",
-    Icon: LuUser,
-    options: [{ value: "option1", label: "Option 1" }, { value: "option2" }],
-  }
-
-  it("renders select with all elements", () => {
+  it("renders with all elements", () => {
     render(<SelectField {...mockProps} />)
-
-    expect(screen.getByLabelText(/Test Label/i)).toBeInTheDocument()
-    expect(screen.getByText("Test description")).toBeInTheDocument()
+    expect(screen.getByLabelText("Label")).toBeInTheDocument()
+    expect(screen.getByText("Description")).toBeInTheDocument()
     expect(screen.getByText("Option 1")).toBeInTheDocument()
+    expect(screen.getByText("Option 2")).toBeInTheDocument()
+    expect(screen.getByText("opt3")).toBeInTheDocument() // Value used when no label
   })
 
-  it("renders select option withou label", () => {
-    render(<SelectField {...mockProps} />)
-
-    expect(screen.getByLabelText(/Test Label/i)).toBeInTheDocument()
-    expect(screen.getByText("option2")).toBeInTheDocument()
-  })
-
-  it("renders suffix when provided", () => {
-    const suffix = <span>Test Suffix</span>
-    render(<SelectField {...mockProps} suffix={suffix} />)
-
-    expect(screen.getByText("Test Suffix")).toBeInTheDocument()
-    expect(screen.getByText("Test Suffix").parentElement).toHaveClass("suffix")
-  })
-
-  it("handles required attribute", () => {
-    render(<SelectField {...mockProps} required />)
+  it("renders suffix and handles props", () => {
+    render(<SelectField {...mockProps} suffix={<span>Suffix</span>} required className="custom" />)
+    expect(screen.getByText("Suffix").parentElement).toHaveClass("suffix")
     expect(screen.getByRole("combobox")).toHaveAttribute("required")
-  })
-
-  it("applies custom className when provided", () => {
-    render(<SelectField {...mockProps} className="custom-class" />)
-    expect(screen.getByTestId("select-wrapper")).toHaveClass("custom-class")
+    expect(screen.getByTestId("select-wrapper")).toHaveClass("custom")
   })
 })

@@ -27,6 +27,7 @@ describe("Info component", () => {
     mockLocation.hash = ""
     mockHistory.replaceState.mockClear()
   })
+
   describe("Non-expandable info", () => {
     it("renders title and content", () => {
       render(
