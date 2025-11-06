@@ -1,8 +1,6 @@
 import { render, screen } from "@testing-library/react"
 import { SITE_CONFIG } from "../../config"
 
-jest.mock("next-seo", () => ({ NextSeo: () => null }))
-
 export const testPageElements = (
   PageComponent: React.ComponentType<Record<string, unknown>>,
   props: Record<string, unknown> = {}

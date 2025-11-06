@@ -14,7 +14,8 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 
 ### Prerequisites
 
-- Node.js 22.19.0 (see `.nvmrc`)
+- Node.js (see `.nvmrc` for version)
+- nvm (for node version management)
 - npm (comes with Node.js)
 
 ## Project Structure
@@ -86,25 +87,35 @@ The application converts eLSA basketball schedule Excel files to MyClub-compatib
 
 ## Development
 
-Install Node.js 22.19.0 and run:
+Use correct node version and install dependencies
 
 ```bash
+nvm install
+nvm use
 npm install
+```
+
+Run development mode
+
+```bash
 npm run dev
 ```
 
 The app will be available at http://localhost:3000
 
-### Available Scripts
+### All available Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run test         # Run tests
-npm run test:watch   # Run tests in watch mode
-npm run test:coverage # Run tests with coverage
+npm run dev             # Start development server
+npm run build           # Build for production
+npm run start           # Start production server
+npm run lint            # Run ESLint
+npm run lint:fix        # Fix linting erros
+npm run test            # Run tests
+npm run test:watch      # Run tests in watch mode
+npm run test:coverage   # Run tests with coverage
+npm run format          # Format code with prettier
+npm run format:check    # Check formatting with prettier
 ```
 
 ### Versioning

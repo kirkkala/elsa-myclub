@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v1.0.1 (YYYY-MM-DD)
+
+- Node, React ja NextJS versiopäivitykset, testiautomaatio 🦾
+
 ## v1.0.0 (2025-09-22)
 
 - Käyttöohjeet ja tiedot applikaatiosta erilliselle [/docs](/docs) -sivulle 📔

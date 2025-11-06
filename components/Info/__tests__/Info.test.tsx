@@ -86,13 +86,13 @@ describe("Info component", () => {
 
     it("generates correct ID from title", () => {
       render(
-        <Info title="Käyttöohjeet ja tietoja">
+        <Info title="Test Title">
           <div>Content</div>
         </Info>
       )
 
       const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "kayttoohjeet-ja-tietoja")
+      expect(details).toHaveAttribute("id", "test-title")
     })
 
     it("uses custom ID when provided", () => {
@@ -108,20 +108,20 @@ describe("Info component", () => {
 
     it("handles Finnish characters in ID generation", () => {
       render(
-        <Info title="Tietoja sovelluksesta ä ö å">
+        <Info title="Käyttöohjeet">
           <div>Content</div>
         </Info>
       )
 
       const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "tietoja-sovelluksesta-a-o-a")
+      expect(details).toHaveAttribute("id", "kayttoohjeet")
     })
 
     it("opens section when ID is in URL hash on mount", () => {
-      mockLocation.hash = "#test-section"
+      mockLocation.hash = "#custom-id"
 
       render(
-        <Info title="Test Section" id="test-section">
+        <Info title="Test Title" id="custom-id">
           <div>Content</div>
         </Info>
       )
@@ -156,6 +156,32 @@ describe("Info component", () => {
       expect(details.open).toBe(false)
     })
 
+    it("handles empty hash gracefully", () => {
+      mockLocation.hash = ""
+
+      render(
+        <Info title="Test Title">
+          <div>Content</div>
+        </Info>
+      )
+
+      const details = screen.getByRole("group") as HTMLDetailsElement
+      expect(details.open).toBe(false)
+    })
+
+    it("handles multiple sections in URL hash", () => {
+      mockLocation.hash = "#section1,test-title,section3"
+
+      render(
+        <Info title="Test Title">
+          <div>Content</div>
+        </Info>
+      )
+
+      const details = screen.getByRole("group") as HTMLDetailsElement
+      expect(details.open).toBe(true)
+    })
+
     it("updates URL hash when section is opened", async () => {
       render(
         <Info title="Test Title">
@@ -176,13 +202,13 @@ describe("Info component", () => {
       mockLocation.hash = "#test-title"
 
       render(
-        <Info title="Test Title" defaultOpen>
+        <Info title="Test Title">
           <div>Content</div>
         </Info>
       )
 
       const button = screen.getByRole("button")
-      fireEvent.click(button)
+      fireEvent.click(button) // Close the section
 
       // Wait for the setTimeout in handleToggle
       await waitFor(() => {
@@ -190,8 +216,26 @@ describe("Info component", () => {
       })
     })
 
-    it("handles multiple sections in URL hash", () => {
+    it("removes section from hash when closing with other sections open", async () => {
       mockLocation.hash = "#section1,test-title,section3"
+
+      render(
+        <Info title="Test Title">
+          <div>Content</div>
+        </Info>
+      )
+
+      const button = screen.getByRole("button")
+      fireEvent.click(button) // Close the section
+
+      // Wait for the setTimeout in handleToggle
+      await waitFor(() => {
+        expect(mockHistory.replaceState).toHaveBeenCalledWith(null, "", "#section1,section3")
+      })
+    })
+
+    it("handles hash with no comma separation", () => {
+      mockLocation.hash = "#test-title"
 
       render(
         <Info title="Test Title">
@@ -201,37 +245,6 @@ describe("Info component", () => {
 
       const details = screen.getByRole("group") as HTMLDetailsElement
       expect(details.open).toBe(true)
-    })
-
-    it("removes section from hash when closing with other sections open", async () => {
-      mockLocation.hash = "#section1,test-title,section3"
-
-      render(
-        <Info title="Test Title" defaultOpen>
-          <div>Content</div>
-        </Info>
-      )
-
-      const button = screen.getByRole("button")
-      fireEvent.click(button)
-
-      // Wait for the setTimeout in handleToggle
-      await waitFor(() => {
-        expect(mockHistory.replaceState).toHaveBeenCalledWith(null, "", "#section1,section3")
-      })
-    })
-
-    it("handles empty hash gracefully", () => {
-      mockLocation.hash = ""
-
-      render(
-        <Info title="Test Title">
-          <div>Content</div>
-        </Info>
-      )
-
-      const details = screen.getByRole("group") as HTMLDetailsElement
-      expect(details.open).toBe(false)
     })
   })
 })
