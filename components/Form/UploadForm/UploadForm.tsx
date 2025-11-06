@@ -31,7 +31,7 @@ export default function UploadForm() {
     setSelectedFile(file ? file.name : "")
     setShowSuccess(false)
     setPreviewData([])
-    
+
     // TODO: Remove this console.log before production
     console.error("File selected:", file?.name)
 
@@ -121,7 +121,7 @@ export default function UploadForm() {
         method: "POST",
         body: formData,
       })
-      
+
       // Debug response status
       console.error("API response status:", response.status)
 
