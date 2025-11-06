@@ -33,7 +33,7 @@ export default function UploadForm() {
     setPreviewData([])
     
     // TODO: Remove this console.log before production
-    console.log("File selected:", file?.name)
+    console.error("File selected:", file?.name)
 
     // Trigger preview if file is selected
     if (file) {
@@ -123,7 +123,7 @@ export default function UploadForm() {
       })
       
       // Debug response status
-      console.log("API response status:", response.status)
+      console.error("API response status:", response.status)
 
       const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
 
