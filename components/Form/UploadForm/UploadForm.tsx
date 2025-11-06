@@ -43,7 +43,7 @@ export default function UploadForm() {
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
-    if (!selectedFile) {
+    if (selectedFile == "") {
       return
     }
 
@@ -324,7 +324,7 @@ export default function UploadForm() {
             label="5. Tapahtumatyyppi"
             Icon={CiBasketball}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
-            defaultValue="GAME"
+            defaultValue="Ottelu"
             onChange={handleFieldChange}
             disabled={!selectedFile || !!error}
           />
