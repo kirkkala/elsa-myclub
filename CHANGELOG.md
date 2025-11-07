@@ -4,6 +4,14 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v1.0.1 (2025-11-07)
+
+- Ylläpito/Versiopäivityksiä 🤓
+  - Node (22->24)
+  - React (minor 19.1->19.2)
+  - NextJS (15->16)
+  - Testiautomaatio päivitykset jest (29->30) 🦾
+
 ## v1.0.0 (2025-09-22)
 
 - Käyttöohjeet ja tiedot applikaatiosta erilliselle [/docs](/docs) -sivulle 📔

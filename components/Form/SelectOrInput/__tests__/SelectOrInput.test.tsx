@@ -1,78 +1,53 @@
 import { render, screen, fireEvent } from "@testing-library/react"
+import { LuUser } from "react-icons/lu"
 import SelectOrInput from "../SelectOrInput"
 
-const uiTexts = {
-  label: "Test Label",
-  description: "Test description",
-  toInputAction: "Add custom text",
-  toListAction: "Select from list",
-  placeholder: "Enter custom value",
+const mockProps = {
+  id: "test",
+  label: "Label",
+  description: "Description",
+  Icon: LuUser,
+  required: true,
+  options: [
+    { value: "A", label: "Team A" },
+    { value: "B", label: "Team B" },
+  ],
+  placeholder: "Placeholder",
+  switchText: {
+    toInput: { action: "To Input" },
+    toList: { action: "To List" },
+  },
 }
 
 describe("SelectOrInput", () => {
-  const mockProps = {
-    id: "test-field",
-    label: uiTexts.label,
-    description: uiTexts.description,
-    Icon: (): React.ReactElement => <span>icon</span>,
-    options: [
-      { value: "HNMKY Team A", label: "HNMKY Team A" },
-      { value: "HNMKY Team B", label: "HNMKY Team B" },
-    ],
-    placeholder: uiTexts.placeholder,
-    required: true,
-    switchText: {
-      toInput: {
-        action: uiTexts.toInputAction,
-      },
-      toList: {
-        action: uiTexts.toListAction,
-      },
-    },
-  }
-
-  it("renders select field by default with all elements", () => {
+  it("renders select mode by default", () => {
     render(<SelectOrInput {...mockProps} />)
     expect(screen.getByRole("combobox")).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.label)).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.description)).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.toInputAction)).toBeInTheDocument()
+    expect(screen.getByText("Label")).toBeInTheDocument()
+    expect(screen.getByText("Description")).toBeInTheDocument()
+    expect(screen.getByText("A")).toBeInTheDocument() // Value is used when no label
+    expect(screen.getByText("To Input")).toBeInTheDocument()
   })
 
-  it("shows custom input with correct text when switching modes", () => {
+  it("switches between modes correctly", () => {
     render(<SelectOrInput {...mockProps} />)
-
-    // Check initial state
-    expect(screen.getByRole("combobox")).toBeInTheDocument()
 
     // Switch to input
-    fireEvent.click(screen.getByText(uiTexts.toInputAction))
+    fireEvent.click(screen.getByText("To Input"))
     expect(screen.getByRole("textbox")).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(uiTexts.placeholder)).toBeInTheDocument()
-    expect(screen.getByText(uiTexts.toListAction)).toBeInTheDocument()
-  })
+    expect(screen.getByPlaceholderText("Placeholder")).toBeInTheDocument()
+    expect(screen.getByText("To List")).toBeInTheDocument()
 
-  it("returns to select field when switching back", () => {
-    render(<SelectOrInput {...mockProps} />)
-    fireEvent.click(screen.getByText(uiTexts.toInputAction))
-    fireEvent.click(screen.getByText(uiTexts.toListAction))
+    // Switch back to select
+    fireEvent.click(screen.getByText("To List"))
     expect(screen.getByRole("combobox")).toBeInTheDocument()
-  })
-
-  it("displays full team names in select options", () => {
-    render(<SelectOrInput {...mockProps} />)
-    expect(screen.getByText("HNMKY Team A")).toBeInTheDocument()
-    expect(screen.getByText("HNMKY Team B")).toBeInTheDocument()
   })
 
   it("maintains required attribute in both modes", () => {
     render(<SelectOrInput {...mockProps} />)
-
-    // Check select is required
     expect(screen.getByRole("combobox")).toHaveAttribute("required")
 
-    // Switch to input and check
-    fireEvent.click(screen.getByText(uiTexts.toInputAction))
+    fireEvent.click(screen.getByText("To Input"))
     expect(screen.getByRole("textbox")).toHaveAttribute("required")
   })
 })

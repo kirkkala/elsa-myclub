@@ -7,7 +7,7 @@ import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 // Mock fetch globally
 global.fetch = jest.fn()
 
-// Constants
+// Test constants
 const DOWNLOAD_BUTTON_TEXT = /lataa excel/i
 const FORM_LABELS = {
   TEAM: /joukkue/i,
@@ -24,6 +24,72 @@ const DEFAULT_VALUES = {
   EVENT_TYPE: "Ottelu",
   REGISTRATION: "Valituille henkilöille",
 } as const
+
+// Test helpers
+const createMockExcelFile = (name = "test.xlsx", content = "") =>
+  new File([content], name, {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  })
+
+const mockSuccessfulPreviewResponse = {
+  ok: true,
+  json: () =>
+    Promise.resolve({
+      data: [
+        {
+          Nimi: "Test Event",
+          Ryhmä: "Test Group",
+          Tapahtumatyyppi: "Ottelu",
+          Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
+          Alkaa: "2024-01-01 10:00:00",
+          Päättyy: "2024-01-01 11:00:00",
+          Ilmoittautuminen: "Valituille henkilöille",
+          Näkyvyys: "Näkyy ryhmälle",
+          Kuvaus: "Test Description",
+        },
+      ],
+    }),
+}
+
+const uploadFileAndWaitForPreview = async (fileName?: string) => {
+  const fileInput = screen.getByTestId("file-input")
+  fireEvent.change(fileInput, {
+    target: { files: [createMockExcelFile(fileName)] },
+  })
+
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
+  })
+}
+
+const uploadFile = (fileName = "test.xlsx", content = "") => {
+  const fileInput = screen.getByTestId("file-input")
+  fireEvent.change(fileInput, {
+    target: { files: [createMockExcelFile(fileName, content)] },
+  })
+}
+
+const mockDownloadEnvironment = () => {
+  const mockClick = jest.fn()
+  const originalCreateElement = document.createElement
+  const originalAppendChild = document.body.appendChild
+
+  document.createElement = jest.fn().mockReturnValue({
+    href: "",
+    download: "",
+    click: mockClick,
+    remove: jest.fn(),
+  })
+  document.body.appendChild = jest.fn()
+
+  return {
+    mockClick,
+    restore: () => {
+      document.createElement = originalCreateElement
+      document.body.appendChild = originalAppendChild
+    },
+  }
+}
 
 describe("UploadForm", () => {
   // Mock URL methods
@@ -44,25 +110,13 @@ describe("UploadForm", () => {
     })
 
     mockCreateObjectURL.mockReturnValue("blob:test-url")
-    ;(global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          data: [
-            {
-              Nimi: "Test Event",
-              Ryhmä: "Test Group",
-              Tapahtumatyyppi: "Ottelu",
-              Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
-              Alkaa: "2024-01-01 10:00:00",
-              Päättyy: "2024-01-01 11:00:00",
-              Ilmoittautuminen: "Valituille henkilöille",
-              Näkyvyys: "Näkyy ryhmälle",
-              Kuvaus: "Test Description",
-            },
-          ],
-        }),
-    })
+    // Set default successful response
+    ;(global.fetch as jest.Mock).mockResolvedValue(mockSuccessfulPreviewResponse)
+  })
+
+  afterEach(() => {
+    // Clean up any DOM modifications
+    jest.restoreAllMocks()
   })
 
   it("validates file input", () => {
@@ -71,32 +125,17 @@ describe("UploadForm", () => {
     expect(groupInput).not.toBeRequired()
   })
 
-  it("shows correct button state based on file selection", async () => {
+  it("shows download button after successful file upload", async () => {
     render(<UploadForm />)
-    const downloadButton = screen.queryByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
-    expect(downloadButton).not.toBeInTheDocument()
 
-    const fileInput = screen.getByTestId("file-input")
-    fireEvent.change(fileInput, {
-      target: {
-        files: [
-          new File([""], "test.xlsx", {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          }),
-        ],
-      },
-    })
+    // Initially no download button
+    expect(screen.queryByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).not.toBeInTheDocument()
 
-    // Wait for the preview data to load and button to appear
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
-    })
-  })
+    // Upload file and wait for preview
+    await uploadFileAndWaitForPreview()
 
-  it("does not show download button before preview", () => {
-    render(<UploadForm />)
-    const downloadButton = screen.queryByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
-    expect(downloadButton).not.toBeInTheDocument()
+    // Download button should now be visible
+    expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
   })
 
   it("shows form fields with correct default values", () => {
@@ -121,16 +160,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Upload a file to trigger the preview API call
-    const fileInput = screen.getByTestId("file-input")
-    fireEvent.change(fileInput, {
-      target: {
-        files: [
-          new File([""], "test.xlsx", {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          }),
-        ],
-      },
-    })
+    uploadFile()
 
     // Wait for error message to appear
     await waitFor(() => {
@@ -144,21 +174,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // First upload a file to enable preview functionality
-    const fileInput = screen.getByTestId("file-input")
-    fireEvent.change(fileInput, {
-      target: {
-        files: [
-          new File([""], "test.xlsx", {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          }),
-        ],
-      },
-    })
-
-    // Wait for preview to complete
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
-    })
+    await uploadFileAndWaitForPreview()
 
     // Change form fields
     const yearSelect = screen.getByLabelText(FORM_LABELS.YEAR)
@@ -198,16 +214,11 @@ describe("UploadForm", () => {
 
     render(<UploadForm />)
 
-    // Create a file object
-    const file = new File(["dummy content"], "test.xlsx", {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    })
-
-    // Get the file input using the correct selector
-    const fileInput = screen.getByTestId("file-input")
-
     // Upload the file
-    await userEvent.upload(fileInput, file)
+    await userEvent.upload(
+      screen.getByTestId("file-input"),
+      createMockExcelFile("test.xlsx", "dummy content")
+    )
 
     // Wait for the error message to appear
     await waitFor(() => {
@@ -220,44 +231,19 @@ describe("UploadForm", () => {
   })
 
   it("clears error message when new file is selected", async () => {
-    // First mock an error response
+    // First mock an error response, then a successful response
     ;(global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: false,
-        json: () =>
-          Promise.resolve({
-            message: "Excel-tiedoston prosessointi epäonnistui.",
-          }),
+        json: () => Promise.resolve({ message: "Excel-tiedoston prosessointi epäonnistui." }),
       })
-      // Then mock a successful response
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            data: [
-              {
-                Nimi: "Test Event",
-                Ryhmä: "Test Group",
-                Tapahtumatyyppi: "Ottelu",
-                Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
-                Alkaa: "2024-01-01 10:00:00",
-                Päättyy: "2024-01-01 11:00:00",
-                Ilmoittautuminen: "Valituille henkilöille",
-                Näkyvyys: "Näkyy ryhmälle",
-                Kuvaus: "Test Description",
-              },
-            ],
-          }),
-      })
+      .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
     render(<UploadForm />)
+    const fileInput = screen.getByTestId("file-input")
 
     // Upload first file (error case)
-    const file1 = new File(["dummy content"], "test1.xlsx", {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    })
-    const fileInput = screen.getByTestId("file-input")
-    await userEvent.upload(fileInput, file1)
+    await userEvent.upload(fileInput, createMockExcelFile("test1.xlsx", "dummy content"))
 
     // Wait for error message
     await waitFor(() => {
@@ -265,10 +251,7 @@ describe("UploadForm", () => {
     })
 
     // Upload second file (success case)
-    const file2 = new File(["dummy content"], "test2.xlsx", {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    })
-    await userEvent.upload(fileInput, file2)
+    await userEvent.upload(fileInput, createMockExcelFile("test2.xlsx", "dummy content"))
 
     // Wait for success message
     await waitFor(() => {
@@ -277,5 +260,48 @@ describe("UploadForm", () => {
 
     // Verify error message is gone
     expect(screen.queryByText(/Virhe:/i)).not.toBeInTheDocument()
+  })
+
+  it("does not trigger preview when changing fields without file", () => {
+    render(<UploadForm />)
+
+    const yearSelect = screen.getByLabelText(FORM_LABELS.YEAR)
+    fireEvent.change(yearSelect, { target: { value: "2025" } })
+
+    // Should not call fetch since no file is selected
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it("handles download functionality", async () => {
+    render(<UploadForm />)
+
+    // Upload file and wait for preview
+    await uploadFileAndWaitForPreview()
+
+    // Mock successful download response
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      blob: () =>
+        Promise.resolve(
+          new Blob(["test"], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          })
+        ),
+    })
+
+    // Mock DOM methods for download
+    const downloadMock = mockDownloadEnvironment()
+
+    // Trigger download
+    const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
+    fireEvent.click(downloadButton)
+
+    // Verify download was triggered
+    await waitFor(() => {
+      expect(downloadMock.mockClick).toHaveBeenCalled()
+    })
+
+    // Restore DOM methods
+    downloadMock.restore()
   })
 })
