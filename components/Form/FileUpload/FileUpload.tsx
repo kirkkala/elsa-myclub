@@ -6,7 +6,6 @@ interface FileUploadProps {
   label: string
   description: string
   selectedFile: string
-  // eslint-disable-next-line no-unused-vars
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 

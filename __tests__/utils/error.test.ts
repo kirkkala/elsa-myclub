@@ -9,10 +9,21 @@ import {
   logError,
 } from "@/utils/error"
 
-const mockConsoleError = jest.spyOn(console, "error").mockImplementation(() => {})
+// Store original console.error to work with jest.setup.js
+const originalConsoleError = console.error
+const mockConsoleError = jest.fn()
 
 describe("Error utilities", () => {
-  afterAll(() => mockConsoleError.mockRestore())
+  beforeAll(() => {
+    // Override console.error for this test suite
+    console.error = mockConsoleError
+  })
+
+  afterAll(() => {
+    // Restore original console.error
+    console.error = originalConsoleError
+  })
+
   beforeEach(() => mockConsoleError.mockClear())
 
   it("exports correct constants", () => {

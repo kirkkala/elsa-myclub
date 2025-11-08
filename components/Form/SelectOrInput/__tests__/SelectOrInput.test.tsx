@@ -50,4 +50,35 @@ describe("SelectOrInput", () => {
     fireEvent.click(screen.getByText("To Input"))
     expect(screen.getByRole("textbox")).toHaveAttribute("required")
   })
+
+  it("handles disabled state correctly", () => {
+    render(<SelectOrInput {...mockProps} disabled />)
+
+    // Select should be disabled
+    expect(screen.getByRole("combobox")).toBeDisabled()
+
+    // Switch link should be disabled
+    const switchLink = screen.getByText("To Input")
+    expect(switchLink.closest("a")).toHaveClass("disabled")
+
+    // Clicking disabled link should not switch modes
+    fireEvent.click(switchLink)
+
+    // Should still be in select mode (disabled links don't work)
+    expect(screen.getByRole("combobox")).toBeInTheDocument()
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
+  })
+
+  it("handles undefined disabled prop", () => {
+    const propsWithoutDisabled = { ...mockProps }
+    delete (propsWithoutDisabled as Record<string, unknown>).disabled
+
+    render(<SelectOrInput {...propsWithoutDisabled} />)
+
+    // Should not be disabled when disabled prop is undefined
+    expect(screen.getByRole("combobox")).not.toBeDisabled()
+
+    const switchLink = screen.getByText("To Input")
+    expect(switchLink.closest("a")).not.toHaveClass("disabled")
+  })
 })

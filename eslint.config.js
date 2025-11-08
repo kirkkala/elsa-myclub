@@ -54,6 +54,7 @@ export default [
       "no-var": "error",
       "prefer-const": "error",
       "no-unused-expressions": "error",
+      "no-unused-vars": "off", // Disabled in favor of @typescript-eslint/no-unused-vars
       "no-shadow": "error",
       "no-return-await": "error",
       "require-await": "error",

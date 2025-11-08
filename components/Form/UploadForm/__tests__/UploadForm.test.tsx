@@ -304,4 +304,141 @@ describe("UploadForm", () => {
     // Restore DOM methods
     downloadMock.restore()
   })
+
+  it("handles download API error", async () => {
+    render(<UploadForm />)
+
+    // Upload file and wait for preview
+    await uploadFileAndWaitForPreview()
+
+    // Mock download API error
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.resolve({ message: "Download failed" }),
+    })
+
+    // Trigger download
+    const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
+    fireEvent.click(downloadButton)
+
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText("Download failed")).toBeInTheDocument()
+    })
+  })
+
+  it("handles network error during preview", async () => {
+    render(<UploadForm />)
+
+    // Mock network error
+    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"))
+
+    // Upload file
+    uploadFile()
+
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/Network error/)).toBeInTheDocument()
+    })
+  })
+
+  it("handles network error during download", async () => {
+    render(<UploadForm />)
+
+    // Upload file and wait for preview
+    await uploadFileAndWaitForPreview()
+
+    // Mock network error for download
+    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Download network error"))
+
+    // Trigger download
+    const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
+    fireEvent.click(downloadButton)
+
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/Download network error/)).toBeInTheDocument()
+    })
+  })
+
+  it("handles multiple file uploads correctly", async () => {
+    render(<UploadForm />)
+
+    // Upload first file
+    await uploadFileAndWaitForPreview("first.xlsx")
+    expect(screen.getByText(/Excelin luku onnistui!/)).toBeInTheDocument()
+
+    // Upload second file - should clear previous state
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+    uploadFile("second.xlsx")
+
+    // Wait for new preview to load
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
+    })
+  })
+
+  it("shows loading state during download", async () => {
+    render(<UploadForm />)
+
+    // Upload file and wait for preview
+    await uploadFileAndWaitForPreview()
+
+    // Mock delayed download response
+    let resolveDownload: (_response: Response) => void
+    const delayedDownload = new Promise<Response>((resolve) => {
+      resolveDownload = resolve
+    })
+    ;(global.fetch as jest.Mock).mockReturnValueOnce(delayedDownload)
+
+    // Trigger download
+    const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
+    fireEvent.click(downloadButton)
+
+    // Check loading state
+    await waitFor(() => {
+      expect(downloadButton).toBeDisabled()
+    })
+
+    // Resolve the download
+    resolveDownload!({
+      ok: true,
+      blob: () => Promise.resolve(new Blob(["test"])),
+    } as Response)
+
+    // Wait for loading to finish
+    await waitFor(() => {
+      expect(downloadButton).not.toBeDisabled()
+    })
+  })
+
+  it("handles empty file selection", () => {
+    render(<UploadForm />)
+
+    const fileInput = screen.getByTestId("file-input")
+
+    // Simulate selecting no files
+    fireEvent.change(fileInput, { target: { files: [] } })
+
+    // Should not trigger any API calls
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it("resets success state when new file is selected", async () => {
+    render(<UploadForm />)
+
+    // Upload first file successfully
+    await uploadFileAndWaitForPreview()
+
+    // Verify success state
+    expect(screen.getByText(/Excelin luku onnistui!/)).toBeInTheDocument()
+
+    // Upload second file
+    uploadFile("second-file.xlsx")
+
+    // Success message should be cleared
+    await waitFor(() => {
+      expect(screen.queryByText(/Excelin luku onnistui!/)).not.toBeInTheDocument()
+    })
+  })
 })
