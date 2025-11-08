@@ -1,8 +1,6 @@
 import { render, screen } from "@testing-library/react"
-import Docs from "../../pages/docs"
+import Docs from "../../app/docs/page"
 import { testPageElements } from "../shared/page-elements.test"
-
-jest.mock("next/router", () => ({ useRouter: () => ({ pathname: "/docs" }) }))
 
 describe("Docs Page", () => {
   testPageElements(Docs)

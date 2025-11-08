@@ -2,7 +2,7 @@ import { Fields, Files } from "formidable"
 import { Buffer } from "buffer"
 import * as XLSX from "xlsx"
 import { promises as fs } from "fs"
-import { EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
+import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
 
 /**
  * Represents a row from eLSA Excel file
@@ -66,12 +66,19 @@ export const excelUtils = {
             Ilmoittautuminen: fields.registration || "Valituille henkilöille",
             Näkyvyys: "Ryhmälle",
           }
-        } catch (error) {
-          console.error(`Error processing row:`, row, error)
+        } catch (err) {
+          console.warn(
+            "Warning: Error processing row:",
+            err instanceof Error ? err.message : String(err)
+          )
           return null
         }
       })
       .filter((row): row is MyClubExcelRow => row !== null)
+
+    if (processedData.length === 0) {
+      throw new Error(EXCEL_VALIDATION_ERROR)
+    }
 
     return processedData
   },

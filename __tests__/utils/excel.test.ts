@@ -157,7 +157,7 @@ describe("Excel utilities", () => {
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
         Ryhmä: "", // Default empty string when fields.group is undefined
-        Tapahtumatyyppi: "", // Default empty string when fields.eventType is undefined
+        Tapahtumatyyppi: "Ottelu", // Default "Ottelu" when fields.eventType is undefined
         Alkaa: expect.stringContaining(new Date().getFullYear().toString()), // Default current year when fields.year is undefined
       })
     })
