@@ -1,7 +1,8 @@
 import { Fields, Files } from "formidable"
+import { Buffer } from "buffer"
 import * as XLSX from "xlsx"
 import { promises as fs } from "fs"
-import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
+import { EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
 
 /**
  * Represents a row from eLSA Excel file
@@ -33,6 +34,64 @@ export interface MyClubExcelRow {
 }
 
 export const excelUtils = {
+  parseExcelBuffer(buffer: Buffer, fields: Record<string, string>): MyClubExcelRow[] {
+    const workbook = XLSX.read(buffer)
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+    const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
+
+    const year = String(fields.year || new Date().getFullYear())
+    const duration = parseInt(String(fields.duration || "75"), 10)
+    const meetingTime = parseInt(String(fields.meetingTime || "0"), 10)
+
+    const processedData: MyClubExcelRow[] = jsonData
+      .map((row: ElsaxcelRow): MyClubExcelRow | null => {
+        if (!row.Klo || !row.Pvm) {
+          return null
+        }
+
+        try {
+          const normalizedDate = this.normalizeDate(row.Pvm)
+          const { startTime, endTime } = this.calculateEventTimes(row.Klo, meetingTime, duration)
+          const startDateTime = this.formatDateTime(normalizedDate, startTime, year)
+          const endDateTime = this.formatDateTime(normalizedDate, endTime, year)
+
+          return {
+            Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
+            Alkaa: startDateTime,
+            Päättyy: endDateTime,
+            Ryhmä: fields.group || "",
+            Kuvaus: this.createDescription(row.Klo, meetingTime),
+            Tapahtumatyyppi: fields.eventType || "Ottelu",
+            Tapahtumapaikka: row.Kenttä || "",
+            Ilmoittautuminen: fields.registration || "Valituille henkilöille",
+            Näkyvyys: "Ryhmälle",
+          }
+        } catch (error) {
+          console.error(`Error processing row:`, row, error)
+          return null
+        }
+      })
+      .filter((row): row is MyClubExcelRow => row !== null)
+
+    return processedData
+  },
+
+  async parseExcelFile(fields: Fields, files: Files): Promise<MyClubExcelRow[]> {
+    const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
+    if (!uploadedFile) {
+      throw new Error(EXCEL_FILE_MISSING_ERROR)
+    }
+
+    const fileData = await fs.readFile(uploadedFile.filepath)
+    return this.parseExcelBuffer(fileData, {
+      year: String(fields.year || new Date().getFullYear()),
+      duration: String(fields.duration || "75"),
+      meetingTime: String(fields.meetingTime || "0"),
+      group: String(fields.group || ""),
+      eventType: String(fields.eventType || "Ottelu"),
+      registration: String(fields.registration || "Valituille henkilöille"),
+    })
+  },
   normalizeDate(date: string | number): string {
     const dateStr = typeof date === "number" ? date.toFixed(2) : String(date)
     const cleanDate = dateStr.replace(",", ".")
@@ -101,66 +160,5 @@ export const excelUtils = {
     }
 
     return `Lämppä: ${this.adjustStartTime(originalTime, meetingTime)}, ${gameStart}`
-  },
-
-  /**
-   * Parses uploaded Excel file and form data into processed MyClub format
-   * @param fields - Form fields from the request
-   * @param files - Uploaded files from the request
-   * @returns Processed data in MyClub format
-   */
-  async parseExcelFile(fields: Fields, files: Files): Promise<MyClubExcelRow[]> {
-    const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
-    if (!uploadedFile) {
-      throw new Error(EXCEL_FILE_MISSING_ERROR)
-    }
-
-    const fileData = await fs.readFile(uploadedFile.filepath)
-    const workbook = XLSX.read(fileData)
-    const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-    const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
-
-    const year = String(fields.year || new Date().getFullYear())
-    const duration = parseInt(String(fields.duration || "75"), 10)
-    const meetingTime = parseInt(String(fields.meetingTime || "0"), 10)
-
-    const processedData: MyClubExcelRow[] = jsonData
-      .map((row: ElsaxcelRow): MyClubExcelRow | null => {
-        if (!row.Klo || !row.Pvm) {
-          return null
-        }
-
-        try {
-          const normalizedDate = this.normalizeDate(row.Pvm)
-          const { startTime, endTime } = this.calculateEventTimes(row.Klo, meetingTime, duration)
-          const startDateTime = this.formatDateTime(normalizedDate, startTime, year)
-          const endDateTime = this.formatDateTime(normalizedDate, endTime, year)
-
-          return {
-            Nimi: this.formatEventName(row.Sarja, row.Koti, row.Vieras),
-            Alkaa: startDateTime,
-            Päättyy: endDateTime,
-            Ryhmä: String(fields.group || ""),
-            Kuvaus: this.createDescription(row.Klo, meetingTime),
-            Tapahtumatyyppi: String(fields.eventType || ""),
-            Tapahtumapaikka: row.Kenttä,
-            Ilmoittautuminen: String(fields.registration || ""),
-            Näkyvyys: "Näkyy ryhmälle",
-          }
-        } catch (err) {
-          console.warn(
-            "Warning: Error processing row:",
-            err instanceof Error ? err.message : String(err)
-          )
-          return null
-        }
-      })
-      .filter((row): row is MyClubExcelRow => row !== null)
-
-    if (processedData.length === 0) {
-      throw new Error(EXCEL_VALIDATION_ERROR)
-    }
-
-    return processedData
   },
 }

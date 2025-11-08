@@ -4,7 +4,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 
 ## Tech Stack
 
-- **Next.js** 15.x - React framework
+- **Next.js** 16.x - React framework with App Router
 - **React** 19.x - UI library
 - **TypeScript** 5.x - Type safety
 - **SCSS** - Styling with CSS modules
@@ -45,15 +45,20 @@ elsa-myclub/
 ├── config/
 │   ├── groups.json           # MyClub group names (HNMKY teams)
 │   └── index.ts              # Site configuration
-├── pages/
-│   ├── _app.tsx              # Next.js app wrapper
-│   ├── _document.tsx         # HTML document structure
-│   ├── index.tsx             # Main converter page
-│   ├── docs.tsx              # Documentation page
-│   ├── changelog.tsx         # Version history page
+├── app/
+│   ├── layout.tsx            # Root layout with metadata
+│   ├── page.tsx              # Main converter page
+│   ├── docs/
+│   │   └── page.tsx          # Documentation page
+│   ├── changelog/
+│   │   └── page.tsx          # Version history page
+│   ├── robots.ts             # Dynamic robots.txt
+│   ├── sitemap.ts            # Dynamic sitemap.xml
 │   └── api/
-│       ├── preview.ts        # File preview API
-│       └── upload.ts         # File conversion API
+│       ├── preview/
+│       │   └── route.ts      # File preview API
+│       └── upload/
+│           └── route.ts      # File conversion API
 ├── public/
 │   ├── images/               # Static images
 │   │   └── docs/             # Documentation screenshots
@@ -93,6 +98,16 @@ Use correct node version and install dependencies
 nvm install
 nvm use
 npm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file to configure the application:
+
+```bash
+# Base URL for the application (used in sitemap.xml and robots.txt)
+# Defaults to https://elsa-myclub.vercel.app if not set
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
 Run development mode
