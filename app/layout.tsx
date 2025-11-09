@@ -10,6 +10,17 @@ export const metadata: Metadata = {
     template: `%s | ${SEO_CONFIG.pages.home.title}`,
   },
   description: SEO_CONFIG.pages.home.description,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
     siteName: SEO_CONFIG.pages.home.openGraph.title,

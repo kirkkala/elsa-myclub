@@ -163,7 +163,7 @@ export default function UploadForm() {
           selectedFile={formValues.file?.name || ""}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse tähän eLSA:sta haettu Excel jonka pelit haluat siirtää MyClub:iin."
+          description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
         />
 
         <div className={styles.messageContainer}>
