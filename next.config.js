@@ -6,10 +6,17 @@ const nextConfig = {
   env: {
     APP_VERSION: packageJson.version,
   },
-  // Next.js 15 optimizations
+  // Next.js optimizations
   experimental: {
     optimizePackageImports: ["react-icons"],
   },
+  // Compiler optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+  // Production optimizations
+  productionBrowserSourceMaps: false,
+  poweredByHeader: false,
 }
 
 export default nextConfig
