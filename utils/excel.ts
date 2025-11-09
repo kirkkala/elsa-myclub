@@ -6,7 +6,7 @@ import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR } from "./error"
  * Represents a row from eLSA Excel file
  * @interface ElsaxcelRow
  */
-export interface ElsaxcelRow {
+interface ElsaxcelRow {
   Pvm: string | number
   Klo: string
   Kenttä: string

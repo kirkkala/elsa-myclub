@@ -86,16 +86,16 @@ export default [
   },
   // Configuration for API routes (Node.js environment)
   {
-    files: ["pages/api/**/*.{js,ts}"],
+    files: ["app/api/**/*.{js,ts}"],
     languageOptions: {
       globals: {
         ...globals.node,
       },
     },
   },
-  // Configuration for SSG functions (Node.js environment)
+  // Configuration for App Router server components (Node.js environment)
   {
-    files: ["pages/changelog.tsx"],
+    files: ["app/**/page.tsx", "app/**/layout.tsx"],
     languageOptions: {
       globals: {
         ...globals.node,

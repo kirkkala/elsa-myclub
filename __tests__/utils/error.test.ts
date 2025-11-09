@@ -1,8 +1,6 @@
 import {
   EXCEL_VALIDATION_ERROR,
   EXCEL_DATE_FORMAT_ERROR,
-  EXCEL_FILE_MISSING_ERROR,
-  API_METHOD_NOT_ALLOWED,
   API_CONVERSION_FAILED,
   API_FILE_MISSING,
   formatErrorMessage,
@@ -28,8 +26,6 @@ describe("Error utilities", () => {
 
   it("exports correct constants", () => {
     expect(EXCEL_VALIDATION_ERROR).toContain("Tarkista että eLSA:sta hakemasi")
-    expect(EXCEL_FILE_MISSING_ERROR).toBe("Ei lisättyä tiedostoa")
-    expect(API_METHOD_NOT_ALLOWED).toBe("Method not allowed")
     expect(API_CONVERSION_FAILED).toBe("Tiedoston muunnos epäonnistui")
     expect(API_FILE_MISSING).toBe("Tiedosto puuttuu")
     expect(EXCEL_DATE_FORMAT_ERROR("test")).toBe("Odottamaton päivämäärämuoto: test")
