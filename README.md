@@ -92,7 +92,7 @@ Follows [Semantic Versioning](https://semver.org/). To release a new version:
 
 ## Deployment
 
-Push to `main` deploys automatically to Vercel. For manual deployment use [vercel cli](https://vercel.com/docs/cli):
+Push to `main` deploy automatically to Vercel. For manual deployment use [vercel cli](https://vercel.com/docs/cli):
 
 ```bash
 vercel --prod
