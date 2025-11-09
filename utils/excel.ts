@@ -1,8 +1,6 @@
-import { Fields, Files } from "formidable"
 import { Buffer } from "buffer"
 import * as XLSX from "xlsx"
-import { promises as fs } from "fs"
-import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR, EXCEL_FILE_MISSING_ERROR } from "./error"
+import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR } from "./error"
 
 /**
  * Represents a row from eLSA Excel file
@@ -83,22 +81,6 @@ export const excelUtils = {
     return processedData
   },
 
-  async parseExcelFile(fields: Fields, files: Files): Promise<MyClubExcelRow[]> {
-    const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file
-    if (!uploadedFile) {
-      throw new Error(EXCEL_FILE_MISSING_ERROR)
-    }
-
-    const fileData = await fs.readFile(uploadedFile.filepath)
-    return this.parseExcelBuffer(fileData, {
-      year: String(fields.year || new Date().getFullYear()),
-      duration: String(fields.duration || "75"),
-      meetingTime: String(fields.meetingTime || "0"),
-      group: String(fields.group || ""),
-      eventType: String(fields.eventType || "Ottelu"),
-      registration: String(fields.registration || "Valituille henkilöille"),
-    })
-  },
   normalizeDate(date: string | number): string {
     const dateStr = typeof date === "number" ? date.toFixed(2) : String(date)
     const cleanDate = dateStr.replace(",", ".")
@@ -135,18 +117,6 @@ export const excelUtils = {
     return { startTime, endTime }
   },
 
-  adjustStartTime(time: string, adjustment: number): string {
-    if (adjustment === 0) {
-      return time.replace(" ", "")
-    }
-
-    const [hours, minutes] = time.replace(" ", "").split(":").map(Number)
-    const date = new Date(2000, 0, 1, hours, minutes)
-    date.setMinutes(date.getMinutes() - adjustment)
-
-    return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
-  },
-
   formatSeriesName(fullSeries: string): string {
     const divMatch = fullSeries.match(/(I+)\s*divisioona/i)
     return divMatch ? `${divMatch[1]} div.` : ""
@@ -166,6 +136,11 @@ export const excelUtils = {
       return gameStart
     }
 
-    return `Lämppä: ${this.adjustStartTime(originalTime, meetingTime)}, ${gameStart}`
+    const [hours, minutes] = originalTime.replace(" ", "").split(":").map(Number)
+    const date = new Date(2000, 0, 1, hours, minutes)
+    date.setMinutes(date.getMinutes() - meetingTime)
+    const warmupTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
+
+    return `Lämppä: ${warmupTime}, ${gameStart}`
   },
 }
