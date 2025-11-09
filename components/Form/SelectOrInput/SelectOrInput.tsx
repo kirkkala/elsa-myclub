@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { LuPencil, LuList } from "react-icons/lu"
 import SelectField from "../SelectField/SelectField"

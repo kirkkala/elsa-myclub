@@ -4,70 +4,33 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 
 ## Tech Stack
 
-- **Next.js** 15.x - React framework
-- **React** 19.x - UI library
-- **TypeScript** 5.x - Type safety
-- **SCSS** - Styling with CSS modules
-- **formidable** - File upload handling
-- **xlsx** - Excel file processing (SheetJS CDN)
-- **React Icons** - Icon components
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **SCSS Modules** for styling
+- **xlsx** (SheetJS) for Excel processing
+- **Jest** + React Testing Library
 
 ### Prerequisites
 
-- Node.js (see `.nvmrc` for version)
-- nvm (for node version management)
-- npm (comes with Node.js)
+- Node.js (version in `.nvmrc`)
+- npm
 
 ## Project Structure
 
 ```
 elsa-myclub/
-├── __tests__/                # Tests and test data
-│   ├── mocks/                # Mock data for tests
-│   ├── pages/                # Page component tests
-│   ├── shared/               # Shared component tests
-│   └── utils/                # Utility function tests
-├── components/               # React components with styles and tests
-│   ├── BackLink/             # Navigation back link
-│   ├── Footer/               # Site footer
-│   ├── Form/                 # Form components
-│   │   ├── Button/           # Button component
-│   │   ├── FileUpload/       # File upload field
-│   │   ├── SelectField/      # Select dropdown field
-│   │   ├── SelectOrInput/    # Switchable select/input field
-│   │   ├── TextInput/        # Text input field
-│   │   └── UploadForm/       # Main upload form
-│   ├── Head/                 # HTML head component
-│   ├── Header/               # Site header
-│   ├── Info/                 # Expandable info sections
-│   ├── Layout/               # Page layout wrapper
-│   └── Preview/              # Data preview table
-├── config/
-│   ├── groups.json           # MyClub group names (HNMKY teams)
-│   └── index.ts              # Site configuration
-├── pages/
-│   ├── _app.tsx              # Next.js app wrapper
-│   ├── _document.tsx         # HTML document structure
-│   ├── index.tsx             # Main converter page
-│   ├── docs.tsx              # Documentation page
-│   ├── changelog.tsx         # Version history page
-│   └── api/
-│       ├── preview.ts        # File preview API
-│       └── upload.ts         # File conversion API
-├── public/
-│   ├── images/               # Static images
-│   │   └── docs/             # Documentation screenshots
-│   └── favicon.ico           # Site favicon
-├── styles/
-│   ├── shared/               # Shared SCSS modules
-│   ├── globals.scss          # Global styles
-│   └── variables.scss        # SCSS variables
-├── utils/
-│   ├── excel.ts              # Excel parsing and conversion
-│   └── error.ts              # Error handling utilities
-├── jest.config.js            # Jest test configuration
-├── jest.setup.js             # Test environment setup
-└── .github/workflows/        # CI/CD GitHub Actions
+├── __tests__/              # Jest tests
+├── app/                    # Next.js App Router
+│   ├── api/                # API routes (preview, upload)
+│   ├── changelog/          # Version history page
+│   ├── docs/               # Documentation page
+│   └── page.tsx            # Main converter page
+├── components/             # React components
+│   ├── Form/               # Form fields (FileUpload, Select, etc.)
+│   └── ...                 # Layout, Header, Footer, Preview
+├── config/                 # App configuration & group data
+├── public/                 # Static assets
+├── styles/                 # Global SCSS styles
+└── utils/                  # Excel parsing & error handling
 ```
 
 ## How It Works
@@ -87,69 +50,49 @@ The application converts eLSA basketball schedule Excel files to MyClub-compatib
 
 ## Development
 
-Use correct node version and install dependencies
-
 ```bash
-nvm install
-nvm use
-npm install
+nvm use              # Use correct Node version
+npm install          # Install dependencies
+npm run dev          # Start dev server at http://localhost:3000
 ```
 
-Run development mode
+### Environment Variables (Optional)
 
 ```bash
-npm run dev
+# .env.local
+NEXT_PUBLIC_BASE_URL=http://localhost:3000  # Defaults to production URL
 ```
 
-The app will be available at http://localhost:3000
-
-### All available Scripts
+### Available Scripts
 
 ```bash
-npm run dev             # Start development server
-npm run build           # Build for production
-npm run start           # Start production server
-npm run lint            # Run ESLint
-npm run lint:fix        # Fix linting erros
-npm run test            # Run tests
-npm run test:watch      # Run tests in watch mode
-npm run test:coverage   # Run tests with coverage
-npm run format          # Format code with prettier
-npm run format:check    # Check formatting with prettier
+npm run dev            # Development server
+npm run build          # Production build
+npm run start          # Production server
+npm run lint           # Check linting
+npm run lint:fix       # Fix linting errors
+npm test               # Run tests
+npm run test:watch     # Tests in watch mode
+npm run test:coverage  # Coverage report
+npm run format         # Format with Prettier
+npm run format:check   # Check formatting
 ```
 
 ### Versioning
 
-<details>
-<summary>The app follows Semantic Versioning (SemVer)</summary>
+Follows [Semantic Versioning](https://semver.org/). To release a new version:
 
-```
-Major version (x.0.0): Breaking changes
-Minor version (0.x.0): New features
-Patch version (0.0.x): Bug fixes
-Beta suffix (-beta): Pre-release version
-```
-
-</details>
-
-To update the version:
-
-1. Update APP_VERSION in `package.json`
-2. Add changelog entry in `CHANGELOG.md`
-
-- Changelog in Finnish because that's shown on the app also
-
-3. Commit with message: `Bump version to x.x.x`
+1. Update `version` in `package.json` and run `npm i`
+2. Add entry to `CHANGELOG.md` (in Finnish)
+3. Commit: `Bump version to x.x.x`
 
 ## Configuration
 
-### MyClub Team Names
+**Team Names**: Update `config/groups.json` with your organization's MyClub team names.
 
-Update `config/groups.json` with current season team names from your organization's MyClub setup.
+## Deployment
 
-### Deployment
-
-The app auto-deploys to Vercel on pushes to main branch. Manual deployment:
+Push to `main` deploy automatically to Vercel. For manual deployment use [vercel cli](https://vercel.com/docs/cli):
 
 ```bash
 vercel --prod
@@ -157,19 +100,14 @@ vercel --prod
 
 ## Testing
 
-Uses Jest and React Testing Library. Tests run automatically on GitHub Actions for all pushes and PRs.
+Tests run automatically on GitHub Actions. Local testing:
 
 ```bash
-npm test                # Run all tests
-npm run test:watch      # Watch mode
-npm run test:coverage   # Coverage report
+npm test               # All tests
+npm run test:watch     # Watch mode
+npm run test:coverage  # Coverage report
 ```
 
-Test locations:
+## Credits
 
-- `components/**/__tests__/` - Component tests
-- `__tests__/` - Page and utility tests
-
-### Credits
-
-Created by [Timo Kirkkala](https://github.com/kirkkala) to help basketball team managers save time when importing game schedules to MyClub.
+Created by [Timo Kirkkala](https://github.com/kirkkala) to help basketball team managers save time importing game schedules to MyClub.

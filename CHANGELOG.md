@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v1.1.0 (9.11.2025)
+
+- App arkkitehtuuri: pages router päivitetty app routeriin 🤓
+- SEO: Sitemap.xml ja robots.txt 🔎
+
 ## v1.0.1 (2025-11-07)
 
 - Ylläpito/Versiopäivityksiä 🤓

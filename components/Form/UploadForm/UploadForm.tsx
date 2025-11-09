@@ -1,4 +1,6 @@
-import { useState, useRef } from "react"
+"use client"
+
+import { useState } from "react"
 import styles from "./UploadForm.module.scss"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
@@ -15,104 +17,86 @@ interface ApiErrorResponse {
   message: string
 }
 
+interface FormValues {
+  file: File | null
+  year: string
+  duration: string
+  meetingTime: string
+  group: string
+  eventType: string
+  registration: string
+}
+
 export default function UploadForm() {
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>("")
-  const [selectedFile, setSelectedFile] = useState<string>("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
-  const [showSuccess, setShowSuccess] = useState<boolean>(false)
-  const formRef = useRef<HTMLFormElement>(null)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
 
+  const [formValues, setFormValues] = useState<FormValues>({
+    file: null,
+    year: String(currentYear),
+    duration: "90",
+    meetingTime: "0",
+    group: "",
+    eventType: "Ottelu",
+    registration: "Valituille henkilöille",
+  })
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0]
-    setSelectedFile(file ? file.name : "")
+    const file = e.target.files?.[0] || null
+    setFormValues((prev) => ({ ...prev, file }))
     setShowSuccess(false)
     setPreviewData([])
 
-    // Trigger preview if file is selected
     if (file) {
-      const form = e.target.form
-      if (form) {
-        const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
-        void handlePreview(formEvent)
-      }
+      void fetchPreview(file, formValues)
     }
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
-    if (!selectedFile) {
-      return
-    }
+    const { name, value } = e.target
+    setFormValues((prev) => ({ ...prev, [name]: value }))
 
-    const form = e.target.form
-    if (form) {
-      const formEvent = { currentTarget: form } as React.FormEvent<HTMLFormElement>
-      void handlePreview(formEvent)
+    if (formValues.file) {
+      void fetchPreview(formValues.file, { ...formValues, [name]: value })
     }
   }
 
-  const handlePreview = async (
-    e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
-  ): Promise<void> => {
-    // Only call preventDefault if it's a form event
-    if ("preventDefault" in e) {
-      e.preventDefault()
+  const buildFormData = (file: File, values: FormValues): FormData => {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    if (values.year) {
+      formData.append("year", values.year)
     }
+    if (values.duration) {
+      formData.append("duration", values.duration)
+    }
+    if (values.meetingTime) {
+      formData.append("meetingTime", values.meetingTime)
+    }
+    if (values.group) {
+      formData.append("group", values.group)
+    }
+    if (values.eventType) {
+      formData.append("eventType", values.eventType)
+    }
+    if (values.registration) {
+      formData.append("registration", values.registration)
+    }
+
+    return formData
+  }
+
+  const fetchPreview = async (file: File, values: FormValues): Promise<void> => {
     setError("")
 
-    const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
-    if (!fileInput) {
-      setError("Lomaketta ei löydy")
-      setShowSuccess(false)
-      return
-    }
-
-    const file = fileInput.files?.[0]
-    if (!file) {
-      setError("Valitse ensin excel-tiedosto")
-      setShowSuccess(false)
-      return
-    }
-
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-
-      // Get form values from the form element
-      const form = fileInput.form
-      if (!form) {
-        throw new Error("Form not found")
-      }
-
-      const year = (form.querySelector("[name='year']") as HTMLSelectElement).value
-      const duration = (form.querySelector("[name='duration']") as HTMLSelectElement).value
-      const meetingTime = (form.querySelector("[name='meetingTime']") as HTMLSelectElement).value
-      const group = (form.querySelector("[name='group']") as HTMLSelectElement).value
-      const eventType = (form.querySelector("[name='eventType']") as HTMLSelectElement).value
-      const registration = (form.querySelector("[name='registration']") as HTMLSelectElement).value
-
-      // Only append values if they exist
-      if (year) {
-        formData.append("year", year)
-      }
-      if (duration) {
-        formData.append("duration", duration)
-      }
-      if (meetingTime) {
-        formData.append("meetingTime", meetingTime)
-      }
-      if (group) {
-        formData.append("group", group)
-      }
-      if (eventType) {
-        formData.append("eventType", eventType)
-      }
-      if (registration) {
-        formData.append("registration", registration)
-      }
+      const formData = buildFormData(file, values)
 
       const response = await fetch("/api/preview", {
         method: "POST",
@@ -134,57 +118,17 @@ export default function UploadForm() {
     }
   }
 
-  const handleDownloadSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-    void handleDownload(e)
-  }
-
   const handleDownload = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
     try {
-      const fileInput = document.querySelector<HTMLInputElement>("input[type='file']")
-      if (!fileInput?.files?.[0]) {
+      if (!formValues.file) {
         throw new Error(API_FILE_MISSING)
       }
 
-      const formData = new FormData()
-      formData.append("file", fileInput.files[0])
-
-      const mainForm = formRef.current
-      if (!mainForm) {
-        throw new Error("Form not found")
-      }
-
-      const year = (mainForm.querySelector("[name='year']") as HTMLSelectElement).value
-      const duration = (mainForm.querySelector("[name='duration']") as HTMLSelectElement).value
-      const meetingTime = (mainForm.querySelector("[name='meetingTime']") as HTMLSelectElement)
-        .value
-      const group = (mainForm.querySelector("[name='group']") as HTMLSelectElement).value
-      const eventType = (mainForm.querySelector("[name='eventType']") as HTMLSelectElement).value
-      const registration = (mainForm.querySelector("[name='registration']") as HTMLSelectElement)
-        .value
-
-      if (year) {
-        formData.append("year", year)
-      }
-      if (duration) {
-        formData.append("duration", duration)
-      }
-      if (meetingTime) {
-        formData.append("meetingTime", meetingTime)
-      }
-      if (group) {
-        formData.append("group", group)
-      }
-      if (eventType) {
-        formData.append("eventType", eventType)
-      }
-      if (registration) {
-        formData.append("registration", registration)
-      }
+      const formData = buildFormData(formValues.file, formValues)
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -214,12 +158,12 @@ export default function UploadForm() {
 
   return (
     <div className={styles.formContainer}>
-      <form ref={formRef}>
+      <form>
         <FileUpload
-          selectedFile={selectedFile}
+          selectedFile={formValues.file?.name || ""}
           onChange={handleFileChange}
           label="eLSA excel tiedosto"
-          description="Valitse tähän eLSA:sta haettu Excel jonka pelit haluat siirtää MyClub:iin."
+          description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
         />
 
         <div className={styles.messageContainer}>
@@ -247,7 +191,7 @@ export default function UploadForm() {
           )}
         </div>
 
-        <div className={!selectedFile || error ? styles.disabledFields : undefined}>
+        <div className={!formValues.file || error ? styles.disabledFields : undefined}>
           <SelectOrInput
             id="group"
             Icon={LuUsers}
@@ -267,7 +211,7 @@ export default function UploadForm() {
             }))}
             placeholder="esim. Harlem Globetrotters"
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
 
           <SelectField
@@ -279,9 +223,9 @@ export default function UploadForm() {
               value: String(year),
               label: String(year),
             }))}
-            defaultValue={String(currentYear)}
+            defaultValue={formValues.year}
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
 
           <SelectField
@@ -298,9 +242,9 @@ export default function UploadForm() {
               { value: "75", label: "1 h 15 min ennen ottelun alkua" },
               { value: "90", label: "1 h 30 min ennen ottelun alkua" },
             ]}
-            defaultValue="0"
+            defaultValue={formValues.meetingTime}
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
 
           <SelectField
@@ -314,9 +258,9 @@ export default function UploadForm() {
               { value: "105", label: "1 tunti 45 minuuttia" },
               { value: "120", label: "2 tuntia" },
             ]}
-            defaultValue="90"
+            defaultValue={formValues.duration}
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
 
           <SelectField
@@ -324,9 +268,9 @@ export default function UploadForm() {
             label="5. Tapahtumatyyppi"
             Icon={CiBasketball}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
-            defaultValue="GAME"
+            defaultValue={formValues.eventType}
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
 
           <SelectField
@@ -339,16 +283,16 @@ export default function UploadForm() {
               { value: "Ryhmän jäsenille" },
               { value: "Seuralle" },
             ]}
-            defaultValue="Valituille henkilöille"
+            defaultValue={formValues.registration}
             onChange={handleFieldChange}
-            disabled={!selectedFile || !!error}
+            disabled={!formValues.file || !!error}
           />
         </div>
       </form>
 
       {previewData.length > 0 && (
         <>
-          <form onSubmit={handleDownloadSubmit} className={styles.downloadForm}>
+          <form onSubmit={handleDownload} className={styles.downloadForm}>
             <Button
               type="submit"
               disabled={loading}

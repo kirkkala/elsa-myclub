@@ -1,29 +1,16 @@
 import { excelUtils } from "@/utils/excel"
-import { EXCEL_FILE_MISSING_ERROR, EXCEL_VALIDATION_ERROR } from "@/utils/error"
-import { promises as fs } from "fs"
 import * as XLSX from "xlsx"
-import type { Fields, Files } from "formidable"
+import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 
-jest.mock("fs", () => ({ promises: { readFile: jest.fn() } }))
-jest.mock("xlsx", () => ({ read: jest.fn(), utils: { sheet_to_json: jest.fn() } }))
+// Mock XLSX
+jest.mock("xlsx", () => ({
+  read: jest.fn(),
+  utils: {
+    sheet_to_json: jest.fn(),
+  },
+}))
 
-const mockFs = fs as jest.Mocked<typeof fs>
 const mockXLSX = XLSX as jest.Mocked<typeof XLSX>
-const mockSheetToJson = mockXLSX.utils.sheet_to_json as jest.MockedFunction<
-  typeof XLSX.utils.sheet_to_json
->
-
-// Helper for mocking console methods
-const mockConsoleMethod = (method: "warn" | "error") => {
-  const mockMethod = jest.spyOn(console, method).mockImplementation(() => {})
-
-  return {
-    mock: mockMethod,
-    restore: () => {
-      mockMethod.mockRestore()
-    },
-  }
-}
 
 describe("Excel utilities", () => {
   test.each([
@@ -84,16 +71,6 @@ describe("Excel utilities", () => {
   )
 
   test.each([
-    // [time, adjustment, expected]
-    ["12:30", 15, "12:15"],
-    ["00:15", 30, "23:45"],
-    ["12: 30", 15, "12:15"],
-    ["12:30", 0, "12:30"],
-  ])("adjustStartTime: %s -%d min → %s", (time, adjustment, expected) => {
-    expect(excelUtils.adjustStartTime(time, adjustment)).toBe(expected)
-  })
-
-  test.each([
     // [originalTime, meetingTime, expected]
     ["12:30", 0, "Peli alkaa: 12:30"],
     ["12:30", 30, "Lämppä: 12:00, Peli alkaa: 12:30"],
@@ -102,114 +79,285 @@ describe("Excel utilities", () => {
     expect(excelUtils.createDescription(time, meeting)).toBe(expected)
   })
 
-  describe("parseExcelFile", () => {
-    const mockFields: Fields = { year: ["2024"], group: ["Test Group"], eventType: ["Ottelu"] }
-    const mockFiles: Files = {
-      file: {
-        filepath: "/tmp/test.xlsx",
-        originalFilename: "test.xlsx",
-        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        size: 1024,
-      } as unknown as Files["file"],
+  describe("parseExcelBuffer", () => {
+    const mockFields = {
+      year: "2024",
+      duration: "90",
+      meetingTime: "30",
+      group: "Test Team",
+      eventType: "Ottelu",
+      registration: "Valituille henkilöille",
     }
-    const mockData = [
-      {
-        Pvm: "14.12",
-        Klo: "12:30",
-        Kenttä: "Venue",
-        Koti: "A",
-        Vieras: "B",
-        Sarja: "I divisioona",
-      },
-    ]
 
     beforeEach(() => {
       jest.clearAllMocks()
-      mockFs.readFile.mockResolvedValue(Buffer.from("data"))
+    })
+
+    it("should parse valid Excel data successfully", () => {
+      const mockData = [
+        {
+          Pvm: "14.12",
+          Klo: "18:30",
+          Kenttä: "Test Arena",
+          Koti: "Team A",
+          Vieras: "Team B",
+          Sarja: "I divisioona",
+        },
+      ]
+
       mockXLSX.read.mockReturnValue({
         Sheets: { Sheet1: {} },
         SheetNames: ["Sheet1"],
       } as XLSX.WorkBook)
-      mockSheetToJson.mockReturnValue(mockData)
-    })
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
 
-    test.each([
-      [{}, EXCEL_FILE_MISSING_ERROR],
-      [{ file: [] }, EXCEL_FILE_MISSING_ERROR],
-    ])("throws error for missing file: %o", async (files, expectedError) => {
-      await expect(excelUtils.parseExcelFile(mockFields, files)).rejects.toThrow(expectedError)
-    })
-
-    it("processes Excel file successfully", async () => {
-      const result = await excelUtils.parseExcelFile(mockFields, mockFiles)
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        Nimi: "I div. A - B",
-        Ryhmä: "Test Group",
-        Alkaa: expect.stringContaining("2024"),
-      })
-    })
-
-    it("uses default values for missing fields", async () => {
-      const fieldsWithMissingValues: Fields = {}
-      const result = await excelUtils.parseExcelFile(fieldsWithMissingValues, mockFiles)
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, mockFields)
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
-        Ryhmä: "", // Default empty string when fields.group is undefined
-        Tapahtumatyyppi: "", // Default empty string when fields.eventType is undefined
-        Alkaa: expect.stringContaining(new Date().getFullYear().toString()), // Default current year when fields.year is undefined
+        Nimi: "I div. Team A - Team B",
+        Ryhmä: "Test Team",
+        Tapahtumatyyppi: "Ottelu",
+        Tapahtumapaikka: "Test Arena",
+        Ilmoittautuminen: "Valituille henkilöille",
+        Näkyvyys: "Ryhmälle",
       })
+      expect(result[0].Alkaa).toContain("2024")
+      expect(result[0].Päättyy).toContain("2024")
+      expect(result[0].Kuvaus).toContain("Lämppä:")
     })
 
-    it("handles errors and missing data", async () => {
-      const consoleMock = mockConsoleMethod("warn")
+    it("should use default values when fields are missing", () => {
+      const mockData = [
+        {
+          Pvm: "14.12",
+          Klo: "18:30",
+          Kenttä: "Arena",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+      ]
 
-      // Missing required fields are filtered out
-      mockSheetToJson.mockReturnValueOnce([{ Pvm: "", Klo: "" }, ...mockData])
-      expect(await excelUtils.parseExcelFile(mockFields, mockFiles)).toHaveLength(1)
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
 
-      // Test validation error when no valid rows (covers line 161)
-      mockSheetToJson.mockReturnValueOnce([{ Pvm: "", Klo: "" }]) // Only invalid data
-      await expect(excelUtils.parseExcelFile(mockFields, mockFiles)).rejects.toThrow(
-        EXCEL_VALIDATION_ERROR
-      )
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, {})
 
-      consoleMock.restore()
+      expect(result).toHaveLength(1)
+      expect(result[0].Ryhmä).toBe("")
+      expect(result[0].Tapahtumatyyppi).toBe("Ottelu")
+      expect(result[0].Ilmoittautuminen).toBe("Valituille henkilöille")
+      expect(result[0].Alkaa).toContain(new Date().getFullYear().toString())
     })
 
-    it("handles non-Error exceptions with String conversion", async () => {
-      const consoleMock = mockConsoleMethod("warn")
-
-      // Use data that will definitely trigger the error
-      const invalidData = [
+    it("should filter out rows with missing required fields", () => {
+      const mockData = [
+        {
+          Pvm: "14.12",
+          Klo: "18:30",
+          Kenttä: "Arena",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+        {
+          Pvm: "",
+          Klo: "19:00",
+          Kenttä: "Arena",
+          Koti: "C",
+          Vieras: "D",
+          Sarja: "II divisioona",
+        },
         {
           Pvm: "15.12",
-          Klo: "13:30",
-          Kenttä: "Venue2",
+          Klo: "",
+          Kenttä: "Arena",
+          Koti: "E",
+          Vieras: "F",
+          Sarja: "III divisioona",
+        },
+      ]
+
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
+
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, mockFields)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].Nimi).toContain("A - B")
+    })
+
+    it("should throw error when no valid rows are processed", () => {
+      const mockData = [
+        { Pvm: "", Klo: "" },
+        { Pvm: "14.12", Klo: "" },
+      ]
+
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
+
+      const buffer = Buffer.from("test")
+
+      expect(() => excelUtils.parseExcelBuffer(buffer, mockFields)).toThrow(EXCEL_VALIDATION_ERROR)
+    })
+
+    it("should handle rows with processing errors gracefully", () => {
+      const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
+
+      const mockData = [
+        {
+          Pvm: "14.12",
+          Klo: "18:30",
+          Kenttä: "Arena",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+        {
+          Pvm: "invalid-date",
+          Klo: "19:00",
+          Kenttä: "Arena",
           Koti: "C",
           Vieras: "D",
           Sarja: "II divisioona",
         },
       ]
-      mockSheetToJson.mockReturnValueOnce(invalidData)
 
-      // Mock normalizeDate to throw a number (non-Error object)
-      const original = excelUtils.normalizeDate
-      excelUtils.normalizeDate = jest.fn(() => {
-        // eslint-disable-next-line no-throw-literal
-        throw 42 // Throw a number, not an Error
-      })
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
 
-      await expect(excelUtils.parseExcelFile(mockFields, mockFiles)).rejects.toThrow(
-        EXCEL_VALIDATION_ERROR
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, mockFields)
+
+      expect(result).toHaveLength(1)
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "Warning: Error processing row:",
+        expect.any(String)
       )
 
-      // Verify the String(err) branch was hit - number should be converted to "42"
-      expect(consoleMock.mock).toHaveBeenCalledWith("Warning: Error processing row:", "42")
+      consoleWarnSpy.mockRestore()
+    })
 
-      excelUtils.normalizeDate = original
-      consoleMock.restore()
+    it("should handle non-Error exceptions during processing", () => {
+      const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
+
+      const mockData = [
+        {
+          Pvm: "14.12",
+          Klo: "18:30",
+          Kenttä: "Arena",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+      ]
+
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
+
+      // Mock normalizeDate to throw a non-Error
+      const originalNormalizeDate = excelUtils.normalizeDate
+      excelUtils.normalizeDate = jest.fn(() => {
+        // eslint-disable-next-line no-throw-literal
+        throw "string error"
+      })
+
+      const buffer = Buffer.from("test")
+
+      // Should throw validation error since all rows fail
+      expect(() => excelUtils.parseExcelBuffer(buffer, mockFields)).toThrow(EXCEL_VALIDATION_ERROR)
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith("Warning: Error processing row:", "string error")
+
+      excelUtils.normalizeDate = originalNormalizeDate
+      consoleWarnSpy.mockRestore()
+    })
+
+    it("should handle empty venue field", () => {
+      const mockData = [
+        {
+          Pvm: 14.12,
+          Klo: "18:30",
+          Kenttä: "",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+      ]
+
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
+
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, mockFields)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].Tapahtumapaikka).toBe("")
+    })
+
+    it("should process multiple valid rows", () => {
+      const mockData = [
+        {
+          Pvm: 14.12,
+          Klo: "18:30",
+          Kenttä: "Arena 1",
+          Koti: "A",
+          Vieras: "B",
+          Sarja: "I divisioona",
+        },
+        {
+          Pvm: 15.12,
+          Klo: "19:00",
+          Kenttä: "Arena 2",
+          Koti: "C",
+          Vieras: "D",
+          Sarja: "II divisioona",
+        },
+        {
+          Pvm: 16.12,
+          Klo: "20:00",
+          Kenttä: "Arena 3",
+          Koti: "E",
+          Vieras: "F",
+          Sarja: "harrastesarja",
+        },
+      ]
+
+      mockXLSX.read.mockReturnValue({
+        Sheets: { Sheet1: {} },
+        SheetNames: ["Sheet1"],
+      } as XLSX.WorkBook)
+      mockXLSX.utils.sheet_to_json.mockReturnValue(mockData)
+
+      const buffer = Buffer.from("test")
+      const result = excelUtils.parseExcelBuffer(buffer, mockFields)
+
+      expect(result).toHaveLength(3)
+      expect(result[0].Nimi).toContain("I div.")
+      expect(result[1].Nimi).toContain("II div.")
+      expect(result[2].Nimi).not.toContain("div.")
     })
   })
 })

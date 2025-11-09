@@ -1,3 +1,5 @@
+"use client"
+
 import { LuChevronDown, LuChevronRight } from "react-icons/lu"
 import { useEffect } from "react"
 import styles from "./Info.module.scss"

@@ -1,9 +1,11 @@
 import packageJson from "../package.json"
+import process from "process"
 
 // Site Configuration
 const SITE_CONFIG = {
   name: "eLSA → MyClub Muuntaja",
   version: `v${packageJson.version}`,
+  baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://elsa-myclub.vercel.app",
   author: {
     name: packageJson.author.name,
     email: packageJson.author.email,
