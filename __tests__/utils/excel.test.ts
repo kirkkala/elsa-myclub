@@ -132,6 +132,38 @@ describe("Excel utilities", () => {
       expect(result[0].Alkaa).toContain(new Date().getFullYear().toString())
     })
 
+    it("should filter out rows with game results (past games)", () => {
+      setupMockXLSX([
+        mockRow({ Tulos: "75-60" }),
+        mockRow({ Koti: "C", Vieras: "D", Tulos: "" }),
+        mockRow({ Koti: "E", Vieras: "F" }),
+      ])
+      const result = parseBuffer(mockFields)
+
+      expect(result).toHaveLength(2)
+      expect(result[0].Nimi).toContain("C - D")
+      expect(result[1].Nimi).toContain("E - F")
+    })
+
+    it.each([
+      ["75-60", true],
+      ["75–60", true],
+      ["75 - 60", true],
+      ["100 99", true],
+      [" 75-60 ", true],
+      ["0-0", true],
+      ["", false],
+      ["-", false],
+    ])("result format '%s' filtered: %s", (tulos, shouldFilter) => {
+      setupMockXLSX([mockRow({ Tulos: tulos })])
+
+      if (shouldFilter) {
+        expect(() => parseBuffer(mockFields)).toThrow(EXCEL_VALIDATION_ERROR)
+      } else {
+        expect(parseBuffer(mockFields)).toHaveLength(1)
+      }
+    })
+
     it("should filter out rows with missing date or time", () => {
       setupMockXLSX([
         mockRow(),
