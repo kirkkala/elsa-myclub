@@ -28,8 +28,7 @@ const setupMockXLSX = (data: unknown[]) => {
   mockXLSX.utils.sheet_to_json.mockReturnValue(data)
 }
 
-const parseBuffer = (fields = {}) =>
-  excelUtils.parseExcelBuffer(Buffer.from("test"), fields)
+const parseBuffer = (fields = {}) => excelUtils.parseExcelBuffer(Buffer.from("test"), fields)
 
 const mockFields = {
   year: "2024",
@@ -177,7 +176,10 @@ describe("Excel utilities", () => {
     })
 
     it("should throw error when no valid rows are processed", () => {
-      setupMockXLSX([{ Pvm: "", Klo: "" }, { Pvm: "14.12", Klo: "" }])
+      setupMockXLSX([
+        { Pvm: "", Klo: "" },
+        { Pvm: "14.12", Klo: "" },
+      ])
       expect(() => parseBuffer(mockFields)).toThrow(EXCEL_VALIDATION_ERROR)
     })
 
@@ -188,7 +190,10 @@ describe("Excel utilities", () => {
       const result = parseBuffer(mockFields)
 
       expect(result).toHaveLength(1)
-      expect(consoleWarnSpy).toHaveBeenCalledWith("Warning: Error processing row:", expect.any(String))
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        "Warning: Error processing row:",
+        expect.any(String)
+      )
       consoleWarnSpy.mockRestore()
     })
 
