@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v1.1.3 (UNRELEASED)
+
+- Pelatut pelit pois MyClub tuontitiedostosta ❌
+
 ## v1.1.2 (14.12.2025)
 
 - Next.js tietoturvapävitys: [CVE-2025-55183](https://www.cve.org/CVERecord?id=CVE-2025-55183) 🔐
