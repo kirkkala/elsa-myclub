@@ -77,6 +77,11 @@ export default function Docs() {
                 className="image-embed"
               />
             </p>
+            <p>
+              Mikäli eLSA:sta haetussa excelissä on pelattuja pelejä tai pelejä joita ei vielä ole
+              asetettu tietylle päivälle, ne jätetään automaattisesti huomioimatta
+              muunnostiedostosta.
+            </p>
           </li>
           <li>
             <strong>Siirrä tiedosto sovellukseen</strong>

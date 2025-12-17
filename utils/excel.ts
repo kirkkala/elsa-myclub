@@ -13,6 +13,7 @@ interface ElsaxcelRow {
   Koti: string
   Vieras: string
   Sarja: string
+  Tulos: string
 }
 
 /**
@@ -43,6 +44,12 @@ export const excelUtils = {
 
     const processedData: MyClubExcelRow[] = jsonData
       .map((row: ElsaxcelRow): MyClubExcelRow | null => {
+        // If game has results it's probably in the past so no need to add to MyClub calendar
+        if (row.Tulos && /^\d+.+\d+$/.test(row.Tulos.trim())) {
+          return null
+        }
+
+        // If we don't have a time or date, skip the row
         if (!row.Klo || !row.Pvm) {
           return null
         }
