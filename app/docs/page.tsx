@@ -94,35 +94,24 @@ export default function Docs() {
             <strong>Säädä asetukset</strong>
             <ol>
               <li>
-                <strong>Joukkue (MyClub ryhmä)</strong>: Tämän tiedon avulla pelien tuonti
-                yhdistetään oikeaan ryhmään MyClubissa. Valitse joukkueesi listalta tai kirjoita
-                nimi kuten se on MyClubissa mikäli joukkueesi ei ole valintalistalla.
+                <strong>Joukkue</strong>: Valitse joukkueesi listalta tai kirjoita nimi kuten se on
+                MyClubissa.
               </li>
               <li>
-                <strong>Vuosi</strong>: eLSA tiedostosta puuttuu vuosiluku päivämäärien yhteydessä
-                joten vuosi tulee valita. Mikäli tiedoston pelit osuvat ovat eri vuosille, voit
-                muokata niitä excelissä omalla koneellasi tiedoston lataamisen jälkeen.
+                <strong>Vuosi</strong>: eLSA-tiedostosta puuttuu vuosiluku, se tulee valita
+                erikseen.
               </li>
               <li>
-                <strong>Kokoontumisaika</strong>: Valitse kuinka paljon ennen ottelun alkua
-                joukkueen tulee olla paikalla lämmittelyä varten. Valinta aikaistaa tapahtuman
-                alkuaikaa MyClubissa sekä lisää MyClub-tapahtuman kuvaukseen tiedon erikseen lämppä-
-                ja otteluajan alusta.
+                <strong>Kokoontumisaika</strong>: Aika ennen ottelua lämmittelyä varten. Aikaistaa
+                tapahtuman alkuaikaa ja lisää tiedon kuvaukseen.
               </li>
               <li>
-                <strong>Tapahtuman kesto</strong>: Valitse tapahtuman kesto. Tämän perusteella
-                lasketaan tapahtuman alkamis- ja päättymisaika mahdollinen kokoontumisaika
-                huomioiden.
+                <strong>Tapahtuman kesto</strong>: Määrittää tapahtuman päättymisajan (1–2 h, Timo
+                voi helposti lisätä tähän lisää vaihtoehtoja pyydettäessä).
               </li>
               <li>
-                <strong>Tapahtumatyyppi</strong>: Valitse tapahtuman tyyppi MyClubiin. "Ottelu" on
-                yleensä paras valinta sarjapelejä varten.
-              </li>
-              <li>
-                <strong>Ilmoittautuminen</strong>: Valitse kenelle ilmoittautuminen tapahtumaan
-                MyClubissa on sallittu. "Valituille henkilöille" on yleensä paras valinta
-                sarjapeleille. Näin valmentaja voi avata ilmoittautumisen vain kokoonpanoon
-                lisätyille pelaajille.
+                <strong>Ilmoittautuminen</strong>: "Valituille henkilöille" sopii sarjapeleihin –
+                valmentaja voi avata ilmon vain kokoonpanolle.
               </li>
             </ol>
           </li>
