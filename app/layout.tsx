@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { SEO_CONFIG } from "../config"
-import "../styles/globals.scss"
+import { ThemeRegistry } from "../theme"
 
 export const metadata: Metadata = {
   title: {
@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fi">
       <body>
-        {children}
+        <ThemeRegistry>{children}</ThemeRegistry>
         <SpeedInsights />
         <Analytics />
       </body>

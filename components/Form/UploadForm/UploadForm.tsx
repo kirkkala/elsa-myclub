@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import styles from "./UploadForm.module.scss"
+import Box from "@mui/material/Box"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
 import { LuCalendar, LuClock, LuUsers, LuDownload } from "react-icons/lu"
@@ -157,7 +159,7 @@ export default function UploadForm() {
   }
 
   return (
-    <div className={styles.formContainer}>
+    <Box sx={{ my: 3 }}>
       <form>
         <FileUpload
           selectedFile={formValues.file?.name || ""}
@@ -166,32 +168,35 @@ export default function UploadForm() {
           description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
         />
 
-        <div className={styles.messageContainer}>
+        <Box sx={{ minHeight: 120, mb: 3 }}>
           {error && (
-            <div className={styles.errorMessage}>
-              <p>
-                <strong>🥴 Virhe:</strong> {error}
-              </p>
-            </div>
+            <Alert severity="error" sx={{ mb: 2 }}>
+              <AlertTitle>🥴 Virhe</AlertTitle>
+              {error}
+            </Alert>
           )}
 
           {showSuccess && !error && (
-            <div className={styles.successMessage}>
-              <p>
-                <strong>Excelin luku onnistui!</strong> 🎉
-              </p>
-              <ol>
+            <Alert severity="success" sx={{ mb: 2 }}>
+              <AlertTitle>Excelin luku onnistui! 🎉</AlertTitle>
+              <Box component="ol" sx={{ pl: 2, m: 0 }}>
                 <li>Säädä asetuksia ja esikatsele muunnosta sivun lopussa.</li>
                 <li>
-                  Lataa muunnettu tiedosto "Lataa Excel" -painikkeella omalle tietokoneellesi.
+                  Lataa muunnettu tiedosto &quot;Lataa Excel&quot; -painikkeella omalle
+                  tietokoneellesi.
                 </li>
                 <li>Mene MyClubiin ja tuo tapahtumat tiedostosta.</li>
-              </ol>
-            </div>
+              </Box>
+            </Alert>
           )}
-        </div>
+        </Box>
 
-        <div className={!formValues.file || error ? styles.disabledFields : undefined}>
+        <Box
+          sx={{
+            opacity: !formValues.file || error ? 0.4 : 1,
+            pointerEvents: !formValues.file || error ? "none" : "auto",
+          }}
+        >
           <SelectOrInput
             id="group"
             Icon={LuUsers}
@@ -202,7 +207,7 @@ export default function UploadForm() {
                 action: "Kirjoita nimi",
               },
               toList: {
-                action: "Näytä listavalitsin (HNMKY)",
+                action: "Lista",
               },
             }}
             options={groupsData.groups.map((option) => ({
@@ -287,12 +292,16 @@ export default function UploadForm() {
             onChange={handleFieldChange}
             disabled={!formValues.file || !!error}
           />
-        </div>
+        </Box>
       </form>
 
       {previewData.length > 0 && (
         <>
-          <form onSubmit={handleDownload} className={styles.downloadForm}>
+          <Box sx={{ mt: 5 }}>
+            <Preview data={previewData} />
+          </Box>
+
+          <Box component="form" onSubmit={handleDownload} sx={{ mt: 3 }}>
             <Button
               type="submit"
               disabled={loading}
@@ -303,11 +312,9 @@ export default function UploadForm() {
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
-          </form>
-
-          <Preview data={previewData} />
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   )
 }

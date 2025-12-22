@@ -5,6 +5,7 @@ import process from "process"
 import matter from "gray-matter"
 import { remark } from "remark"
 import html from "remark-html"
+import Box from "@mui/material/Box"
 import { SITE_CONFIG } from "../../config"
 import BackLink from "../../components/BackLink/BackLink"
 import Info from "../../components/Info/Info"
@@ -41,7 +42,7 @@ export default async function Changelog() {
       <Header />
       <BackLink />
       <Info title="Versiohistoria" expandable={false}>
-        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </Info>
       <BackLink />
       <Footer />

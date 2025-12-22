@@ -1,8 +1,12 @@
 "use client"
 
-import { LuChevronDown, LuChevronRight } from "react-icons/lu"
-import { useEffect } from "react"
-import styles from "./Info.module.scss"
+import { useEffect, useState, useCallback } from "react"
+import Accordion from "@mui/material/Accordion"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import { LuChevronDown } from "react-icons/lu"
 
 interface InfoProps {
   title: string
@@ -54,31 +58,28 @@ export default function Info({
   id,
 }: InfoProps) {
   const sectionId = id || generateId(title)
+  const [expanded, setExpanded] = useState(defaultOpen)
 
   // Check URL hash on mount and open if matches
   useEffect(() => {
     const openSections = getOpenSections()
     if (openSections.includes(sectionId)) {
-      const details = document.getElementById(sectionId) as HTMLDetailsElement | null
-      if (details) {
-        details.open = true
-      }
+      setExpanded(true)
     }
   }, [sectionId])
 
-  const handleToggle = () => {
-    // Update URL hash after the toggle
-    setTimeout(() => {
-      const openSections = getOpenSections()
-      const details = document.getElementById(sectionId) as HTMLDetailsElement | null
+  const handleChange = useCallback(
+    (_event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded)
 
-      if (details?.open) {
-        // Add section to hash if not already there
+      // Update URL hash after the toggle
+      const openSections = getOpenSections()
+
+      if (isExpanded) {
         if (!openSections.includes(sectionId)) {
           openSections.push(sectionId)
         }
       } else {
-        // Remove section from hash
         const index = openSections.indexOf(sectionId)
         if (index > -1) {
           openSections.splice(index, 1)
@@ -86,32 +87,38 @@ export default function Info({
       }
 
       updateUrlHash(openSections)
-    }, 0)
-  }
+    },
+    [sectionId]
+  )
 
   if (expandable) {
     return (
-      <details className={styles.info} open={defaultOpen} id={sectionId} onToggle={handleToggle}>
-        <summary role="button">
-          <h2 className={styles.summaryTitle}>{title}</h2>
-          <span className={styles.summaryClosed}>
-            <LuChevronRight className={styles.icon} />
-          </span>
-          <span className={styles.summaryOpen}>
-            <LuChevronDown className={styles.icon} />
-          </span>
-        </summary>
-        <div className={`${styles.infoContent} ${styles.expandable}`}>{children}</div>
-      </details>
+      <Accordion
+        expanded={expanded}
+        onChange={handleChange}
+        id={sectionId}
+        slotProps={{ heading: { component: "h2" } }}
+      >
+        <AccordionSummary expandIcon={<LuChevronDown />}>
+          <Typography>{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>{children}</AccordionDetails>
+      </Accordion>
     )
   }
 
   return (
-    <div className={styles.info}>
-      <div className={styles.infoContent}>
-        <h2>{title}</h2>
-        {children}
-      </div>
-    </div>
+    <Box
+      sx={{
+        border: 1,
+        borderColor: "divider",
+        borderRadius: 1,
+        mb: 2,
+        p: 2,
+      }}
+    >
+      <Typography variant="h2">{title}</Typography>
+      {children}
+    </Box>
   )
 }

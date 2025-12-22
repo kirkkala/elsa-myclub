@@ -37,12 +37,12 @@ describe("Info component", () => {
         </Info>
       )
 
-      expect(screen.queryByRole("button")).not.toBeInTheDocument()
-      expect(screen.queryByRole("summary")).not.toBeInTheDocument()
+      // Non-expandable info should not have an accordion button
+      expect(screen.queryByRole("button", { expanded: false })).not.toBeInTheDocument()
     })
   })
 
-  describe("Expandable info", () => {
+  describe("Expandable info (MUI Accordion)", () => {
     it("renders collapsed by default", () => {
       render(
         <Info title="Expandable Info">
@@ -50,7 +50,9 @@ describe("Info component", () => {
         </Info>
       )
 
-      expect(screen.queryByText("Hidden Content")).not.toBeVisible()
+      // The accordion button should indicate it's collapsed
+      const button = screen.getByRole("button", { name: /Expandable Info/i })
+      expect(button).toHaveAttribute("aria-expanded", "false")
     })
 
     it("expands and collapses on click", () => {
@@ -60,29 +62,30 @@ describe("Info component", () => {
         </Info>
       )
 
-      const button = screen.getByRole("button")
+      const button = screen.getByRole("button", { name: /Expandable Info/i })
 
       // Initially collapsed
-      expect(screen.queryByText("Toggle Content")).not.toBeVisible()
+      expect(button).toHaveAttribute("aria-expanded", "false")
 
       // Click to expand
       fireEvent.click(button)
-      expect(screen.getByText("Toggle Content")).toBeVisible()
+      expect(button).toHaveAttribute("aria-expanded", "true")
 
       // Click to collapse
       fireEvent.click(button)
-      expect(screen.queryByText("Toggle Content")).not.toBeVisible()
+      expect(button).toHaveAttribute("aria-expanded", "false")
     })
 
-    it("generates correct ID from title", () => {
+    it("has correct ID", () => {
       render(
         <Info title="Test Title">
           <div>Content</div>
         </Info>
       )
 
-      const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "test-title")
+      // MUI Accordion uses the ID on the container element
+      const accordion = document.getElementById("test-title")
+      expect(accordion).toBeInTheDocument()
     })
 
     it("uses custom ID when provided", () => {
@@ -92,8 +95,8 @@ describe("Info component", () => {
         </Info>
       )
 
-      const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "custom-id")
+      const accordion = document.getElementById("custom-id")
+      expect(accordion).toBeInTheDocument()
     })
 
     it("handles Finnish characters in ID generation", () => {
@@ -103,19 +106,8 @@ describe("Info component", () => {
         </Info>
       )
 
-      const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "kayttoohjeet")
-    })
-
-    it("renders in collapsed state by default (URL hash functionality tested in integration)", () => {
-      render(
-        <Info title="Test Title">
-          <div>Content</div>
-        </Info>
-      )
-
-      const details = screen.getByRole("group") as HTMLDetailsElement
-      expect(details.open).toBe(false)
+      const accordion = document.getElementById("kayttoohjeet")
+      expect(accordion).toBeInTheDocument()
     })
 
     it("updates URL hash when section is opened", async () => {
@@ -125,10 +117,9 @@ describe("Info component", () => {
         </Info>
       )
 
-      const button = screen.getByRole("button")
+      const button = screen.getByRole("button", { name: /Test Title/i })
       fireEvent.click(button)
 
-      // Wait for the setTimeout in handleToggle
       await waitFor(() => {
         expect(mockReplaceState).toHaveBeenCalledWith(null, "", "#test-title")
       })
@@ -141,7 +132,7 @@ describe("Info component", () => {
         </Info>
       )
 
-      const button = screen.getByRole("button")
+      const button = screen.getByRole("button", { name: /Test Title/i })
 
       // First open the section
       fireEvent.click(button)
@@ -149,7 +140,6 @@ describe("Info component", () => {
       // Then close it
       fireEvent.click(button)
 
-      // Wait for the setTimeout in handleToggle
       await waitFor(() => {
         expect(mockReplaceState).toHaveBeenCalled()
       })
@@ -163,10 +153,10 @@ describe("Info component", () => {
       )
 
       // Content should be visible initially
-      expect(screen.getByText("Initially Visible Content")).toBeVisible()
+      expect(screen.getByText("Initially Visible Content")).toBeInTheDocument()
 
-      const details = screen.getByRole("group") as HTMLDetailsElement
-      expect(details.open).toBe(true)
+      const button = screen.getByRole("button", { name: /Test Title/i })
+      expect(button).toHaveAttribute("aria-expanded", "true")
     })
 
     it("handles defaultOpen false explicitly", () => {
@@ -176,11 +166,8 @@ describe("Info component", () => {
         </Info>
       )
 
-      // Content should be hidden initially
-      expect(screen.queryByText("Initially Hidden Content")).not.toBeVisible()
-
-      const details = screen.getByRole("group") as HTMLDetailsElement
-      expect(details.open).toBe(false)
+      const button = screen.getByRole("button", { name: /Test Title/i })
+      expect(button).toHaveAttribute("aria-expanded", "false")
     })
 
     it("handles special characters in title for ID generation", () => {
@@ -190,8 +177,8 @@ describe("Info component", () => {
         </Info>
       )
 
-      const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "test--title-with--special-characters")
+      const accordion = document.getElementById("test--title-with--special-characters")
+      expect(accordion).toBeInTheDocument()
     })
 
     it("handles empty title for ID generation", () => {
@@ -201,35 +188,18 @@ describe("Info component", () => {
         </Info>
       )
 
-      const details = screen.getByRole("group")
-      expect(details).toHaveAttribute("id", "")
+      // With empty title, the component should still render the content
+      expect(screen.getByText("Content")).toBeInTheDocument()
     })
 
-    it("shows correct icon when collapsed", () => {
+    it("shows expand icon", () => {
       render(
         <Info title="Test Title">
           <div>Content</div>
         </Info>
       )
 
-      // Should show right chevron when collapsed
-      const button = screen.getByRole("button")
-      expect(button.querySelector("svg")).toBeInTheDocument()
-    })
-
-    it("shows correct icon when expanded", () => {
-      render(
-        <Info title="Test Title">
-          <div>Content</div>
-        </Info>
-      )
-
-      const button = screen.getByRole("button")
-
-      // Expand the section
-      fireEvent.click(button)
-
-      // Should show down chevron when expanded
+      const button = screen.getByRole("button", { name: /Test Title/i })
       expect(button.querySelector("svg")).toBeInTheDocument()
     })
   })

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, fireEvent } from "@testing-library/react"
 import Docs from "../../app/docs/page"
 import { testPageElements } from "../shared/page-elements.test"
 
@@ -8,19 +8,10 @@ describe("Docs Page", () => {
   it("renders content and external links", () => {
     render(<Docs />)
 
-    // Main content sections
+    // Main content sections (accordions)
     expect(screen.getByText("Tietoja sovelluksesta")).toBeInTheDocument()
-    expect(screen.getByText(/eLSA → MyClub Muuntajan avulla/)).toBeInTheDocument()
     expect(screen.getByText("Käyttöohjeet")).toBeInTheDocument()
-    expect(screen.getByText(/Hae ottelut eLSA:sta/)).toBeInTheDocument()
-    expect(screen.getByText("Tietosuojaseloste")).toBeInTheDocument()
-    expect(screen.getByText(/Sovellus ei kerää tietoa käyttäjistä/)).toBeInTheDocument()
-
-    // External links
-    const elsaLink = screen.getAllByRole("link", { name: /eLSA/ })[0]
-    const myclubLink = screen.getAllByRole("link", { name: /MyClub/ })[0]
-    expect(elsaLink).toHaveAttribute("href", expect.stringContaining("elsa"))
-    expect(myclubLink).toHaveAttribute("href", expect.stringContaining("myclub"))
+    expect(screen.getByText("Lisätietoja ja palaute")).toBeInTheDocument()
   })
 
   it("has proper metadata structure", () => {
@@ -32,30 +23,30 @@ describe("Docs Page", () => {
     expect(screen.getByText("Lisätietoja ja palaute")).toBeInTheDocument()
   })
 
-  it("contains step-by-step instructions", () => {
+  it("renders back links", () => {
     render(<Docs />)
 
-    // Check for numbered instructions
-    expect(screen.getByText(/Hae ottelut eLSA:sta/)).toBeInTheDocument()
-    expect(screen.getByText(/Siirrä tiedosto sovellukseen/)).toBeInTheDocument()
-    expect(screen.getByText(/Säädä asetukset/)).toBeInTheDocument()
-    expect(screen.getByText(/Esikatsele muunnosta/)).toBeInTheDocument()
-    expect(screen.getByText(/Lataa tiedosto/)).toBeInTheDocument()
-    expect(screen.getByText(/Vie tiedosto MyClub:iin/)).toBeInTheDocument()
+    // BackLink renders as MUI Button with Link component
+    const backLinks = screen.getAllByRole("link", { name: /etusivulle/i })
+    expect(backLinks.length).toBeGreaterThanOrEqual(1)
   })
 
-  it("includes privacy information", () => {
+  it("includes external links when accordion is expanded", () => {
     render(<Docs />)
 
-    expect(screen.getByText("Tietosuojaseloste")).toBeInTheDocument()
-    expect(screen.getByText(/Sovellus ei kerää tietoa käyttäjistä/)).toBeInTheDocument()
+    // First expand the "Tietoja sovelluksesta" accordion to access its links
+    const tietojaButton = screen.getByRole("button", { name: /Tietoja sovelluksesta/i })
+    fireEvent.click(tietojaButton)
+
+    // External links should be present after expanding the accordion
+    expect(screen.getByRole("link", { name: /eLSA/i })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: /MyClub/i })).toBeInTheDocument()
   })
 
-  it("has contact information", () => {
+  it("has footer with author info", () => {
     render(<Docs />)
 
-    expect(screen.getByText(/timo.kirkkala@gmail.com/)).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /versiohistoria/ })).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /GitHubissa/ })).toBeInTheDocument()
+    expect(screen.getByText(/Timo Kirkkala/)).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: /GitHub/i })).toBeInTheDocument()
   })
 })

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, fireEvent } from "@testing-library/react"
 import { LuUser } from "react-icons/lu"
 import SelectField from "../SelectField"
 
@@ -12,22 +12,40 @@ const mockProps = {
     { value: "opt2", label: "Option 2" },
     { value: "opt3" }, // No label - tests value fallback
   ],
+  defaultValue: "opt1",
 }
 
 describe("SelectField", () => {
   it("renders with all elements", () => {
     render(<SelectField {...mockProps} />)
-    expect(screen.getByLabelText("Label")).toBeInTheDocument()
+    expect(screen.getByText("Label")).toBeInTheDocument()
     expect(screen.getByText("Description")).toBeInTheDocument()
-    expect(screen.getByText("Option 1")).toBeInTheDocument()
-    expect(screen.getByText("Option 2")).toBeInTheDocument()
-    expect(screen.getByText("opt3")).toBeInTheDocument() // Value used when no label
+    // MUI Select shows the selected value, not all options by default
+    expect(screen.getByRole("combobox")).toBeInTheDocument()
   })
 
-  it("renders suffix and handles props", () => {
-    render(<SelectField {...mockProps} suffix={<span>Suffix</span>} required className="custom" />)
-    expect(screen.getByText("Suffix").parentElement).toHaveClass("suffix")
-    expect(screen.getByRole("combobox")).toHaveAttribute("required")
-    expect(screen.getByTestId("select-wrapper")).toHaveClass("custom")
+  it("renders suffix", () => {
+    render(<SelectField {...mockProps} suffix={<span data-testid="suffix">Suffix</span>} />)
+    expect(screen.getByTestId("suffix")).toBeInTheDocument()
+  })
+
+  it("handles disabled state", () => {
+    render(<SelectField {...mockProps} disabled />)
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-disabled", "true")
+  })
+
+  it("calls onChange when selection changes", () => {
+    const onChange = jest.fn()
+    render(<SelectField {...mockProps} onChange={onChange} />)
+
+    // Open the select
+    const select = screen.getByRole("combobox")
+    fireEvent.mouseDown(select)
+
+    // Click on Option 2
+    const option2 = screen.getByRole("option", { name: "Option 2" })
+    fireEvent.click(option2)
+
+    expect(onChange).toHaveBeenCalled()
   })
 })

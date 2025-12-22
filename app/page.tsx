@@ -1,9 +1,10 @@
-import Link from "next/link"
-import { LuInfo } from "react-icons/lu"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import Layout from "../components/Layout/Layout"
 import Header from "../components/Header/Header"
 import UploadForm from "../components/Form/UploadForm/UploadForm"
 import Footer from "../components/Footer/Footer"
+import InfoButton from "../components/InfoButton/InfoButton"
 import { SEO_CONFIG } from "../config"
 
 export default function Home() {
@@ -28,17 +29,13 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Header />
-      <div className="intro-section">
-        <p className="intro-text">
+      <Box sx={{ textAlign: "center", mb: 3 }}>
+        <Typography sx={{ mb: 2 }}>
           Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella. Helpota
           jojotöitä ja säästä aikaa.
-        </p>
-        <Link href="/docs" className="btn-info">
-          <LuInfo size={20} />
-          <span>Käyttöohjeet ja tietoja sovelluksesta</span>
-        </Link>
-      </div>
-      <h2 className="visually-hidden">Konversiolomake</h2>
+        </Typography>
+        <InfoButton />
+      </Box>
       <UploadForm />
       <Footer />
     </Layout>

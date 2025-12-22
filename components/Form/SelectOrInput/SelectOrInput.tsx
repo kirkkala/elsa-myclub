@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import Box from "@mui/material/Box"
+import MuiLink from "@mui/material/Link"
 import { LuPencil, LuList } from "react-icons/lu"
 import SelectField from "../SelectField/SelectField"
 import TextInput from "../TextInput/TextInput"
-import styles from "./SelectOrInput.module.scss"
 import { BaseFormFieldProps, SelectOption } from "../types"
 
 interface SwitchText {
@@ -29,19 +30,28 @@ const SwitchLink = ({
   switchText: SwitchText
   onToggle: () => void
 }) => (
-  <a
-    href="#"
-    onClick={(e) => {
+  <MuiLink
+    component="button"
+    type="button"
+    onClick={(e: React.MouseEvent) => {
       e.preventDefault()
       if (!disabled) {
         onToggle()
       }
     }}
-    className={disabled ? styles.disabled : ""}
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 0.5,
+      fontSize: "0.875rem",
+      whiteSpace: "nowrap",
+      opacity: disabled ? 0.5 : 1,
+      cursor: disabled ? "not-allowed" : "pointer",
+    }}
   >
     {isInput ? <LuList /> : <LuPencil />}{" "}
     {isInput ? switchText.toList.action : switchText.toInput.action}
-  </a>
+  </MuiLink>
 )
 
 export default function SelectOrInput({
@@ -70,15 +80,9 @@ export default function SelectOrInput({
   )
 
   return (
-    <div className={styles.selectOrInput}>
+    <Box>
       {!useCustomInput ? (
-        <SelectField
-          {...props}
-          className={styles.nestedField}
-          options={displayOptions}
-          suffix={switchLink}
-          disabled={disabled}
-        />
+        <SelectField {...props} options={displayOptions} suffix={switchLink} disabled={disabled} />
       ) : (
         <TextInput
           {...props}
@@ -87,6 +91,6 @@ export default function SelectOrInput({
           disabled={disabled}
         />
       )}
-    </div>
+    </Box>
   )
 }

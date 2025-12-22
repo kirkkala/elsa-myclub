@@ -1,22 +1,44 @@
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import MuiLink from "@mui/material/Link"
 import { LuHeart } from "react-icons/lu"
-import styles from "./Footer.module.scss"
 import { SITE_CONFIG } from "../../config"
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
-      <p>
-        Made with <LuHeart style={{ transform: "translateY(2px)" }} /> by{" "}
-        <a href={SITE_CONFIG.links.githubAuthorUrl} target="_blank" rel="noopener noreferrer">
+    <Box
+      component="footer"
+      sx={{
+        mt: 4,
+        pt: 3,
+        borderTop: 1,
+        borderColor: "divider",
+        textAlign: "center",
+      }}
+    >
+      <Typography color="text.secondary">
+        Made with{" "}
+        <LuHeart
+          style={{
+            transform: "translateY(2px)",
+            color: "#c8102e",
+          }}
+        />{" "}
+        by{" "}
+        <MuiLink href={SITE_CONFIG.links.githubAuthorUrl} target="_blank" rel="noopener noreferrer">
           {SITE_CONFIG.author.name}
-        </a>
-      </p>
-      <p>
+        </MuiLink>
+      </Typography>
+      <Typography color="text.secondary">
         Source code published on{" "}
-        <a href={SITE_CONFIG.links.githubAppRepoUrl} target="_blank" rel="noopener noreferrer">
+        <MuiLink
+          href={SITE_CONFIG.links.githubAppRepoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           GitHub
-        </a>
-      </p>
-    </footer>
+        </MuiLink>
+      </Typography>
+    </Box>
   )
 }

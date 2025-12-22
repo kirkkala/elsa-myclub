@@ -1,4 +1,6 @@
-import styles from "./TextInput.module.scss"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
 import { BaseFormFieldProps } from "../types"
 
 interface TextInputProps extends BaseFormFieldProps {
@@ -19,30 +21,57 @@ export default function TextInput({
   onChange,
   disabled,
 }: TextInputProps) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      // Create a synthetic event that matches the expected type
+      const syntheticEvent = {
+        target: {
+          name: id,
+          value: event.target.value,
+        },
+      } as React.ChangeEvent<HTMLInputElement>
+      onChange(syntheticEvent)
+    }
+  }
+
   return (
-    <div className={styles.formGroup}>
-      <label htmlFor={id}>
+    <Box>
+      <Typography
+        component="label"
+        htmlFor={id}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5,
+          mb: 0.5,
+        }}
+      >
         <Icon /> {label}
-      </label>
+      </Typography>
       {description && (
-        <div id={`${id}-description`} className={styles.fieldDescription}>
+        <Typography id={`${id}-description`} color="text.secondary">
           {description}
-        </div>
+        </Typography>
       )}
-      <div className={styles.inputWrapper}>
-        <input
-          type="text"
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <TextField
           id={id}
           name={id}
           placeholder={placeholder}
           defaultValue={defaultValue}
           required={required}
-          aria-describedby={description ? `${id}-description` : undefined}
-          onChange={onChange}
+          fullWidth
+          size="small"
           disabled={disabled}
+          onChange={handleChange}
+          slotProps={{
+            htmlInput: {
+              "aria-describedby": description ? `${id}-description` : undefined,
+            },
+          }}
         />
-        {suffix && <div className={styles.suffix}>{suffix}</div>}
-      </div>
-    </div>
+        {suffix}
+      </Box>
+    </Box>
   )
 }

@@ -1,5 +1,13 @@
+import Box from "@mui/material/Box"
+import Table from "@mui/material/Table"
+import TableBody from "@mui/material/TableBody"
+import TableCell from "@mui/material/TableCell"
+import TableContainer from "@mui/material/TableContainer"
+import TableHead from "@mui/material/TableHead"
+import TableRow from "@mui/material/TableRow"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
 import type { MyClubExcelRow } from "@/utils/excel"
-import styles from "./Preview.module.scss"
 
 interface PreviewProps {
   data: MyClubExcelRow[]
@@ -16,41 +24,54 @@ export default function Preview({ data }: PreviewProps) {
   }
 
   return (
-    <div className={styles.preview}>
-      <div className={styles.previewTableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nimi</th>
-              <th>Alkaa</th>
-              <th>Päättyy</th>
-              <th>Kuvaus</th>
-              <th>Ryhmä</th>
-              <th>Tapahtumatyyppi</th>
-              <th>Tapahtumapaikka</th>
-              <th>Ilmoittautuminen</th>
-              <th>Näkyvyys</th>
-            </tr>
-          </thead>
-          <tbody>
+    <Box
+      sx={{
+        mt: 3,
+        // Break out of container to full width
+        width: "100vw",
+        position: "relative",
+        left: "50%",
+        transform: "translateX(-50%)",
+        px: { xs: 1, sm: 2 },
+      }}
+    >
+      <Typography variant="h2" sx={{ mb: 1.5 }}>
+        Esikatselu ({data.length} tapahtumaa)
+      </Typography>
+      <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 400 }}>
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Nimi</TableCell>
+              <TableCell>Alkaa</TableCell>
+              <TableCell>Päättyy</TableCell>
+              <TableCell>Kuvaus</TableCell>
+              <TableCell>Ryhmä</TableCell>
+              <TableCell>Tapahtumatyyppi</TableCell>
+              <TableCell>Tapahtumapaikka</TableCell>
+              <TableCell>Ilmoittautuminen</TableCell>
+              <TableCell>Näkyvyys</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {data.map((row, index) => (
-              <tr key={getRowKey(row)}>
-                <td>{index + 1}</td>
-                <td>{row.Nimi}</td>
-                <td>{row.Alkaa}</td>
-                <td>{row.Päättyy}</td>
-                <td>{row.Kuvaus}</td>
-                <td>{row.Ryhmä}</td>
-                <td>{row.Tapahtumatyyppi}</td>
-                <td>{row.Tapahtumapaikka}</td>
-                <td>{row.Ilmoittautuminen}</td>
-                <td>{row.Näkyvyys}</td>
-              </tr>
+              <TableRow key={getRowKey(row)} hover>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{row.Nimi}</TableCell>
+                <TableCell>{row.Alkaa}</TableCell>
+                <TableCell>{row.Päättyy}</TableCell>
+                <TableCell>{row.Kuvaus}</TableCell>
+                <TableCell>{row.Ryhmä}</TableCell>
+                <TableCell>{row.Tapahtumatyyppi}</TableCell>
+                <TableCell>{row.Tapahtumapaikka}</TableCell>
+                <TableCell>{row.Ilmoittautuminen}</TableCell>
+                <TableCell>{row.Näkyvyys}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }

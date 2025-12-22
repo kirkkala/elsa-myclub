@@ -1,11 +1,18 @@
-import styles from "./SelectField.module.scss"
+"use client"
+
+import { useState, useEffect } from "react"
+import Box from "@mui/material/Box"
+import FormControl from "@mui/material/FormControl"
+import Select, { SelectChangeEvent } from "@mui/material/Select"
+import MenuItem from "@mui/material/MenuItem"
+import Typography from "@mui/material/Typography"
 import { BaseFormFieldProps, SelectOption } from "../types"
 
 interface SelectFieldProps extends BaseFormFieldProps {
   options: SelectOption[]
   defaultValue?: string
+  value?: string
   suffix?: React.ReactNode
-  className?: string
 }
 
 export default function SelectField({
@@ -16,45 +23,77 @@ export default function SelectField({
   options,
   required,
   defaultValue,
+  value,
   suffix,
-  className,
   onChange,
   disabled,
 }: SelectFieldProps) {
-  const optionElements = options.map((option) => (
-    <option key={`${option.value}`} value={option.value} disabled={option.disabled}>
-      {option.label ?? option.value}
-    </option>
-  ))
+  // Use internal state to track the selected value for controlled behavior
+  const [internalValue, setInternalValue] = useState(value ?? defaultValue ?? "")
+
+  // Sync with external value prop when it changes
+  useEffect(() => {
+    if (value !== undefined) {
+      setInternalValue(value)
+    }
+  }, [value])
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setInternalValue(event.target.value)
+    if (onChange) {
+      // Create a synthetic event that matches the expected type
+      const syntheticEvent = {
+        target: {
+          name: id,
+          value: event.target.value,
+        },
+      } as React.ChangeEvent<HTMLSelectElement>
+      onChange(syntheticEvent)
+    }
+  }
 
   return (
-    <div
-      className={styles.formGroup + (className ? ` ${className}` : "")}
-      data-testid="select-wrapper"
-    >
-      <label htmlFor={id}>
+    <Box data-testid="select-wrapper">
+      <Typography
+        component="label"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5,
+          mb: 0.5,
+        }}
+      >
         <Icon />
         {label}
-      </label>
+      </Typography>
       {description && (
-        <div id={`${id}-description`} className={styles.fieldDescription}>
+        <Typography id={`${id}-description`} color="text.secondary">
           {description}
-        </div>
+        </Typography>
       )}
-      <div className={styles.selectWrapper}>
-        <select
-          id={id}
-          name={id}
-          required={required}
-          defaultValue={defaultValue}
-          aria-describedby={description ? `${id}-description` : undefined}
-          onChange={onChange}
-          disabled={disabled}
-        >
-          {optionElements}
-        </select>
-        {suffix && <div className={styles.suffix}>{suffix}</div>}
-      </div>
-    </div>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <FormControl fullWidth size="small" disabled={disabled}>
+          <Select
+            id={id}
+            name={id}
+            value={internalValue}
+            onChange={handleChange}
+            required={required}
+            displayEmpty
+            aria-describedby={description ? `${id}-description` : undefined}
+            MenuProps={{
+              disableScrollLock: true,
+            }}
+          >
+            {options.map((option) => (
+              <MenuItem key={option.value} value={option.value} disabled={option.disabled}>
+                {option.label ?? option.value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {suffix}
+      </Box>
+    </Box>
   )
 }

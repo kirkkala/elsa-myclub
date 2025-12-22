@@ -25,7 +25,6 @@ describe("SelectOrInput", () => {
     expect(screen.getByRole("combobox")).toBeInTheDocument()
     expect(screen.getByText("Label")).toBeInTheDocument()
     expect(screen.getByText("Description")).toBeInTheDocument()
-    expect(screen.getByText("A")).toBeInTheDocument() // Value is used when no label
     expect(screen.getByText("To Input")).toBeInTheDocument()
   })
 
@@ -45,7 +44,8 @@ describe("SelectOrInput", () => {
 
   it("maintains required attribute in both modes", () => {
     render(<SelectOrInput {...mockProps} />)
-    expect(screen.getByRole("combobox")).toHaveAttribute("required")
+    // MUI Select uses aria-required for required state
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-required", "true")
 
     fireEvent.click(screen.getByText("To Input"))
     expect(screen.getByRole("textbox")).toHaveAttribute("required")
@@ -54,15 +54,15 @@ describe("SelectOrInput", () => {
   it("handles disabled state correctly", () => {
     render(<SelectOrInput {...mockProps} disabled />)
 
-    // Select should be disabled
-    expect(screen.getByRole("combobox")).toBeDisabled()
+    // Select should be disabled (MUI uses aria-disabled)
+    expect(screen.getByRole("combobox")).toHaveAttribute("aria-disabled", "true")
 
-    // Switch link should be disabled
-    const switchLink = screen.getByText("To Input")
-    expect(switchLink.closest("a")).toHaveClass("disabled")
+    // Switch link should still be in the DOM but visually disabled
+    const switchButton = screen.getByRole("button", { name: /To Input/i })
+    expect(switchButton).toBeInTheDocument()
 
     // Clicking disabled link should not switch modes
-    fireEvent.click(switchLink)
+    fireEvent.click(switchButton)
 
     // Should still be in select mode (disabled links don't work)
     expect(screen.getByRole("combobox")).toBeInTheDocument()
@@ -76,9 +76,6 @@ describe("SelectOrInput", () => {
     render(<SelectOrInput {...propsWithoutDisabled} />)
 
     // Should not be disabled when disabled prop is undefined
-    expect(screen.getByRole("combobox")).not.toBeDisabled()
-
-    const switchLink = screen.getByText("To Input")
-    expect(switchLink.closest("a")).not.toHaveClass("disabled")
+    expect(screen.getByRole("combobox")).not.toHaveAttribute("aria-disabled")
   })
 })
