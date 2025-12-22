@@ -4,9 +4,13 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.1.3 (UNRELEASED)
+## v1.1.4 (22.12.2025)
 
-- Pelatut pelit pois MyClub tuontitiedostosta ❌
+- Selkeämmät käyttöohjeet 🧹
+
+## v1.1.3 (17.12.2025)
+
+- Jo pelattujen sekä asettelemattomian otteluiden huomiotta jättäminen 🧹
 
 ## v1.1.2 (14.12.2025)
 
