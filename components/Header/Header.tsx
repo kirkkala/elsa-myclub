@@ -3,7 +3,7 @@ import Link from "next/link"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Chip from "@mui/material/Chip"
-import { LuWandSparkles } from "react-icons/lu"
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
 import { SITE_CONFIG } from "../../config"
 
 export default function Header() {
@@ -32,8 +32,8 @@ export default function Header() {
           height={40}
           style={{ objectFit: "contain", backgroundColor: "#004176", padding: 8, borderRadius: 6 }}
         />
-        <LuWandSparkles
-          style={{
+        <AutoAwesomeIcon
+          sx={{
             fontSize: "1rem",
             color: "#6b7280",
           }}

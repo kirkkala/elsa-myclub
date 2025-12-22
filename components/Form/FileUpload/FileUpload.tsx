@@ -4,8 +4,9 @@ import { useRef } from "react"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
-import { RiFileExcel2Line } from "react-icons/ri"
-import { LuSend, LuCheck } from "react-icons/lu"
+import DescriptionIcon from "@mui/icons-material/Description"
+import SendIcon from "@mui/icons-material/Send"
+import CheckIcon from "@mui/icons-material/Check"
 
 interface FileUploadProps {
   label: string
@@ -38,7 +39,7 @@ export default function FileUpload({
           mb: 0.5,
         }}
       >
-        <LuSend /> {label}
+        <SendIcon sx={{ fontSize: "1rem" }} /> {label}
       </Typography>
       <Typography color="text.secondary">{description}</Typography>
       <Button
@@ -59,7 +60,7 @@ export default function FileUpload({
           },
         }}
       >
-        <RiFileExcel2Line style={{ fontSize: "1.25rem" }} />
+        <DescriptionIcon sx={{ fontSize: "1.25rem" }} />
         <Typography
           component="span"
           sx={{
@@ -71,7 +72,7 @@ export default function FileUpload({
         >
           {selectedFile || "Valitse tiedosto..."}
         </Typography>
-        {selectedFile && <LuCheck style={{ marginLeft: "auto", color: "#16a34a" }} />}
+        {selectedFile && <CheckIcon sx={{ marginLeft: "auto", color: "#16a34a" }} />}
       </Button>
       <input
         ref={inputRef}

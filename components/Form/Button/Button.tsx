@@ -1,12 +1,12 @@
+import { ElementType } from "react"
 import Box from "@mui/material/Box"
 import MuiButton from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
-import { IconType } from "react-icons"
 
 interface ButtonProps {
   type?: "button" | "submit"
   disabled?: boolean
-  Icon?: IconType
+  Icon?: ElementType
   label?: string
   description?: string
   children: React.ReactNode

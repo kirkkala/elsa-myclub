@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import Button from "@mui/material/Button"
-import { LuInfo } from "react-icons/lu"
+import InfoIcon from "@mui/icons-material/Info"
 
 export default function InfoButton() {
   const router = useRouter()
@@ -11,7 +11,7 @@ export default function InfoButton() {
     <Button
       onClick={() => router.push("/docs")}
       variant="outlined"
-      startIcon={<LuInfo />}
+      startIcon={<InfoIcon />}
       sx={{
         py: 1,
         px: 2,

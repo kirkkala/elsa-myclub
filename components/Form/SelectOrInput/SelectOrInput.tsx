@@ -3,7 +3,8 @@
 import { useState } from "react"
 import Box from "@mui/material/Box"
 import MuiLink from "@mui/material/Link"
-import { LuPencil, LuList } from "react-icons/lu"
+import EditIcon from "@mui/icons-material/Edit"
+import ListIcon from "@mui/icons-material/List"
 import SelectField from "../SelectField/SelectField"
 import TextInput from "../TextInput/TextInput"
 import { BaseFormFieldProps, SelectOption } from "../types"
@@ -49,7 +50,7 @@ const SwitchLink = ({
       cursor: disabled ? "not-allowed" : "pointer",
     }}
   >
-    {isInput ? <LuList /> : <LuPencil />}{" "}
+    {isInput ? <ListIcon sx={{ fontSize: "1rem" }} /> : <EditIcon sx={{ fontSize: "1rem" }} />}{" "}
     {isInput ? switchText.toList.action : switchText.toInput.action}
   </MuiLink>
 )

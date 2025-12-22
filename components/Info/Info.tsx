@@ -6,7 +6,7 @@ import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
-import { LuChevronDown } from "react-icons/lu"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 
 interface InfoProps {
   title: string
@@ -99,7 +99,7 @@ export default function Info({
         id={sectionId}
         slotProps={{ heading: { component: "h2" } }}
       >
-        <AccordionSummary expandIcon={<LuChevronDown />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>{title}</Typography>
         </AccordionSummary>
         <AccordionDetails>{children}</AccordionDetails>

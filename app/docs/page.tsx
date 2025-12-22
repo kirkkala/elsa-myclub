@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography"
 import MuiLink from "@mui/material/Link"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
-import { LuBookMarked, LuGithub } from "react-icons/lu"
+import ListItemText from "@mui/material/ListItemText"
+import ListItemIcon from "@mui/material/ListItemIcon"
 import { SITE_CONFIG } from "../../config"
 import Layout from "../../components/Layout/Layout"
 import Header from "../../components/Header/Header"
@@ -14,6 +15,8 @@ import BackLink from "../../components/BackLink/BackLink"
 import Footer from "../../components/Footer/Footer"
 import InternalLink from "../../components/InternalLink/InternalLink"
 import Divider from "@mui/material/Divider"
+import GitHubIcon from "@mui/icons-material/GitHub"
+import HistoryIcon from "@mui/icons-material/History"
 
 export const metadata: Metadata = {
   title: `Dokumentaatio`,
@@ -156,19 +159,29 @@ export default function Docs() {
           <br />→ Katso koodit GitHubissa ja tee pull request.
         </Typography>
         <Divider />
-        <List>
+        <List dense>
           <ListItem>
-            <LuBookMarked /> <InternalLink href="/changelog">Versiohistoria</InternalLink>
+            <ListItemIcon sx={{ minWidth: 30 }}>
+              <HistoryIcon />
+            </ListItemIcon>
+            <ListItemText>
+              Katso <InternalLink href="/changelog">Versiohistoria</InternalLink>
+            </ListItemText>
           </ListItem>
           <ListItem>
-            <LuGithub /> Lähdekoodi{" "}
-            <MuiLink
-              href={SITE_CONFIG.links.githubAppRepoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHubissa
-            </MuiLink>
+            <ListItemIcon sx={{ minWidth: 30 }}>
+              <GitHubIcon />
+            </ListItemIcon>
+            <ListItemText>
+              Lähdekoodi{" "}
+              <MuiLink
+                href={SITE_CONFIG.links.githubAppRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHubissa
+              </MuiLink>
+            </ListItemText>
           </ListItem>
         </List>
       </Info>

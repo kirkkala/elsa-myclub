@@ -2,14 +2,14 @@
 
 import Link from "next/link"
 import Button from "@mui/material/Button"
-import { LuArrowLeft } from "react-icons/lu"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
 export default function BackLink() {
   return (
     <Button
       component={Link}
       href="/"
-      startIcon={<LuArrowLeft />}
+      startIcon={<ArrowBackIcon />}
       sx={{
         mb: 2,
         color: "text.secondary",

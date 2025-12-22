@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import MuiLink from "@mui/material/Link"
-import { LuHeart } from "react-icons/lu"
+import FavoriteIcon from "@mui/icons-material/Favorite"
 import { SITE_CONFIG } from "../../config"
 
 export default function Footer() {
@@ -18,8 +18,9 @@ export default function Footer() {
     >
       <Typography color="text.secondary">
         Made with{" "}
-        <LuHeart
-          style={{
+        <FavoriteIcon
+          sx={{
+            fontSize: "1rem",
             transform: "translateY(2px)",
             color: "#c8102e",
           }}

@@ -6,8 +6,11 @@ import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import FileUpload from "../FileUpload/FileUpload"
 import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuClock, LuUsers, LuDownload } from "react-icons/lu"
-import { CiBasketball } from "react-icons/ci"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
+import PeopleIcon from "@mui/icons-material/People"
+import DownloadIcon from "@mui/icons-material/Download"
+import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
 import Button from "../Button/Button"
 import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
@@ -199,7 +202,7 @@ export default function UploadForm() {
         >
           <SelectOrInput
             id="group"
-            Icon={LuUsers}
+            Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
             description={`Valitse joukkueesi listalta tai paina "Kirjoita nimi" ja anna kuten se on MyClubissa.`}
             switchText={{
@@ -223,7 +226,7 @@ export default function UploadForm() {
             id="year"
             label="2. Vuosi"
             description="Valitse vuosi, eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä."
-            Icon={LuCalendar}
+            Icon={CalendarMonthIcon}
             options={years.map((year) => ({
               value: String(year),
               label: String(year),
@@ -237,7 +240,7 @@ export default function UploadForm() {
             id="meetingTime"
             label="3. Kokoontumisaika"
             description="Voit valita kokoontumisajan lämppää varten, valinta aikaistaa tapahtuman alkamisaikaa."
-            Icon={LuClock}
+            Icon={AccessTimeIcon}
             options={[
               { value: "0", label: "Ei aikaistusta" },
               { value: "15", label: "15 min ennen ottelun alkua" },
@@ -255,7 +258,7 @@ export default function UploadForm() {
           <SelectField
             id="duration"
             label="4. Tapahtuman kesto"
-            Icon={LuClock}
+            Icon={AccessTimeIcon}
             options={[
               { value: "60", label: "1 tunti" },
               { value: "75", label: "1 tunti 15 minuuttia" },
@@ -271,7 +274,7 @@ export default function UploadForm() {
           <SelectField
             id="eventType"
             label="5. Tapahtumatyyppi"
-            Icon={CiBasketball}
+            Icon={SportsBasketballIcon}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue={formValues.eventType}
             onChange={handleFieldChange}
@@ -282,7 +285,7 @@ export default function UploadForm() {
             id="registration"
             label="6. Ilmoittautuminen"
             description="Valitse kenelle tapahtumaan ilmoittautuminen sallitaan MyClubissa."
-            Icon={LuUsers}
+            Icon={PeopleIcon}
             options={[
               { value: "Valituille henkilöille" },
               { value: "Ryhmän jäsenille" },
@@ -305,7 +308,7 @@ export default function UploadForm() {
             <Button
               type="submit"
               disabled={loading}
-              Icon={LuDownload}
+              Icon={DownloadIcon}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen Excel-tiedosto omalle
                 tietokoneellesi, muokkaa tarvittaessa ja siirry MyClubiin tuomaan tapahtumat tiedostosta.`}

@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from "@testing-library/react"
-import { LuUser } from "react-icons/lu"
+import PersonIcon from "@mui/icons-material/Person"
 import SelectField from "../SelectField"
 
 const mockProps = {
   id: "test",
   label: "Label",
   description: "Description",
-  Icon: LuUser,
+  Icon: PersonIcon,
   options: [
     { value: "opt1", label: "Option 1" },
     { value: "opt2", label: "Option 2" },
