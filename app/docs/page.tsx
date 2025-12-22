@@ -38,7 +38,7 @@ export default function Docs() {
         <h3>Kenelle sovellus on tarkoitettu?</h3>
         <p>
           Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
-          taustahenkilölle ketkä siirtävät pelejä eLSA:sta MyClub:iin.
+          taustahenkilölle ketkä siirtävät otteluita eLSA:sta MyClub:iin.
         </p>
         <p>
           <Link href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
@@ -54,115 +54,96 @@ export default function Docs() {
           tietokoneelle.
         </p>
         <p>
-          Applikaation käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto
-          ei tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
+          Sovelluksen käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto ei
+          tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
         </p>
       </Info>
 
       <Info title="Käyttöohjeet" expandable defaultOpen={false}>
-        <ol>
+        <h3>1. Hae ottelutiedosto eLSA:sta</h3>
+        <p>
+          Kirjaudu{" "}
+          <Link href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
+            elsa.basket.fi
+          </Link>
+          , valitse joukkue ja siirry "Ottelut"-välilehdelle. Lataa Excel-tiedosto omalle
+          tietokoneellesi.
+          <Image
+            src="/images/docs/elsa-excel-download.png"
+            alt="eLSA Excel-tiedoston lataaminen"
+            width={887}
+            height={346}
+            className="image-embed"
+          />
+        </p>
+
+        <h3>2. Vie tiedosto sovellukseen</h3>
+        <p>
+          Siirry sovelluksen <Link href="/">etusivulle</Link> ja valitse eLSA:sta lataamasi Excel
+          kohtaan "<strong>eLSA excel tiedosto</strong>".
+        </p>
+        <p>
+          eLSA:sta lataamassasi tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä
+          otteluita. Ne voi jättää tiedostoon, muuntaja ei käsittelee niitä.
+        </p>
+
+        <h3>3. Säädä asetukset</h3>
+        <ul>
           <li>
-            <strong>Hae ottelut eLSA:sta</strong>
-            <p>
-              Kirjaudu{" "}
-              <Link href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
-                elsa.basket.fi
-              </Link>
-              , siirry joukkueesi "Ottelut" -välilehdelle ja lataa ottelutiedosto Excel-muodossa.
-              <Image
-                src="/images/docs/elsa-excel-download.png"
-                alt="eLSA Excel-tiedoston lataaminen"
-                width={887}
-                height={346}
-                className="image-embed"
-              />
-            </p>
-            <p>
-              Mikäli eLSA:sta haetussa excelissä on pelattuja pelejä tai pelejä joita ei vielä ole
-              asetettu tietylle päivälle, ne jätetään automaattisesti huomioimatta
-              muunnostiedostosta.
-            </p>
+            <strong>Joukkue</strong>: Valitse listalta tai kirjoita nimi kuten se on MyClubissa.
           </li>
           <li>
-            <strong>Siirrä tiedosto sovellukseen</strong>
-            <p>
-              Mene sovelluksen <Link href="/">etusivulle</Link>, "Valitse tiedosto..." ja valitse
-              eLSA:sta lataamasi Excel muunnosta varten.
-            </p>
+            <strong>Vuosi</strong>: eLSA:n tiedostossa ei ole vuosilukuja, se tulee valita erikseen
+            jotta MyClub osaa luoda tapahtuman oikein.
           </li>
           <li>
-            <strong>Säädä asetukset</strong>
-            <ol>
-              <li>
-                <strong>Joukkue</strong>: Valitse joukkueesi listalta tai kirjoita nimi kuten se on
-                MyClubissa.
-              </li>
-              <li>
-                <strong>Vuosi</strong>: eLSA-tiedostosta puuttuu vuosiluku, se tulee valita
-                erikseen.
-              </li>
-              <li>
-                <strong>Kokoontumisaika</strong>: Aika ennen ottelua lämmittelyä varten. Aikaistaa
-                tapahtuman alkuaikaa ja lisää tiedon kuvaukseen.
-              </li>
-              <li>
-                <strong>Tapahtuman kesto</strong>: Määrittää tapahtuman päättymisajan (1–2 h, Timo
-                voi helposti lisätä tähän lisää vaihtoehtoja pyydettäessä).
-              </li>
-              <li>
-                <strong>Ilmoittautuminen</strong>: "Valituille henkilöille" sopii sarjapeleihin –
-                valmentaja voi avata ilmon vain kokoonpanolle.
-              </li>
-            </ol>
+            <strong>Kokoontumisaika</strong>: Aikaistaa tapahtuman alkuaikaa sekä lisää tiedon
+            lämppä- ja otteluajan alusta tapahtuman kuvaukseen.
           </li>
           <li>
-            <strong>Esikatsele muunnosta</strong>
-            <p>
-              Voit esikatsella muunnostiedoston sisältöä ennen sen lataamista omalle koneelle.
-              Esikatselu päivittyy reaaliaikaisesti kun muutat asetuksia.
-            </p>
+            <strong>Tapahtuman kesto</strong>: Määrittää tapahtuman keston.
           </li>
           <li>
-            <strong>Lataa tiedosto</strong>
-            <p>
-              Kun näyttää hyvältä, painma "Lataa Excel" ja tallenna tiedosto tietokoneellesi.
-              Tarvittaessa voit muokata muunnostiedostoa omalla koneellasi lataamisen jälkeen.
-            </p>
+            <strong>Ilmoittautuminen</strong>: Kenelle tapahtuma näkyy MyClubissa. "Valituille
+            henkilöille" on usein paras valinta sarjapeleihin.
           </li>
-          <li>
-            <strong>Vie tiedosto MyClub:iin</strong>
-            <p>Kirjaudu MyClub:iin, siirry tapahtumien hallintaan ja valitse "Tuo tapahtumia".</p>
-            <p>
-              Ohjeet MyClubin dokumentaatiossa:{" "}
-              <Link
-                href="https://docs.myclub.fi/article/1213-tapahtumien-tuonti"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Tapahtumat → Tapahtumien tuonti
-              </Link>
-              .
-            </p>
-          </li>
-        </ol>
+        </ul>
+
+        <h3>4. Esikatsele ja lataa</h3>
+        <p>
+          Tarkastele muunnosta esikatelussa, ja paina "Lataa Excel" saadaksesi ottelutiedoston
+          omalle tietokoneellesi. Voit tarvittaessa muokata tiedostoa lataamisen jälkeen.
+        </p>
+
+        <h3>5.Tuo ottelutiedosto MyClubiin</h3>
+        <p>Kirjaudu MyClubiin ja siirry kohtaan "Tapahtumien hallinta" → "Tuo tapahtumia".</p>
+        <p>
+          Katso myös MyClubin ohjeet:{" "}
+          <Link
+            href="https://docs.myclub.fi/article/1213-tapahtumien-tuonti"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tapahtumien tuonti
+          </Link>
+          .
+        </p>
       </Info>
 
       <Info title="Lisätietoja ja palaute" expandable defaultOpen={false}>
         <p>
           Löysitkö bugin tai keksit parannusehdotuksen?
-          <br />
-          Laita viestiä Timolle osoitteeseen{" "}
+          <br />→ Laita viestiä Timolle osoitteeseen{" "}
           <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
         </p>
         <p>
-          Haluatko osallistua applikaation kehittämiseen?
-          <br />
-          Katso koodit GitHubissa ja tee pull request.
+          Haluatko osallistua sovelluksen kehittämiseen?
+          <br />→ Katso koodit GitHubissa ja tee pull request.
         </p>
         <hr />
         <ul className="list-reset">
           <li>
-            <LuBookMarked /> Sovelluksen <Link href="/changelog">versiohistoria</Link>
+            <LuBookMarked /> <Link href="/changelog">Versiohistoria</Link>
           </li>
           <li>
             <LuGithub /> Lähdekoodi{" "}
