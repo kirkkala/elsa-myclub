@@ -4,9 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.1.4 (22.12.2025)
+## v2.0.0 (UNRELEASED)
 
-- Selkeämmät käyttöohjeet 🧹
+- Käyttöliittymäremontti: [Material UI](https://mui.com/material-ui) 🤖
+- Joukkuevalintaan hakutoiminto 🔎
+- Ohjeistuksien parannukset 📖
 
 ## v1.1.3 (17.12.2025)
 
