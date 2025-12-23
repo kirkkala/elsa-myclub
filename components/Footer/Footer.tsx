@@ -22,7 +22,7 @@ export default function Footer() {
           sx={{
             fontSize: "1rem",
             transform: "translateY(2px)",
-            color: "#c8102e",
+            color: "primary.dark",
           }}
         />{" "}
         by{" "}

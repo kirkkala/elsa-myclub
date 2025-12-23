@@ -9,10 +9,8 @@ export const testPageElements = (
     it("renders header, footer, and semantic structure", () => {
       render(<PageComponent {...props} />)
 
-      // Header with logos and version
+      // Header with version
       expect(screen.getByRole("banner")).toBeInTheDocument()
-      expect(screen.getByAltText("eLSA")).toBeInTheDocument()
-      expect(screen.getByAltText("MyClub")).toBeInTheDocument()
       expect(screen.queryAllByText(SITE_CONFIG.version).length).toBeGreaterThanOrEqual(1)
 
       // Footer with author and links

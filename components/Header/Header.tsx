@@ -1,5 +1,8 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Chip from "@mui/material/Chip"
@@ -7,6 +10,9 @@ import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
 import { SITE_CONFIG } from "../../config"
 
 export default function Header() {
+  const pathname = usePathname()
+  const isDocsPage = pathname === "/docs"
+  const linkText = "Lisätietoja ja ohjeet"
   return (
     <Box
       component="header"
@@ -27,7 +33,7 @@ export default function Header() {
       >
         <Image
           src="/images/elsa.png"
-          alt="eLSA"
+          alt=""
           width={65}
           height={40}
           style={{ objectFit: "contain", backgroundColor: "#004176", padding: 8, borderRadius: 6 }}
@@ -41,7 +47,7 @@ export default function Header() {
         />
         <Image
           src="/images/myclub.svg"
-          alt="MyClub"
+          alt=""
           width={50}
           height={50}
           style={{ objectFit: "contain" }}
@@ -58,11 +64,8 @@ export default function Header() {
         <Link href="/changelog">
           <Chip
             label={SITE_CONFIG.version}
-            size="small"
             clickable
             sx={{
-              fontSize: "0.75rem",
-              height: 22,
               bgcolor: "background.paper",
               border: 1,
               borderColor: "divider",
@@ -74,6 +77,13 @@ export default function Header() {
             }}
           />
         </Link>
+      </Box>
+      <Box component="nav" sx={{ mt: 1 }}>
+        {isDocsPage ? (
+          <Typography component="span">{linkText}</Typography>
+        ) : (
+          <Link href="/docs">{linkText}</Link>
+        )}
       </Box>
     </Box>
   )

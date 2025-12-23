@@ -13,7 +13,6 @@ import Header from "../../components/Header/Header"
 import Info from "../../components/Info/Info"
 import BackLink from "../../components/BackLink/BackLink"
 import Footer from "../../components/Footer/Footer"
-import InternalLink from "../../components/InternalLink/InternalLink"
 import Divider from "@mui/material/Divider"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import HistoryIcon from "@mui/icons-material/History"
@@ -93,8 +92,9 @@ export default function Docs() {
 
         <Typography variant="h3">2. Vie tiedosto sovellukseen</Typography>
         <Typography>
-          Siirry sovelluksen <InternalLink href="/">etusivulle</InternalLink> ja valitse eLSA:sta
-          lataamasi Excel kohtaan &quot;<strong>eLSA excel tiedosto</strong>&quot;.
+          Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja valitse eLSA:sta lataamasi
+          Excel kohtaan &quot;<strong>eLSA excel tiedosto</strong>
+          &quot;.
         </Typography>
         <Typography>
           eLSA:sta lataamassasi tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä
@@ -165,7 +165,7 @@ export default function Docs() {
               <HistoryIcon />
             </ListItemIcon>
             <ListItemText>
-              Katso <InternalLink href="/changelog">Versiohistoria</InternalLink>
+              Katso <MuiLink href="/changelog">Versiohistoria</MuiLink>
             </ListItemText>
           </ListItem>
           <ListItem>

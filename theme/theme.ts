@@ -2,14 +2,18 @@
 
 import { createTheme } from "@mui/material/styles"
 
+// Link color with high contrast (9.5:1 on white, WCAG AAA)
+const linkColor = "#7a0714"
+const darkGray = "#1f2937"
+
 const theme = createTheme({
   palette: {
     primary: {
       main: "#ff4238",
-      dark: "#c8102e",
+      dark: linkColor,
     },
     secondary: {
-      main: "#1f2937",
+      main: darkGray,
     },
     error: {
       main: "#dc2626",
@@ -20,7 +24,7 @@ const theme = createTheme({
       light: "#dcfce7",
     },
     text: {
-      primary: "#1f2937",
+      primary: darkGray,
       secondary: "#6b7280",
     },
     background: {
@@ -56,6 +60,15 @@ const theme = createTheme({
         },
         body: {
           overflowX: "hidden",
+        },
+        a: {
+          fontWeight: 500,
+          color: linkColor,
+          textDecoration: "none",
+          "&:hover": {
+            textDecoration: "underline",
+            textDecorationStyle: "dotted",
+          },
         },
       },
     },
@@ -97,8 +110,8 @@ const theme = createTheme({
     MuiLink: {
       styleOverrides: {
         root: {
+          color: linkColor,
           fontWeight: 500,
-          color: "#c8102e",
           textDecoration: "none",
           "&:hover": {
             textDecoration: "underline",
