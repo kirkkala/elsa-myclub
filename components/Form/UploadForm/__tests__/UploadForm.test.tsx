@@ -106,13 +106,13 @@ describe("UploadForm", () => {
 
   it("renders all form elements", () => {
     render(<UploadForm />)
-    // Check for form field labels - use more specific patterns
-    expect(screen.getByText(/1\. Joukkue/i)).toBeInTheDocument()
-    expect(screen.getByText(/2\. Vuosi/i)).toBeInTheDocument()
-    expect(screen.getByText(/3\. Kokoontumisaika/i)).toBeInTheDocument()
-    expect(screen.getByText(/4\. Tapahtuman kesto/i)).toBeInTheDocument()
-    expect(screen.getByText(/5\. Tapahtumatyyppi/i)).toBeInTheDocument()
-    expect(screen.getByText(/6\. Ilmoittautuminen/i)).toBeInTheDocument()
+    // Check for form field labels using getAllByText since MUI renders labels in multiple places
+    expect(screen.getAllByText(/1\. Joukkue/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/2\. Vuosi/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/3\. Kokoontumisaika/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/4\. Tapahtuman kesto/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/5\. Tapahtumatyyppi/i).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/6\. Ilmoittautuminen/i).length).toBeGreaterThan(0)
   })
 
   it("shows download button after successful file upload", async () => {
@@ -236,7 +236,7 @@ describe("UploadForm", () => {
     // Fields are disabled when no file is selected
     const comboboxes = screen.getAllByRole("combobox")
     // Try to interact with a combobox - it should be disabled
-    expect(comboboxes[1]).toHaveAttribute("aria-disabled", "true") // Year dropdown
+    expect(comboboxes[1]).toBeDisabled() // Year dropdown
 
     // Should not call fetch since no file is selected
     expect(global.fetch).not.toHaveBeenCalled()

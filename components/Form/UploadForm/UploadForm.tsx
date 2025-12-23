@@ -12,7 +12,6 @@ import PeopleIcon from "@mui/icons-material/People"
 import DownloadIcon from "@mui/icons-material/Download"
 import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
 import Button from "../Button/Button"
-import SelectOrInput from "../SelectOrInput/SelectOrInput"
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
 import type { MyClubExcelRow } from "@/utils/excel"
@@ -200,26 +199,19 @@ export default function UploadForm() {
             pointerEvents: !formValues.file || error ? "none" : "auto",
           }}
         >
-          <SelectOrInput
+          <SelectField
             id="group"
             Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
-            description={`Valitse joukkueesi listalta tai paina "Kirjoita nimi" ja anna kuten se on MyClubissa.`}
-            switchText={{
-              toInput: {
-                action: "Kirjoita nimi",
-              },
-              toList: {
-                action: "Lista",
-              },
-            }}
+            description="Valitse joukkueesi listalta tai kirjoita nimi kuten se on MyClubissa."
             options={groupsData.groups.map((option) => ({
               value: option,
               label: option,
             }))}
-            placeholder="esim. Harlem Globetrotters"
+            placeholder="Hae tai kirjoita joukkueen nimi"
             onChange={handleFieldChange}
             disabled={!formValues.file || !!error}
+            freeSolo
           />
 
           <SelectField

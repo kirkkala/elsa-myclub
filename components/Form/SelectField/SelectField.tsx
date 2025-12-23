@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react"
 import Box from "@mui/material/Box"
-import FormControl from "@mui/material/FormControl"
-import Select, { SelectChangeEvent } from "@mui/material/Select"
-import MenuItem from "@mui/material/MenuItem"
-import Typography from "@mui/material/Typography"
+import TextField from "@mui/material/TextField"
+import Autocomplete from "@mui/material/Autocomplete"
+import InputAdornment from "@mui/material/InputAdornment"
 import { BaseFormFieldProps, SelectOption } from "../types"
 
 interface SelectFieldProps extends BaseFormFieldProps {
   options: SelectOption[]
   defaultValue?: string
   value?: string
-  suffix?: React.ReactNode
+  placeholder?: string
+  freeSolo?: boolean
 }
 
 export default function SelectField({
@@ -24,76 +24,107 @@ export default function SelectField({
   required,
   defaultValue,
   value,
-  suffix,
+  placeholder,
   onChange,
   disabled,
+  freeSolo = false,
 }: SelectFieldProps) {
-  // Use internal state to track the selected value for controlled behavior
-  const [internalValue, setInternalValue] = useState(value ?? defaultValue ?? "")
+  const findOption = (val: string) => options.find((opt) => opt.value === val) ?? null
 
-  // Sync with external value prop when it changes
+  // With freeSolo, value can be string (custom input) or SelectOption (from list)
+  const [selectedValue, setSelectedValue] = useState<SelectOption | string | null>(() => {
+    const initial = value ?? defaultValue ?? ""
+    if (!initial) {
+      return null
+    }
+    return findOption(initial) ?? (freeSolo ? initial : null)
+  })
+
   useEffect(() => {
     if (value !== undefined) {
-      setInternalValue(value)
+      const found = options.find((opt) => opt.value === value)
+      setSelectedValue(found || (freeSolo && value) || null)
     }
-  }, [value])
+  }, [value, options, freeSolo])
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setInternalValue(event.target.value)
+  const handleChange = (_event: React.SyntheticEvent, newValue: SelectOption | string | null) => {
+    setSelectedValue(newValue)
     if (onChange) {
-      // Create a synthetic event that matches the expected type
+      // Extract the string value whether it's an option or custom text
+      const stringValue = typeof newValue === "string" ? newValue : (newValue?.value ?? "")
       const syntheticEvent = {
         target: {
           name: id,
-          value: event.target.value,
+          value: stringValue,
         },
       } as React.ChangeEvent<HTMLSelectElement>
       onChange(syntheticEvent)
     }
   }
 
+  // Handle both string (custom input) and SelectOption (from list)
+  const getOptionLabel = (option: SelectOption | string) => {
+    if (typeof option === "string") {
+      return option
+    }
+    return option.label ?? option.value
+  }
+
+  const isOptionEqualToValue = (option: SelectOption, val: SelectOption | string) => {
+    if (typeof val === "string") {
+      return option.value === val
+    }
+    return option.value === val.value
+  }
+
   return (
-    <Box data-testid="select-wrapper">
-      <Typography
-        component="label"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 0.5,
-          mb: 0.5,
-        }}
-      >
-        <Icon />
-        {label}
-      </Typography>
-      {description && (
-        <Typography id={`${id}-description`} color="text.secondary">
-          {description}
-        </Typography>
-      )}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <FormControl fullWidth size="small" disabled={disabled}>
-          <Select
-            id={id}
+    <Box data-testid="select-wrapper" sx={{ mb: 4 }}>
+      <Autocomplete
+        id={id}
+        options={options}
+        value={selectedValue}
+        onChange={handleChange}
+        getOptionLabel={getOptionLabel}
+        isOptionEqualToValue={isOptionEqualToValue}
+        getOptionDisabled={(option) => option.disabled ?? false}
+        disabled={disabled}
+        fullWidth
+        size="small"
+        disablePortal
+        openOnFocus
+        freeSolo={freeSolo}
+        autoSelect={freeSolo}
+        renderInput={(params) => (
+          <TextField
+            {...params}
             name={id}
-            value={internalValue}
-            onChange={handleChange}
+            label={label}
+            placeholder={placeholder}
             required={required}
-            displayEmpty
-            aria-describedby={description ? `${id}-description` : undefined}
-            MenuProps={{
-              disableScrollLock: true,
+            helperText={description}
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                startAdornment: (
+                  <>
+                    <InputAdornment position="start">
+                      <Icon sx={{ fontSize: "1.25rem" }} />
+                    </InputAdornment>
+                    {params.InputProps.startAdornment}
+                  </>
+                ),
+              },
+              formHelperText: {
+                id: description ? `${id}-description` : undefined,
+              },
+              htmlInput: {
+                ...params.inputProps,
+                "aria-label": label,
+              },
             }}
-          >
-            {options.map((option) => (
-              <MenuItem key={option.value} value={option.value} disabled={option.disabled}>
-                {option.label ?? option.value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        {suffix}
-      </Box>
+          />
+        )}
+      />
     </Box>
   )
 }

@@ -13,7 +13,8 @@ const mockProps = {
 describe("TextInput", () => {
   it("renders with all elements", () => {
     render(<TextInput {...mockProps} />)
-    expect(screen.getByText("Label")).toBeInTheDocument()
+    // Use getByLabelText for proper accessibility testing
+    expect(screen.getByLabelText("Label")).toBeInTheDocument()
     expect(screen.getByText("Description")).toBeInTheDocument()
     expect(screen.getByPlaceholderText("Placeholder")).toBeInTheDocument()
   })

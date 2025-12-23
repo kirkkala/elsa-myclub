@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import PersonIcon from "@mui/icons-material/Person"
 import SelectField from "../SelectField"
 
@@ -18,34 +19,49 @@ const mockProps = {
 describe("SelectField", () => {
   it("renders with all elements", () => {
     render(<SelectField {...mockProps} />)
-    expect(screen.getByText("Label")).toBeInTheDocument()
+    expect(screen.getByLabelText("Label")).toBeInTheDocument()
     expect(screen.getByText("Description")).toBeInTheDocument()
-    // MUI Select shows the selected value, not all options by default
     expect(screen.getByRole("combobox")).toBeInTheDocument()
-  })
-
-  it("renders suffix", () => {
-    render(<SelectField {...mockProps} suffix={<span data-testid="suffix">Suffix</span>} />)
-    expect(screen.getByTestId("suffix")).toBeInTheDocument()
   })
 
   it("handles disabled state", () => {
     render(<SelectField {...mockProps} disabled />)
-    expect(screen.getByRole("combobox")).toHaveAttribute("aria-disabled", "true")
+    expect(screen.getByRole("combobox")).toBeDisabled()
   })
 
-  it("calls onChange when selection changes", () => {
+  it("calls onChange when selection changes", async () => {
+    const user = userEvent.setup()
     const onChange = jest.fn()
     render(<SelectField {...mockProps} onChange={onChange} />)
 
-    // Open the select
-    const select = screen.getByRole("combobox")
-    fireEvent.mouseDown(select)
+    // Open the autocomplete
+    const combobox = screen.getByRole("combobox")
+    await user.click(combobox)
 
     // Click on Option 2
     const option2 = screen.getByRole("option", { name: "Option 2" })
-    fireEvent.click(option2)
+    await user.click(option2)
 
-    expect(onChange).toHaveBeenCalled()
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        target: expect.objectContaining({
+          name: "test",
+          value: "opt2",
+        }),
+      })
+    )
+  })
+
+  it("allows searching/filtering options", async () => {
+    const user = userEvent.setup()
+    render(<SelectField {...mockProps} />)
+
+    const combobox = screen.getByRole("combobox")
+    await user.type(combobox, "Option 2")
+
+    // Should only show Option 2
+    const options = screen.getAllByRole("option")
+    expect(options).toHaveLength(1)
+    expect(options[0]).toHaveTextContent("Option 2")
   })
 })
