@@ -3,7 +3,9 @@
 import { useRef } from "react"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
-import Typography from "@mui/material/Typography"
+import FormControl from "@mui/material/FormControl"
+import FormLabel from "@mui/material/FormLabel"
+import FormHelperText from "@mui/material/FormHelperText"
 import DescriptionIcon from "@mui/icons-material/Description"
 import SendIcon from "@mui/icons-material/Send"
 import CheckIcon from "@mui/icons-material/Check"
@@ -28,40 +30,39 @@ export default function FileUpload({
   }
 
   return (
-    <Box>
-      <Typography
-        component="label"
+    <FormControl fullWidth>
+      <FormLabel
+        htmlFor="file"
         sx={{
           display: "flex",
           alignItems: "center",
           gap: 0.5,
           fontWeight: 600,
           mb: 0.5,
+          color: "text.primary",
         }}
       >
         <SendIcon sx={{ fontSize: "1rem" }} /> {label}
-      </Typography>
-      <Typography color="text.secondary">{description}</Typography>
+      </FormLabel>
+      <FormHelperText sx={{ mx: 0, mb: 1 }}>{description}</FormHelperText>
       <Button
         variant="outlined"
         onClick={handleButtonClick}
         fullWidth
+        aria-describedby="file-description"
         sx={{
           py: 2,
+          mb: 2,
           justifyContent: "flex-start",
           gap: 1,
           borderStyle: "dashed",
           color: selectedFile ? "success.main" : "text.secondary",
           borderColor: selectedFile ? "success.main" : "divider",
           bgcolor: selectedFile ? "success.light" : "transparent",
-          "&:hover": {
-            borderStyle: "dashed",
-            bgcolor: selectedFile ? "success.light" : "action.hover",
-          },
         }}
       >
         <DescriptionIcon sx={{ fontSize: "1.25rem" }} />
-        <Typography
+        <Box
           component="span"
           sx={{
             overflow: "hidden",
@@ -71,8 +72,8 @@ export default function FileUpload({
           }}
         >
           {selectedFile || "Valitse tiedosto..."}
-        </Typography>
-        {selectedFile && <CheckIcon sx={{ marginLeft: "auto", color: "#16a34a" }} />}
+        </Box>
+        {selectedFile && <CheckIcon sx={{ marginLeft: "auto" }} />}
       </Button>
       <input
         ref={inputRef}
@@ -84,7 +85,8 @@ export default function FileUpload({
         required
         onChange={onChange}
         style={{ display: "none" }}
+        aria-label={label}
       />
-    </Box>
+    </FormControl>
   )
 }

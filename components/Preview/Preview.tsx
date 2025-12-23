@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import type { MyClubExcelRow } from "@/utils/excel"
+import PreviewIcon from "@mui/icons-material/RemoveRedEyeSharp"
 
 interface PreviewProps {
   data: MyClubExcelRow[]
@@ -35,8 +36,8 @@ export default function Preview({ data }: PreviewProps) {
         px: { xs: 1, sm: 2 },
       }}
     >
-      <Typography variant="h2" sx={{ mb: 1.5 }}>
-        Esikatselu ({data.length} tapahtumaa)
+      <Typography variant="h2" sx={{ mb: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
+        <PreviewIcon /> Esikatselu ({data.length} tapahtumaa)
       </Typography>
       <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 400 }}>
         <Table stickyHeader size="small">

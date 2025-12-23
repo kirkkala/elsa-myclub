@@ -24,12 +24,13 @@ export default function Button({
     <Box>
       {label && (
         <Typography
-          component="label"
+          variant="body1"
           sx={{
             display: "flex",
             alignItems: "center",
             gap: 0.5,
             mb: 0.5,
+            fontWeight: 500,
           }}
         >
           {Icon && <Icon />}

@@ -3,7 +3,7 @@ import Link from "next/link"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import Chip from "@mui/material/Chip"
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome"
+import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
 import { SITE_CONFIG } from "../../config"
 
 export default function Header() {
@@ -32,9 +32,10 @@ export default function Header() {
           height={40}
           style={{ objectFit: "contain", backgroundColor: "#004176", padding: 8, borderRadius: 6 }}
         />
-        <AutoAwesomeIcon
+        <MagicIcon
           sx={{
-            fontSize: "1rem",
+            mx: 1,
+            fontSize: "2rem",
             color: "#6b7280",
           }}
         />

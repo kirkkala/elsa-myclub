@@ -20,10 +20,6 @@ export default function Layout({ children }: LayoutProps) {
         sx={{
           maxWidth: 600,
           py: 3,
-          px: { xs: 2, sm: 3 },
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
         }}
       >
         {children}
