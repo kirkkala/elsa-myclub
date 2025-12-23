@@ -2,7 +2,7 @@
 export const EXCEL_VALIDATION_ERROR =
   "Tarkista että eLSA:sta hakemasi excel-tiedoston sarakkeita ei ole muokattu ja että tarvittavat sarakkeet on tiedostossa (Sarja, Pvm, Klo, Kenttä, Koti, Vieras). Tarvittaessa ole yhteydessä ylläpitäjään."
 export const EXCEL_DATE_FORMAT_ERROR = (date: string | number) =>
-  `Odottamaton päivämäärämuoto: ${date}`
+  `Odottamaton päivämäärämuoto: ${String(date)}`
 
 // API response errors
 export const API_CONVERSION_FAILED = "Tiedoston muunnos epäonnistui"

@@ -1,21 +1,23 @@
 "use client"
 
-import { useState } from "react"
-import Box from "@mui/material/Box"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import DownloadIcon from "@mui/icons-material/Download"
+import PeopleIcon from "@mui/icons-material/People"
+import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
-import FileUpload from "../FileUpload/FileUpload"
-import SelectField from "../SelectField/SelectField"
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
-import AccessTimeIcon from "@mui/icons-material/AccessTime"
-import PeopleIcon from "@mui/icons-material/People"
-import DownloadIcon from "@mui/icons-material/Download"
-import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
-import Button from "../Button/Button"
+import Box from "@mui/material/Box"
+import { useState } from "react"
+
+import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import type { MyClubExcelRow } from "@/utils/excel"
+
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
-import type { MyClubExcelRow } from "@/utils/excel"
-import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import Button from "../Button/Button"
+import FileUpload from "../FileUpload/FileUpload"
+import SelectField from "../SelectField/SelectField"
 
 interface ApiErrorResponse {
   message: string
@@ -296,7 +298,7 @@ export default function UploadForm() {
             <Preview data={previewData} />
           </Box>
 
-          <Box component="form" onSubmit={handleDownload} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={(e) => void handleDownload(e)} sx={{ mt: 3 }}>
             <Button
               type="submit"
               disabled={loading}

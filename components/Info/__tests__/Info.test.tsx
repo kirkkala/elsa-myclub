@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+
 import Info from "../Info"
 
 // Jest 30 compatible approach - mock history.replaceState only

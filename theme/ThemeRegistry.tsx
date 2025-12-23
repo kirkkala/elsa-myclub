@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { useServerInsertedHTML } from "next/navigation"
-import { ThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
 import createCache from "@emotion/cache"
 import { CacheProvider } from "@emotion/react"
+import CssBaseline from "@mui/material/CssBaseline"
+import { ThemeProvider } from "@mui/material/styles"
+import { useServerInsertedHTML } from "next/navigation"
+import { useState } from "react"
+
 import theme from "./theme"
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {

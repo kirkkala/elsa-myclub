@@ -1,5 +1,6 @@
-import packageJson from "../package.json"
 import process from "process"
+
+import packageJson from "../package.json"
 
 // Site Configuration
 const SITE_CONFIG = {

@@ -1,13 +1,16 @@
-import { excelUtils } from "@/utils/excel"
 import * as XLSX from "xlsx"
+
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
+import { excelUtils } from "@/utils/excel"
 
 jest.mock("xlsx", () => ({
   read: jest.fn(),
   utils: { sheet_to_json: jest.fn() },
 }))
 
-const mockXLSX = XLSX as jest.Mocked<typeof XLSX>
+const mockRead = jest.mocked(XLSX.read)
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const mockSheetToJson = jest.mocked(XLSX.utils.sheet_to_json)
 
 // Test helpers
 const mockRow = (overrides = {}) => ({
@@ -21,11 +24,11 @@ const mockRow = (overrides = {}) => ({
 })
 
 const setupMockXLSX = (data: unknown[]) => {
-  mockXLSX.read.mockReturnValue({
+  mockRead.mockReturnValue({
     Sheets: { Sheet1: {} },
     SheetNames: ["Sheet1"],
   } as XLSX.WorkBook)
-  mockXLSX.utils.sheet_to_json.mockReturnValue(data)
+  mockSheetToJson.mockReturnValue(data)
 }
 
 const parseBuffer = (fields = {}) => excelUtils.parseExcelBuffer(Buffer.from("test"), fields)
@@ -72,7 +75,7 @@ describe("Excel utilities", () => {
 
   test.each([
     ["14.12.", "12:30", "2025", "14.12.2025 12:30:00"],
-    ["14.12.", "12:30", 2025, "14.12.2025 12:30:00"],
+    ["14.12.", "12:30", "2024", "14.12.2024 12:30:00"],
   ])("formatDateTime: %s %s %s → %s", (date, time, year, expected) => {
     expect(excelUtils.formatDateTime(date, time, year)).toBe(expected)
   })
@@ -201,16 +204,15 @@ describe("Excel utilities", () => {
       const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
       setupMockXLSX([mockRow()])
 
-      const originalNormalizeDate = excelUtils.normalizeDate
-      excelUtils.normalizeDate = jest.fn(() => {
-        // eslint-disable-next-line no-throw-literal
+      const normalizeDateSpy = jest.spyOn(excelUtils, "normalizeDate").mockImplementation(() => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw "string error"
       })
 
       expect(() => parseBuffer(mockFields)).toThrow(EXCEL_VALIDATION_ERROR)
       expect(consoleWarnSpy).toHaveBeenCalledWith("Warning: Error processing row:", "string error")
 
-      excelUtils.normalizeDate = originalNormalizeDate
+      normalizeDateSpy.mockRestore()
       consoleWarnSpy.mockRestore()
     })
 

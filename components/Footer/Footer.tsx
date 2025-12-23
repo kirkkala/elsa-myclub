@@ -1,7 +1,8 @@
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
-import MuiLink from "@mui/material/Link"
 import FavoriteIcon from "@mui/icons-material/Favorite"
+import Box from "@mui/material/Box"
+import MuiLink from "@mui/material/Link"
+import Typography from "@mui/material/Typography"
+
 import { SITE_CONFIG } from "../../config"
 
 export default function Footer() {

@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import Box from "@mui/material/Box"
-import TextField from "@mui/material/TextField"
 import Autocomplete from "@mui/material/Autocomplete"
+import Box from "@mui/material/Box"
 import InputAdornment from "@mui/material/InputAdornment"
+import TextField from "@mui/material/TextField"
+import { useState, useMemo } from "react"
+
 import { BaseFormFieldProps, SelectOption } from "../types"
 
 interface SelectFieldProps extends BaseFormFieldProps {
@@ -29,26 +30,29 @@ export default function SelectField({
   disabled,
   freeSolo = false,
 }: SelectFieldProps) {
-  const findOption = (val: string) => options.find((opt) => opt.value === val) ?? null
-
-  // With freeSolo, value can be string (custom input) or SelectOption (from list)
-  const [selectedValue, setSelectedValue] = useState<SelectOption | string | null>(() => {
-    const initial = value ?? defaultValue ?? ""
-    if (!initial) {
-      return null
-    }
-    return findOption(initial) ?? (freeSolo ? initial : null)
+  // Internal state for uncontrolled mode (when value prop is not provided)
+  const [internalValue, setInternalValue] = useState<SelectOption | string | null>(() => {
+    const initial = defaultValue ?? ""
+    if (!initial) return null
+    const found = options.find((opt) => opt.value === initial)
+    return found ?? (freeSolo ? initial : null)
   })
 
-  useEffect(() => {
-    if (value !== undefined) {
+  // Controlled mode: derive selected value from props; Uncontrolled: use internal state
+  const isControlled = value !== undefined
+  const selectedValue = useMemo(() => {
+    if (isControlled) {
+      if (!value) return null
       const found = options.find((opt) => opt.value === value)
-      setSelectedValue(found || (freeSolo && value) || null)
+      return found ?? (freeSolo ? value : null)
     }
-  }, [value, options, freeSolo])
+    return internalValue
+  }, [isControlled, value, options, freeSolo, internalValue])
 
   const handleChange = (_event: React.SyntheticEvent, newValue: SelectOption | string | null) => {
-    setSelectedValue(newValue)
+    if (!isControlled) {
+      setInternalValue(newValue)
+    }
     if (onChange) {
       // Extract the string value whether it's an option or custom text
       const stringValue = typeof newValue === "string" ? newValue : (newValue?.value ?? "")

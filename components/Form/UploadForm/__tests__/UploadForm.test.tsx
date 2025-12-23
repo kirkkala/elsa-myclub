@@ -1,8 +1,10 @@
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import userEvent from "@testing-library/user-event"
-import UploadForm from "../UploadForm"
+
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
+
+import UploadForm from "../UploadForm"
 
 // Mock fetch globally
 global.fetch = jest.fn()
@@ -56,16 +58,17 @@ const uploadFile = (fileName = "test.xlsx", content = "") => {
 
 const mockDownloadEnvironment = () => {
   const mockClick = jest.fn()
-  const originalCreateElement = document.createElement
-  const originalAppendChild = document.body.appendChild
+  /* eslint-disable @typescript-eslint/no-deprecated */
+  const originalCreateElement = document.createElement.bind(document)
+  const originalAppendChild = document.body.appendChild.bind(document.body)
 
   document.createElement = jest.fn().mockReturnValue({
     href: "",
     download: "",
     click: mockClick,
     remove: jest.fn(),
-  })
-  document.body.appendChild = jest.fn()
+  }) as typeof document.createElement
+  document.body.appendChild = jest.fn() as typeof document.body.appendChild
 
   return {
     mockClick,
@@ -74,6 +77,7 @@ const mockDownloadEnvironment = () => {
       document.body.appendChild = originalAppendChild
     },
   }
+  /* eslint-enable @typescript-eslint/no-deprecated */
 }
 
 describe("UploadForm", () => {

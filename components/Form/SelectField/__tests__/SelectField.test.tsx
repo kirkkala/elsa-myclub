@@ -1,6 +1,7 @@
+import PersonIcon from "@mui/icons-material/Person"
 import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import PersonIcon from "@mui/icons-material/Person"
+
 import SelectField from "../SelectField"
 
 const mockProps = {
@@ -44,6 +45,7 @@ describe("SelectField", () => {
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         target: expect.objectContaining({
           name: "test",
           value: "opt2",

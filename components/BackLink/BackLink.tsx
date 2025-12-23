@@ -1,9 +1,9 @@
 "use client"
 
-import Link from "next/link"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"
+import Link from "next/link"
 
 export default function BackLink() {
   return (

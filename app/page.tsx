@@ -1,7 +1,7 @@
-import Layout from "../components/Layout/Layout"
-import Header from "../components/Header/Header"
-import UploadForm from "../components/Form/UploadForm/UploadForm"
 import Footer from "../components/Footer/Footer"
+import UploadForm from "../components/Form/UploadForm/UploadForm"
+import Header from "../components/Header/Header"
+import Layout from "../components/Layout/Layout"
 import { SEO_CONFIG } from "../config"
 
 export default function Home() {

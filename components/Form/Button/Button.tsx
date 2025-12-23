@@ -1,7 +1,7 @@
-import { ElementType } from "react"
 import Box from "@mui/material/Box"
 import MuiButton from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
+import { ElementType } from "react"
 
 interface ButtonProps {
   type?: "button" | "submit"

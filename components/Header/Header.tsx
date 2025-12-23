@@ -1,12 +1,13 @@
 "use client"
 
+import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
+import Box from "@mui/material/Box"
+import Chip from "@mui/material/Chip"
+import Typography from "@mui/material/Typography"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
-import Chip from "@mui/material/Chip"
-import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
+
 import { SITE_CONFIG } from "../../config"
 
 export default function Header() {

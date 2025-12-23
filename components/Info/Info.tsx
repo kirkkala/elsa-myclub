@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import Accordion from "@mui/material/Accordion"
-import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
 import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import { useState, useCallback } from "react"
 
 interface InfoProps {
   title: string
@@ -58,15 +58,11 @@ export default function Info({
   id,
 }: InfoProps) {
   const sectionId = id || generateId(title)
-  const [expanded, setExpanded] = useState(defaultOpen)
-
-  // Check URL hash on mount and open if matches
-  useEffect(() => {
+  const [expanded, setExpanded] = useState(() => {
+    if (defaultOpen) return true
     const openSections = getOpenSections()
-    if (openSections.includes(sectionId)) {
-      setExpanded(true)
-    }
-  }, [sectionId])
+    return openSections.includes(sectionId)
+  })
 
   const handleChange = useCallback(
     (_event: React.SyntheticEvent, isExpanded: boolean) => {
