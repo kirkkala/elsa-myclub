@@ -5,9 +5,10 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 ## Tech Stack
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript**
-- **SCSS Modules** for styling
+- **Material UI 7** (MUI) for components and styling
 - **xlsx** (SheetJS) for Excel processing
 - **Jest** + React Testing Library
+- **ESLint** with TypeScript and React Compiler plugins
 
 ### Prerequisites
 
@@ -29,7 +30,7 @@ elsa-myclub/
 │   └── ...                 # Layout, Header, Footer, Preview
 ├── config/                 # App configuration & group data
 ├── public/                 # Static assets
-├── styles/                 # Global SCSS styles
+├── theme/                  # MUI theme configuration
 └── utils/                  # Excel parsing & error handling
 ```
 
@@ -107,6 +108,18 @@ npm test               # All tests
 npm run test:watch     # Watch mode
 npm run test:coverage  # Coverage report
 ```
+
+## Code Quality
+
+ESLint is configured with strict TypeScript rules and React Compiler support:
+
+```bash
+npm run lint           # Check for issues
+npm run lint:fix       # Auto-fix issues
+npm run format         # Format with Prettier
+```
+
+Configuration is in `eslint.config.js` using the flat config format.
 
 ## Credits
 
