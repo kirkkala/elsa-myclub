@@ -8,7 +8,6 @@ import type { Metadata } from "next"
 import { remark } from "remark"
 import html from "remark-html"
 
-import BackLink from "../../components/BackLink/BackLink"
 import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
 import Info from "../../components/Info/Info"
@@ -42,11 +41,9 @@ export default async function Changelog() {
   return (
     <Layout>
       <Header />
-      <BackLink />
       <Info title="Versiohistoria" expandable={false}>
         <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </Info>
-      <BackLink />
       <Footer />
     </Layout>
   )

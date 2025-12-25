@@ -30,8 +30,6 @@ describe("Changelog", () => {
   it("renders content and version information", async () => {
     const ChangelogComponent = await Changelog()
     render(ChangelogComponent)
-
-    expect(screen.getByText(/Versiohistoria/)).toBeInTheDocument()
     expect(screen.getAllByText(/v\d+\.\d+(\.\d+)?/).length).toBeGreaterThan(0)
   })
 

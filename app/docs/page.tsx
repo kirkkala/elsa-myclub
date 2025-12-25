@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography"
 import type { Metadata } from "next"
 import Image from "next/image"
 
-import BackLink from "../../components/BackLink/BackLink"
 import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
 import Info from "../../components/Info/Info"
@@ -27,7 +26,6 @@ export default function Docs() {
   return (
     <Layout>
       <Header />
-      <BackLink />
       <Info title="Tietoja sovelluksesta" expandable defaultOpen={false}>
         <Typography>
           {SITE_CONFIG.name}n avulla voit muuntaa{" "}
@@ -174,7 +172,6 @@ export default function Docs() {
           </Typography>
         </Box>
       </Info>
-      <BackLink />
       <Footer />
     </Layout>
   )

@@ -24,14 +24,6 @@ describe("Docs Page", () => {
     expect(screen.getByText("Lisätietoja ja palaute")).toBeInTheDocument()
   })
 
-  it("renders back links", () => {
-    render(<Docs />)
-
-    // BackLink renders as MUI Button with Link component
-    const backLinks = screen.getAllByRole("link", { name: /etusivulle/i })
-    expect(backLinks.length).toBeGreaterThanOrEqual(1)
-  })
-
   it("includes external links when accordion is expanded", () => {
     render(<Docs />)
 

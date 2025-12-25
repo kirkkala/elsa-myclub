@@ -24,11 +24,6 @@ export const testPageElements = (
       expect(screen.getByRole("main")).toBeInTheDocument()
       expect(screen.getAllByRole("heading").length).toBeGreaterThan(0)
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
-
-      // Back navigation
-      const backLinks = screen.getAllByRole("link", { name: /Etusivulle/ })
-      expect(backLinks.length).toBeGreaterThan(0)
-      expect(backLinks.find((link) => link.getAttribute("href") === "/")).toBeInTheDocument()
     })
   })
 }

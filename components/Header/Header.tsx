@@ -3,21 +3,20 @@
 import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
 import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
+import Tab from "@mui/material/Tab"
+import Tabs from "@mui/material/Tabs"
 import Typography from "@mui/material/Typography"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { SITE_CONFIG } from "../../config"
+import { PAGES, SITE_CONFIG } from "../../config"
 
 const CHANGELOG_PATH = "/changelog"
-const DOCS_PATH = "/docs"
 
 export default function Header() {
   const pathname = usePathname()
-  const isDocsPage = pathname === DOCS_PATH
   const isChangelogPage = pathname === CHANGELOG_PATH
-  const linkText = "Lisätietoja ja ohjeet"
   return (
     <Box
       component="header"
@@ -98,15 +97,28 @@ export default function Header() {
           </Link>
         )}
       </Box>
-      <Box component="nav" sx={{ mt: 1 }}>
-        {isDocsPage ? (
-          <Typography component="span" sx={{ fontWeight: 700 }}>
-            {linkText}
-          </Typography>
-        ) : (
-          <Link href={DOCS_PATH}>{linkText}</Link>
-        )}
-      </Box>
+      <Tabs value={pathname} component="nav" sx={{ mt: 2 }}>
+        {PAGES.map((page) => (
+          // The main navigation with Tab component
+          <Tab
+            key={page.path}
+            label={page.label}
+            value={page.path}
+            href={page.path}
+            component={Link}
+            sx={{
+              textTransform: "none",
+              textDecoration: "none",
+              fontWeight: pathname === page.path ? 700 : 400,
+              minWidth: "auto",
+              px: 2,
+              "&:hover": {
+                textDecoration: "none",
+              },
+            }}
+          />
+        ))}
+      </Tabs>
     </Box>
   )
 }
