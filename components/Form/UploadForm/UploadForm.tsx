@@ -175,7 +175,7 @@ export default function UploadForm() {
         <Box sx={{ minHeight: 120, mb: 3 }}>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
-              <AlertTitle>🥴 Virhe</AlertTitle>
+              <AlertTitle>Virhe: Tiedoston prosessointi epäonnistui 🥴</AlertTitle>
               {error}
             </Alert>
           )}
@@ -205,7 +205,7 @@ export default function UploadForm() {
             id="group"
             Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
-            description="Valitse joukkueesi listalta tai kirjoita nimi kuten se on MyClubissa."
+            description="Etsi joukkue listalta tai kirjoita kuten se on MyClubissa."
             options={groupsData.groups.map((option) => ({
               value: option,
               label: option,

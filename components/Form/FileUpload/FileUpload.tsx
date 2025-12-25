@@ -58,7 +58,7 @@ export default function FileUpload({
           borderStyle: "dashed",
           color: selectedFile ? "success.main" : "text.secondary",
           borderColor: selectedFile ? "success.main" : "divider",
-          bgcolor: selectedFile ? "success.light" : "transparent",
+          bgcolor: selectedFile ? "transparent" : "transparent",
         }}
       >
         <DescriptionIcon sx={{ fontSize: "1.25rem" }} />

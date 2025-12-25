@@ -58,10 +58,20 @@ export default function Info({
   id,
 }: InfoProps) {
   const sectionId = id || generateId(title)
+
+  const titleElement = (compact?: boolean) => (
+    <Typography variant="h2" sx={compact ? { m: 0 } : undefined}>
+      {title}
+    </Typography>
+  )
+
+  // Initialize expanded state, checking URL hash on client
   const [expanded, setExpanded] = useState(() => {
-    if (defaultOpen) return true
+    if (typeof window === "undefined") {
+      return defaultOpen
+    }
     const openSections = getOpenSections()
-    return openSections.includes(sectionId)
+    return openSections.includes(sectionId) || defaultOpen
   })
 
   const handleChange = useCallback(
@@ -95,9 +105,7 @@ export default function Info({
         id={sectionId}
         slotProps={{ heading: { component: "h2" } }}
       >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>{title}</Typography>
-        </AccordionSummary>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>{titleElement(true)}</AccordionSummary>
         <AccordionDetails>{children}</AccordionDetails>
       </Accordion>
     )
@@ -106,6 +114,7 @@ export default function Info({
   return (
     <Box
       sx={{
+        bgcolor: "background.paper",
         border: 1,
         borderColor: "divider",
         borderRadius: 1,
@@ -113,7 +122,7 @@ export default function Info({
         p: 2,
       }}
     >
-      <Typography variant="h2">{title}</Typography>
+      {titleElement()}
       {children}
     </Box>
   )

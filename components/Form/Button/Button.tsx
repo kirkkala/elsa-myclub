@@ -24,7 +24,6 @@ export default function Button({
     <Box>
       {label && (
         <Typography
-          variant="body1"
           sx={{
             display: "flex",
             alignItems: "center",

@@ -10,9 +10,13 @@ import { usePathname } from "next/navigation"
 
 import { SITE_CONFIG } from "../../config"
 
+const CHANGELOG_PATH = "/changelog"
+const DOCS_PATH = "/docs"
+
 export default function Header() {
   const pathname = usePathname()
-  const isDocsPage = pathname === "/docs"
+  const isDocsPage = pathname === DOCS_PATH
+  const isChangelogPage = pathname === CHANGELOG_PATH
   const linkText = "Lisätietoja ja ohjeet"
   return (
     <Box
@@ -61,29 +65,46 @@ export default function Header() {
           gap: 1,
         }}
       >
-        <Typography variant="h1">{SITE_CONFIG.name}</Typography>
-        <Link href="/changelog">
+        <Typography variant="h1" sx={{ m: 0.5 }}>
+          {SITE_CONFIG.name}
+        </Typography>
+        {isChangelogPage ? (
           <Chip
             label={SITE_CONFIG.version}
-            clickable
             sx={{
-              bgcolor: "background.paper",
+              bgcolor: "primary.main",
+              color: "white",
               border: 1,
-              borderColor: "divider",
-              "&:hover": {
-                bgcolor: "primary.main",
-                color: "white",
-                borderColor: "primary.main",
-              },
+              borderColor: "primary.main",
+              fontWeight: 700,
             }}
           />
-        </Link>
+        ) : (
+          <Link href={CHANGELOG_PATH}>
+            <Chip
+              label={SITE_CONFIG.version}
+              clickable
+              sx={{
+                bgcolor: "background.paper",
+                border: 1,
+                borderColor: "divider",
+                "&:hover": {
+                  bgcolor: "primary.main",
+                  color: "white",
+                  borderColor: "primary.main",
+                },
+              }}
+            />
+          </Link>
+        )}
       </Box>
       <Box component="nav" sx={{ mt: 1 }}>
         {isDocsPage ? (
-          <Typography component="span">{linkText}</Typography>
+          <Typography component="span" sx={{ fontWeight: 700 }}>
+            {linkText}
+          </Typography>
         ) : (
-          <Link href="/docs">{linkText}</Link>
+          <Link href={DOCS_PATH}>{linkText}</Link>
         )}
       </Box>
     </Box>

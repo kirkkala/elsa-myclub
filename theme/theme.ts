@@ -1,37 +1,49 @@
 "use client"
 
-import { createTheme } from "@mui/material/styles"
+import { alpha, createTheme } from "@mui/material/styles"
 
-// Link color with high contrast (9.5:1 on white, WCAG AAA)
-const linkColor = "#7a0714"
+// Brand colors
+const hnmkyRed = "#ff4238"
+
+// Grays
 const darkGray = "#1f2937"
+const mediumGray = "#374151"
+const gray = "#6b7280"
+const lightGray = "#e5e7eb"
+const paleGray = "#f9fafb"
+const white = "#ffffff"
+
+// Semantic colors
+const errorRed = "#dc2626"
+const errorRedLight = "#f4bdbd"
+const successGreen = "#16a34a"
+const successGreenLight = "#a1dab6"
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#ff4238",
-      dark: linkColor,
+      main: hnmkyRed,
     },
     secondary: {
       main: darkGray,
     },
     error: {
-      main: "#dc2626",
-      light: "#fee2e2",
+      main: errorRed,
+      light: errorRedLight,
     },
     success: {
-      main: "#16a34a",
-      light: "#dcfce7",
+      main: successGreen,
+      light: successGreenLight,
     },
     text: {
       primary: darkGray,
-      secondary: "#6b7280",
+      secondary: gray,
     },
     background: {
-      default: "#ffffff",
-      paper: "#f9fafb",
+      default: white,
+      paper: paleGray,
     },
-    divider: "#e5e7eb",
+    divider: lightGray,
   },
   typography: {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -41,12 +53,12 @@ const theme = createTheme({
       fontWeight: 700,
     },
     h2: {
-      fontSize: "1.2em",
-      fontWeight: 600,
+      fontSize: "1.4em",
+      fontWeight: 700,
     },
     h3: {
-      fontSize: "1.1rem",
-      fontWeight: 600,
+      fontSize: "1rem",
+      fontWeight: 500,
     },
   },
   shape: {
@@ -62,14 +74,22 @@ const theme = createTheme({
           overflowX: "hidden",
         },
         a: {
-          fontWeight: 500,
-          color: linkColor,
+          color: hnmkyRed,
           textDecoration: "none",
           "&:hover": {
             textDecoration: "underline",
             textDecorationStyle: "dotted",
           },
         },
+        ul: {
+          paddingLeft: "1.25rem",
+          marginLeft: 0,
+        },
+      },
+    },
+    MuiTypography: {
+      defaultProps: {
+        sx: { marginBottom: "1.25rem" },
       },
     },
     MuiButton: {
@@ -91,26 +111,42 @@ const theme = createTheme({
         size: "small",
       },
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          margin: "0",
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.divider, 0.4),
+          },
+        }),
+      },
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {
           padding: "0.2rem 0.75rem",
-          borderColor: "#e5e7eb",
+          borderColor: lightGray,
           whiteSpace: "nowrap",
           fontFamily: '"Courier New", Courier, monospace',
           fontSize: "0.8rem",
         },
         head: {
-          backgroundColor: "#f9fafb",
+          backgroundColor: paleGray,
           fontWeight: 700,
-          color: "#374151",
+          color: mediumGray,
         },
       },
     },
     MuiLink: {
       styleOverrides: {
         root: {
-          color: linkColor,
+          color: hnmkyRed,
           fontWeight: 500,
           textDecoration: "none",
           "&:hover": {

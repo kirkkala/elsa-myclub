@@ -15,15 +15,16 @@ export default function Footer() {
         borderTop: 1,
         borderColor: "divider",
         textAlign: "center",
+        color: "text.secondary",
       }}
     >
-      <Typography color="text.secondary">
+      <Typography sx={{ mb: 0.5 }}>
         Made with{" "}
         <FavoriteIcon
           sx={{
             fontSize: "1rem",
             transform: "translateY(2px)",
-            color: "primary.dark",
+            color: "primary.main",
           }}
         />{" "}
         by{" "}
@@ -31,7 +32,7 @@ export default function Footer() {
           {SITE_CONFIG.author.name}
         </MuiLink>
       </Typography>
-      <Typography color="text.secondary">
+      <Typography>
         Source code published on{" "}
         <MuiLink
           href={SITE_CONFIG.links.githubAppRepoUrl}

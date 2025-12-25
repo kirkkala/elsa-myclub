@@ -3,10 +3,6 @@ import HistoryIcon from "@mui/icons-material/History"
 import Box from "@mui/material/Box"
 import Divider from "@mui/material/Divider"
 import MuiLink from "@mui/material/Link"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -78,7 +74,7 @@ export default function Docs() {
           , valitse joukkue ja siirry &quot;Ottelut&quot;-välilehdelle. Lataa Excel-tiedosto omalle
           tietokoneellesi.
         </Typography>
-        <Box>
+        <Box sx={{ mb: 2 }}>
           <Image
             src="/images/docs/elsa-excel-download.png"
             alt="eLSA Excel-tiedoston lataaminen"
@@ -160,31 +156,23 @@ export default function Docs() {
           <br />→ Katso koodit GitHubissa ja tee pull request.
         </Typography>
         <Divider />
-        <List dense>
-          <ListItem>
-            <ListItemIcon sx={{ minWidth: 30 }}>
-              <HistoryIcon />
-            </ListItemIcon>
-            <ListItemText>
-              Katso <MuiLink href="/changelog">Versiohistoria</MuiLink>
-            </ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemIcon sx={{ minWidth: 30 }}>
-              <GitHubIcon />
-            </ListItemIcon>
-            <ListItemText>
-              Lähdekoodi{" "}
-              <MuiLink
-                href={SITE_CONFIG.links.githubAppRepoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHubissa
-              </MuiLink>
-            </ListItemText>
-          </ListItem>
-        </List>
+        <Box sx={{ mt: 2 }}>
+          <Typography sx={{ mb: 0.5 }}>
+            <HistoryIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
+            <MuiLink href="/changelog">Versiohistoria</MuiLink>
+          </Typography>
+          <Typography>
+            <GitHubIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
+            Lähdekoodi{" "}
+            <MuiLink
+              href={SITE_CONFIG.links.githubAppRepoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHubissa
+            </MuiLink>
+          </Typography>
+        </Box>
       </Info>
       <BackLink />
       <Footer />
