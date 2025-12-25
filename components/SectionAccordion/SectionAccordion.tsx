@@ -4,11 +4,10 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import Accordion from "@mui/material/Accordion"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import AccordionSummary from "@mui/material/AccordionSummary"
-import Box from "@mui/material/Box"
 import Typography from "@mui/material/Typography"
 import { useState, useCallback } from "react"
 
-interface InfoProps {
+interface SectionAccordionProps {
   title: string
   expandable?: boolean
   defaultOpen?: boolean
@@ -50,13 +49,13 @@ const updateUrlHash = (openSections: string[]): void => {
   }
 }
 
-export default function Info({
+export default function SectionAccordion({
   title,
   expandable = true,
   defaultOpen = false,
   children,
   id,
-}: InfoProps) {
+}: SectionAccordionProps) {
   const sectionId = id || generateId(title)
 
   const titleElement = (compact?: boolean) => (
@@ -97,33 +96,21 @@ export default function Info({
     [sectionId]
   )
 
-  if (expandable) {
-    return (
-      <Accordion
-        expanded={expanded}
-        onChange={handleChange}
-        id={sectionId}
-        slotProps={{ heading: { component: "h2" } }}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>{titleElement(true)}</AccordionSummary>
-        <AccordionDetails>{children}</AccordionDetails>
-      </Accordion>
-    )
-  }
-
   return (
-    <Box
-      sx={{
-        bgcolor: "background.paper",
-        border: 1,
-        borderColor: "divider",
-        borderRadius: 1,
-        mb: 2,
-        p: 2,
-      }}
+    <Accordion
+      expanded={expandable ? expanded : true}
+      onChange={expandable ? handleChange : undefined}
+      id={sectionId}
+      defaultExpanded={!expandable}
+      slotProps={{ heading: { component: "h2" } }}
     >
-      {titleElement()}
-      {children}
-    </Box>
+      <AccordionSummary
+        expandIcon={expandable ? <ExpandMoreIcon /> : undefined}
+        sx={!expandable ? { cursor: "default !important" } : undefined}
+      >
+        {titleElement(true)}
+      </AccordionSummary>
+      <AccordionDetails>{children}</AccordionDetails>
+    </Accordion>
   )
 }

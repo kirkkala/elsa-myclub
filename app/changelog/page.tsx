@@ -10,8 +10,8 @@ import html from "remark-html"
 
 import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
-import Info from "../../components/Info/Info"
 import Layout from "../../components/Layout/Layout"
+import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
@@ -41,9 +41,9 @@ export default async function Changelog() {
   return (
     <Layout>
       <Header />
-      <Info title="Versiohistoria" expandable={false}>
+      <SectionAccordion title="Versiohistoria" expandable={false}>
         <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
-      </Info>
+      </SectionAccordion>
       <Footer />
     </Layout>
   )

@@ -9,8 +9,8 @@ import Image from "next/image"
 
 import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
-import Info from "../../components/Info/Info"
 import Layout from "../../components/Layout/Layout"
+import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function Docs() {
   return (
     <Layout>
       <Header />
-      <Info title="Tietoja sovelluksesta" expandable defaultOpen={false}>
+      <SectionAccordion title="Tietoja sovelluksesta" expandable defaultOpen={false}>
         <Typography>
           {SITE_CONFIG.name}n avulla voit muuntaa{" "}
           <MuiLink href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
@@ -60,9 +60,9 @@ export default function Docs() {
           Sovelluksen käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto ei
           tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
         </Typography>
-      </Info>
+      </SectionAccordion>
 
-      <Info title="Käyttöohjeet" expandable defaultOpen={false}>
+      <SectionAccordion title="Käyttöohjeet" expandable defaultOpen={false}>
         <Typography variant="h3">1. Hae ottelutiedosto eLSA:sta</Typography>
         <Typography>
           Kirjaudu{" "}
@@ -141,9 +141,9 @@ export default function Docs() {
           </MuiLink>
           .
         </Typography>
-      </Info>
+      </SectionAccordion>
 
-      <Info title="Lisätietoja ja palaute" expandable defaultOpen={false}>
+      <SectionAccordion title="Lisätietoja ja palaute" expandable defaultOpen={false}>
         <Typography>
           Löysitkö bugin tai keksit parannusehdotuksen?
           <br />→ Laita viestiä Timolle osoitteeseen{" "}
@@ -171,7 +171,7 @@ export default function Docs() {
             </MuiLink>
           </Typography>
         </Box>
-      </Info>
+      </SectionAccordion>
       <Footer />
     </Layout>
   )
