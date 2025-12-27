@@ -97,7 +97,7 @@ export default function Header() {
           </Link>
         )}
       </Box>
-      <Tabs value={pathname} component="nav" sx={{ mt: 1,mb: 2 }}>
+      <Tabs value={pathname} component="nav" sx={{ mt: 1, mb: 2 }}>
         {PAGES.map((page) => (
           <Tab
             key={page.path}

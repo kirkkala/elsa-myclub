@@ -6,9 +6,10 @@ This changelog is printed on the application at /changelog
 
 ## v2.0.0 (UNRELEASED)
 
-- Käyttöliittymäremontti: [Material UI](https://mui.com/material-ui) 🤖
-- Joukkuevalintaan hakutoiminto 🔎
+- Käyttöliittymäremontti, [Material UI](https://mui.com/material-ui) 🤖
+- Joukkuevalinnan hakutoiminto 🔎
 - Ohjeistuksien parannukset 📖
+- Demotila 🎬
 
 ## v1.1.3 (17.12.2025)
 

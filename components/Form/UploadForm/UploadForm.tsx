@@ -8,6 +8,10 @@ import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Link from "@mui/material/Link"
+import Typography from "@mui/material/Typography"
 import { useState } from "react"
 
 import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
@@ -17,6 +21,7 @@ import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
 import Button from "../Button/Button"
 import FileUpload from "../FileUpload/FileUpload"
+import IOSSwitch from "../IOSSwitch/IOSSwitch"
 import SelectField from "../SelectField/SelectField"
 
 interface ApiErrorResponse {
@@ -38,6 +43,7 @@ export default function UploadForm() {
   const [error, setError] = useState("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isDemoMode, setIsDemoMode] = useState(false)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
@@ -57,10 +63,42 @@ export default function UploadForm() {
     setFormValues((prev) => ({ ...prev, file }))
     setShowSuccess(false)
     setPreviewData([])
+    setIsDemoMode(false)
 
     if (file) {
       void fetchPreview(file, formValues)
     }
+  }
+
+  const handleLoadDemo = async (): Promise<void> => {
+    setError("")
+    setShowSuccess(false)
+    setPreviewData([])
+
+    try {
+      const response = await fetch("/elsa-demo.xlsx")
+      if (!response.ok) {
+        throw new Error("Demo-tiedoston lataus epäonnistui")
+      }
+      const blob = await response.blob()
+      const demoFile = new File([blob], "elsa-demo.xlsx", {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      })
+
+      setFormValues((prev) => ({ ...prev, file: demoFile }))
+      setIsDemoMode(true)
+      void fetchPreview(demoFile, formValues)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Demo-tiedoston lataus epäonnistui")
+    }
+  }
+
+  const handleStopDemo = (): void => {
+    setFormValues((prev) => ({ ...prev, file: null }))
+    setIsDemoMode(false)
+    setPreviewData([])
+    setShowSuccess(false)
+    setError("")
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
@@ -163,8 +201,64 @@ export default function UploadForm() {
   }
 
   return (
-    <Box sx={{ my: 3 }}>
+    <Box sx={{ mb: 6 }}>
       <form>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2,
+            mb: 2,
+          }}
+        >
+          {isDemoMode ? (
+            <Alert severity="info" sx={{ flex: 1, py: 0.5 }}>
+              <Typography variant="h2" sx={{ mb: 0.5, fontSize: "0.9rem", fontWeight: 500 }}>
+                Demotila aktivoitu
+              </Typography>
+              Esimerkkitiedosto{" "}
+              <Link
+                href="/elsa-demo.xlsx"
+                download="elsa-demo.xlsx"
+                title="Lataa esimerkkitiedosto tarkastelua varten"
+                sx={{ fontWeight: 500 }}
+              >
+                elsa-demo.xlsx
+              </Link>{" "}
+              lisätty lomakkeelle. Voit kokeilla asetuksia, ihastella esikatselua sivun lopussa ja
+              ladata muunnetun Excel tiedoston omalle tietokoneellesi.
+            </Alert>
+          ) : (
+            <Box />
+          )}
+          <FormControlLabel
+            control={
+              <IOSSwitch
+                checked={isDemoMode}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    void handleLoadDemo()
+                  } else {
+                    handleStopDemo()
+                  }
+                }}
+              />
+            }
+            label={
+              <Typography
+                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1 }}
+              >
+                Demotila
+              </Typography>
+            }
+            labelPlacement="start"
+            sx={{ flexShrink: 0 }}
+          />
+        </Box>
+
+        {isDemoMode && <Divider sx={{ my: 2 }} />}
+
         <FileUpload
           selectedFile={formValues.file?.name || ""}
           onChange={handleFileChange}
@@ -172,7 +266,7 @@ export default function UploadForm() {
           description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
         />
 
-        <Box sx={{ minHeight: 120, mb: 3 }}>
+        <Box sx={{ minHeight: 120, mb: 3, mt: 2 }}>
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               <AlertTitle>Virhe: Tiedoston prosessointi epäonnistui 🥴</AlertTitle>
@@ -181,8 +275,10 @@ export default function UploadForm() {
           )}
 
           {showSuccess && !error && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              <AlertTitle>Excelin luku onnistui! 🎉</AlertTitle>
+            <Alert severity="success" sx={{ mb: 4 }}>
+              <AlertTitle>
+                {isDemoMode ? "Demo-Excelin lataus onnistui!" : "Excelin luku onnistui!"} 🎉
+              </AlertTitle>
               <Box component="ol" sx={{ pl: 2, m: 0 }}>
                 <li>Säädä asetuksia ja esikatsele muunnosta sivun lopussa.</li>
                 <li>

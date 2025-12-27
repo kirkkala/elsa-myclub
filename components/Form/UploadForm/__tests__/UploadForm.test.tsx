@@ -415,4 +415,154 @@ describe("UploadForm", () => {
       expect(screen.queryByText(/Excelin luku onnistui!/)).not.toBeInTheDocument()
     })
   })
+
+  describe("Demo mode", () => {
+    const DEMO_INFO_TEXT = /Demotila aktivoitu/i
+
+    const mockDemoFileResponse = {
+      ok: true,
+      blob: () =>
+        Promise.resolve(
+          new Blob(["demo content"], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          })
+        ),
+    }
+
+    it("renders demo switch with label", () => {
+      render(<UploadForm />)
+
+      expect(screen.getByText("Demotila")).toBeInTheDocument()
+      expect(screen.getByRole("switch", { name: "Demotila" })).toBeInTheDocument()
+    })
+
+    it("loads demo file when switch is enabled", async () => {
+      // First call: fetch demo file, second call: preview API
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockDemoFileResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for demo info alert to appear
+      await waitFor(() => {
+        expect(screen.getByText(DEMO_INFO_TEXT)).toBeInTheDocument()
+      })
+
+      // Verify demo file was fetched
+      expect(global.fetch).toHaveBeenCalledWith("/elsa-demo.xlsx")
+    })
+
+    it("shows preview after demo file is loaded", async () => {
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockDemoFileResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for download button (indicates preview loaded)
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
+      })
+    })
+
+    it("shows demo-specific success message when demo file is loaded", async () => {
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockDemoFileResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for demo-specific success message
+      await waitFor(() => {
+        expect(screen.getByText(/Demo-Excelin lataus onnistui!/)).toBeInTheDocument()
+      })
+    })
+
+    it("clears demo state when switch is disabled", async () => {
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockDemoFileResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for demo to load
+      await waitFor(() => {
+        expect(screen.getByText(DEMO_INFO_TEXT)).toBeInTheDocument()
+      })
+
+      // Disable demo mode
+      fireEvent.click(demoSwitch)
+
+      // Demo info should be hidden
+      await waitFor(() => {
+        expect(screen.queryByText(DEMO_INFO_TEXT)).not.toBeInTheDocument()
+      })
+
+      // Preview should be cleared
+      expect(screen.queryByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).not.toBeInTheDocument()
+    })
+
+    it("shows error when demo file fetch fails", async () => {
+      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+      })
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for error message
+      await waitFor(() => {
+        expect(screen.getByText(/Demo-tiedoston lataus epäonnistui/)).toBeInTheDocument()
+      })
+    })
+
+    it("clears demo mode when regular file is uploaded", async () => {
+      ;(global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockDemoFileResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
+
+      render(<UploadForm />)
+
+      // Enable demo mode
+      const demoSwitch = screen.getByRole("switch")
+      fireEvent.click(demoSwitch)
+
+      // Wait for demo to load
+      await waitFor(() => {
+        expect(screen.getByText(DEMO_INFO_TEXT)).toBeInTheDocument()
+      })
+
+      // Upload a regular file
+      uploadFile("real-file.xlsx")
+
+      // Demo info should be hidden
+      await waitFor(() => {
+        expect(screen.queryByText(DEMO_INFO_TEXT)).not.toBeInTheDocument()
+      })
+
+      // Switch should be unchecked
+      expect(demoSwitch).not.toBeChecked()
+    })
+  })
 })

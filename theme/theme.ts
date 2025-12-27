@@ -71,7 +71,7 @@ const theme = createTheme({
           overflowX: "hidden",
         },
         body: {
-          overflowX: "hidden",
+          overflowX: "scroll",
         },
         a: {
           color: hnmkyRed,
