@@ -40,7 +40,7 @@ export default function Preview({ data }: PreviewProps) {
       <Typography variant="h2" sx={{ mb: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
         <PreviewIcon /> Esikatselu ({data.length} tapahtumaa)
       </Typography>
-      <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 400 }}>
+      <TableContainer component={Paper} variant="outlined">
         <Table stickyHeader size="small">
           <TableHead>
             <TableRow>

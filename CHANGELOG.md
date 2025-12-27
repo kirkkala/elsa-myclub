@@ -7,6 +7,7 @@ This changelog is printed on the application at /changelog
 ## v2.0.0 (UNRELEASED)
 
 - Käyttöliittymäremontti, [Material UI](https://mui.com/material-ui) 🤖
+- Usean tiedoston yhtäaikainen prosessointi ([dropzone.js](https://react-dropzone.js.org/)) 📂
 - Joukkuevalinnan hakutoiminto 🔎
 - Ohjeistuksien parannukset 📖
 - Demotila 🎬

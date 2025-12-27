@@ -12,7 +12,7 @@ import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 
 import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
@@ -29,7 +29,7 @@ interface ApiErrorResponse {
 }
 
 interface FormValues {
-  file: File | null
+  files: File[]
   year: string
   duration: string
   meetingTime: string
@@ -49,7 +49,7 @@ export default function UploadForm() {
   const years = [currentYear, currentYear + 1]
 
   const [formValues, setFormValues] = useState<FormValues>({
-    file: null,
+    files: [],
     year: String(currentYear),
     duration: "90",
     meetingTime: "0",
@@ -58,17 +58,20 @@ export default function UploadForm() {
     registration: "Valituille henkilöille",
   })
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0] || null
-    setFormValues((prev) => ({ ...prev, file }))
-    setShowSuccess(false)
-    setPreviewData([])
-    setIsDemoMode(false)
+  const handleFilesChange = useCallback(
+    (files: File[]): void => {
+      setFormValues((prev) => ({ ...prev, files }))
+      setShowSuccess(false)
+      setPreviewData([])
+      setIsDemoMode(false)
 
-    if (file) {
-      void fetchPreview(file, formValues)
-    }
-  }
+      if (files.length > 0) {
+        void fetchPreview(files, formValues)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [formValues]
+  )
 
   const handleLoadDemo = async (): Promise<void> => {
     setError("")
@@ -85,16 +88,16 @@ export default function UploadForm() {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       })
 
-      setFormValues((prev) => ({ ...prev, file: demoFile }))
+      setFormValues((prev) => ({ ...prev, files: [demoFile] }))
       setIsDemoMode(true)
-      void fetchPreview(demoFile, formValues)
+      void fetchPreview([demoFile], formValues)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Demo-tiedoston lataus epäonnistui")
     }
   }
 
   const handleStopDemo = (): void => {
-    setFormValues((prev) => ({ ...prev, file: null }))
+    setFormValues((prev) => ({ ...prev, files: [] }))
     setIsDemoMode(false)
     setPreviewData([])
     setShowSuccess(false)
@@ -105,14 +108,18 @@ export default function UploadForm() {
     const { name, value } = e.target
     setFormValues((prev) => ({ ...prev, [name]: value }))
 
-    if (formValues.file) {
-      void fetchPreview(formValues.file, { ...formValues, [name]: value })
+    if (formValues.files.length > 0) {
+      void fetchPreview(formValues.files, { ...formValues, [name]: value })
     }
   }
 
-  const buildFormData = (file: File, values: FormValues): FormData => {
+  const buildFormData = (files: File[], values: FormValues): FormData => {
     const formData = new FormData()
-    formData.append("file", file)
+
+    // Append all files
+    files.forEach((file) => {
+      formData.append("files", file)
+    })
 
     if (values.year) {
       formData.append("year", values.year)
@@ -136,11 +143,11 @@ export default function UploadForm() {
     return formData
   }
 
-  const fetchPreview = async (file: File, values: FormValues): Promise<void> => {
+  const fetchPreview = async (files: File[], values: FormValues): Promise<void> => {
     setError("")
 
     try {
-      const formData = buildFormData(file, values)
+      const formData = buildFormData(files, values)
 
       const response = await fetch("/api/preview", {
         method: "POST",
@@ -168,11 +175,11 @@ export default function UploadForm() {
     setError("")
 
     try {
-      if (!formValues.file) {
+      if (formValues.files.length === 0) {
         throw new Error(API_FILE_MISSING)
       }
 
-      const formData = buildFormData(formValues.file, formValues)
+      const formData = buildFormData(formValues.files, formValues)
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -200,6 +207,9 @@ export default function UploadForm() {
     }
   }
 
+  const hasFiles = formValues.files.length > 0
+  const fileCount = formValues.files.length
+
   return (
     <Box sx={{ mb: 6 }}>
       <form>
@@ -226,8 +236,8 @@ export default function UploadForm() {
               >
                 elsa-demo.xlsx
               </Link>{" "}
-              lisätty lomakkeelle. Voit kokeilla asetuksia, ihastella esikatselua sivun lopussa ja
-              ladata muunnetun Excel tiedoston omalle tietokoneellesi.
+              lisätty lomakkeelle. Voit nyt kokeilla asetuksia, ihastella esikatselua sivun lopussa
+              ja ladata muunnetun Excel tiedoston omalle tietokoneellesi.
             </Alert>
           ) : (
             <Box />
@@ -260,10 +270,10 @@ export default function UploadForm() {
         {isDemoMode && <Divider sx={{ my: 2 }} />}
 
         <FileUpload
-          selectedFile={formValues.file?.name || ""}
-          onChange={handleFileChange}
-          label="eLSA excel tiedosto"
-          description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
+          files={formValues.files}
+          onFilesChange={handleFilesChange}
+          label="eLSA Excel-tiedosto(t)"
+          disabled={isDemoMode}
         />
 
         <Box sx={{ minHeight: 120, mb: 3, mt: 2 }}>
@@ -277,7 +287,10 @@ export default function UploadForm() {
           {showSuccess && !error && (
             <Alert severity="success" sx={{ mb: 4 }}>
               <AlertTitle>
-                {isDemoMode ? "Demo-Excelin lataus onnistui!" : "Excelin luku onnistui!"} 🎉
+                {isDemoMode
+                  ? "Demo-Excelin lataus onnistui!"
+                  : `${String(fileCount)} tiedosto${fileCount > 1 ? "a" : ""} luettu onnistuneesti!`}{" "}
+                🎉
               </AlertTitle>
               <Box component="ol" sx={{ pl: 2, m: 0 }}>
                 <li>Säädä asetuksia ja esikatsele muunnosta sivun lopussa.</li>
@@ -293,8 +306,8 @@ export default function UploadForm() {
 
         <Box
           sx={{
-            opacity: !formValues.file || error ? 0.4 : 1,
-            pointerEvents: !formValues.file || error ? "none" : "auto",
+            opacity: !hasFiles || error ? 0.4 : 1,
+            pointerEvents: !hasFiles || error ? "none" : "auto",
           }}
         >
           <SelectField
@@ -308,7 +321,7 @@ export default function UploadForm() {
             }))}
             placeholder="Hae tai kirjoita joukkueen nimi"
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
             freeSolo
           />
 
@@ -323,7 +336,7 @@ export default function UploadForm() {
             }))}
             defaultValue={formValues.year}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -342,7 +355,7 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.meetingTime}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -358,7 +371,7 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.duration}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -368,7 +381,7 @@ export default function UploadForm() {
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue={formValues.eventType}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -383,7 +396,7 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.registration}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
         </Box>
       </form>

@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/react"
 import "@testing-library/jest-dom"
-import userEvent from "@testing-library/user-event"
 
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 
@@ -38,21 +37,20 @@ const mockSuccessfulPreviewResponse = {
     }),
 }
 
-const uploadFileAndWaitForPreview = async (fileName?: string) => {
-  const fileInput = screen.getByTestId("file-input")
-  fireEvent.change(fileInput, {
-    target: { files: [createMockExcelFile(fileName)] },
-  })
-
-  await waitFor(() => {
-    expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
+const dropFiles = (files: File[]) => {
+  const dropzone = screen.getByTestId("dropzone")
+  fireEvent.drop(dropzone, {
+    dataTransfer: {
+      files,
+      types: ["Files"],
+    },
   })
 }
 
-const uploadFile = (fileName = "test.xlsx", content = "") => {
-  const fileInput = screen.getByTestId("file-input")
-  fireEvent.change(fileInput, {
-    target: { files: [createMockExcelFile(fileName, content)] },
+const dropFilesAndWaitForPreview = async (files: File[]) => {
+  dropFiles(files)
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
   })
 }
 
@@ -119,6 +117,13 @@ describe("UploadForm", () => {
     expect(screen.getAllByText(/6\. Ilmoittautuminen/i).length).toBeGreaterThan(0)
   })
 
+  it("renders dropzone with instructions", () => {
+    render(<UploadForm />)
+    expect(
+      screen.getByText("Pudota eLSA:sta haetut excel-tiedostot tai klikkaa valitaksesi")
+    ).toBeInTheDocument()
+  })
+
   it("shows download button after successful file upload", async () => {
     render(<UploadForm />)
 
@@ -126,7 +131,7 @@ describe("UploadForm", () => {
     expect(screen.queryByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).not.toBeInTheDocument()
 
     // Upload file and wait for preview
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Download button should now be visible
     expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
@@ -142,7 +147,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Upload a file to trigger the preview API call
-    uploadFile()
+    dropFiles([createMockExcelFile()])
 
     // Wait for error message to appear
     await waitFor(() => {
@@ -154,7 +159,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // First upload a file to enable preview functionality
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Find comboboxes by their roles
     const comboboxes = screen.getAllByRole("combobox")
@@ -190,11 +195,8 @@ describe("UploadForm", () => {
 
     render(<UploadForm />)
 
-    // Upload the file
-    await userEvent.upload(
-      screen.getByTestId("file-input"),
-      createMockExcelFile("test.xlsx", "dummy content")
-    )
+    // Upload the file via dropzone
+    dropFiles([createMockExcelFile("test.xlsx", "dummy content")])
 
     // Wait for the error message to appear
     await waitFor(() => {
@@ -212,22 +214,21 @@ describe("UploadForm", () => {
       .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
     render(<UploadForm />)
-    const fileInput = screen.getByTestId("file-input")
 
     // Upload first file (error case)
-    await userEvent.upload(fileInput, createMockExcelFile("test1.xlsx", "dummy content"))
+    dropFiles([createMockExcelFile("test1.xlsx", "dummy content")])
 
     // Wait for error message
     await waitFor(() => {
       expect(screen.getByText(/Virhe/i)).toBeInTheDocument()
     })
 
-    // Upload second file (success case)
-    await userEvent.upload(fileInput, createMockExcelFile("test2.xlsx", "dummy content"))
+    // Upload second file (success case) - this replaces all files
+    dropFiles([createMockExcelFile("test2.xlsx", "dummy content")])
 
     // Wait for success message
     await waitFor(() => {
-      expect(screen.getByText(/Excelin luku onnistui!/i)).toBeInTheDocument()
+      expect(screen.getByText(/tiedosto.*luettu onnistuneesti!/i)).toBeInTheDocument()
     })
 
     // Verify error message is gone
@@ -250,7 +251,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Upload file and wait for preview
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock successful download response
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -283,7 +284,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Upload file and wait for preview
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock download API error
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -308,7 +309,7 @@ describe("UploadForm", () => {
     ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"))
 
     // Upload file
-    uploadFile()
+    dropFiles([createMockExcelFile()])
 
     // Wait for error message
     await waitFor(() => {
@@ -320,7 +321,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Upload file and wait for preview
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock network error for download
     ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Download network error"))
@@ -335,28 +336,11 @@ describe("UploadForm", () => {
     })
   })
 
-  it("handles multiple file uploads correctly", async () => {
-    render(<UploadForm />)
-
-    // Upload first file
-    await uploadFileAndWaitForPreview("first.xlsx")
-    expect(screen.getByText(/Excelin luku onnistui!/)).toBeInTheDocument()
-
-    // Upload second file - should clear previous state
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce(mockSuccessfulPreviewResponse)
-    uploadFile("second.xlsx")
-
-    // Wait for new preview to load
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
-    })
-  })
-
   it("shows loading state during download", async () => {
     render(<UploadForm />)
 
     // Upload file and wait for preview
-    await uploadFileAndWaitForPreview()
+    await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock delayed download response
     let resolveDownload: (_response: Response) => void
@@ -386,33 +370,37 @@ describe("UploadForm", () => {
     })
   })
 
-  it("handles empty file selection", () => {
-    render(<UploadForm />)
+  describe("Multiple files support", () => {
+    it("shows file count in success message for multiple files", async () => {
+      render(<UploadForm />)
 
-    const fileInput = screen.getByTestId("file-input")
+      // Upload multiple files
+      const files = [createMockExcelFile("file1.xlsx"), createMockExcelFile("file2.xlsx")]
+      await dropFilesAndWaitForPreview(files)
 
-    // Simulate selecting no files
-    fireEvent.change(fileInput, { target: { files: [] } })
+      // Check success message shows correct count
+      expect(screen.getByText(/2 tiedostoa luettu onnistuneesti!/)).toBeInTheDocument()
+    })
 
-    // Should not trigger any API calls
-    expect(global.fetch).not.toHaveBeenCalled()
-  })
+    it("shows file count in success message for single file", async () => {
+      render(<UploadForm />)
 
-  it("resets success state when new file is selected", async () => {
-    render(<UploadForm />)
+      // Upload single file
+      await dropFilesAndWaitForPreview([createMockExcelFile()])
 
-    // Upload first file successfully
-    await uploadFileAndWaitForPreview()
+      // Check success message for single file
+      expect(screen.getByText(/1 tiedosto luettu onnistuneesti!/)).toBeInTheDocument()
+    })
 
-    // Verify success state
-    expect(screen.getByText(/Excelin luku onnistui!/)).toBeInTheDocument()
+    it("displays all uploaded files in the list", async () => {
+      render(<UploadForm />)
 
-    // Upload second file
-    uploadFile("second-file.xlsx")
+      const files = [createMockExcelFile("file1.xlsx"), createMockExcelFile("file2.xlsx")]
+      await dropFilesAndWaitForPreview(files)
 
-    // Success message should be cleared
-    await waitFor(() => {
-      expect(screen.queryByText(/Excelin luku onnistui!/)).not.toBeInTheDocument()
+      // Both files should be visible
+      expect(screen.getByText("file1.xlsx")).toBeInTheDocument()
+      expect(screen.getByText("file2.xlsx")).toBeInTheDocument()
     })
   })
 
@@ -536,10 +524,9 @@ describe("UploadForm", () => {
       })
     })
 
-    it("clears demo mode when regular file is uploaded", async () => {
+    it("disables dropzone when in demo mode", async () => {
       ;(global.fetch as jest.Mock)
         .mockResolvedValueOnce(mockDemoFileResponse)
-        .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
       render(<UploadForm />)
@@ -553,16 +540,9 @@ describe("UploadForm", () => {
         expect(screen.getByText(DEMO_INFO_TEXT)).toBeInTheDocument()
       })
 
-      // Upload a regular file
-      uploadFile("real-file.xlsx")
-
-      // Demo info should be hidden
-      await waitFor(() => {
-        expect(screen.queryByText(DEMO_INFO_TEXT)).not.toBeInTheDocument()
-      })
-
-      // Switch should be unchecked
-      expect(demoSwitch).not.toBeChecked()
+      // Dropzone should be disabled (has disabled styling)
+      const dropzone = screen.getByTestId("dropzone")
+      expect(dropzone).toHaveStyle({ opacity: "0.5" })
     })
   })
 })

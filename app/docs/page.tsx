@@ -72,7 +72,7 @@ export default function Docs() {
           , valitse joukkue ja siirry &quot;Ottelut&quot;-välilehdelle. Lataa Excel-tiedosto omalle
           tietokoneellesi.
         </Typography>
-        <Box sx={{ mb: 2 }}>
+        <Box sx={{ mb: 3 }}>
           <Image
             src="/images/docs/elsa-excel-download.png"
             alt="eLSA Excel-tiedoston lataaminen"
@@ -85,15 +85,14 @@ export default function Docs() {
           />
         </Box>
 
-        <Typography variant="h3">2. Vie tiedosto sovellukseen</Typography>
+        <Typography variant="h3">2. Vie tiedosto(t) sovellukseen</Typography>
         <Typography>
-          Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja valitse eLSA:sta lataamasi
-          Excel kohtaan &quot;<strong>eLSA excel tiedosto</strong>
-          &quot;.
+          Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja pudota tai valitse eLSA:n
+          excel-tiedosto niille varattuun kohtaan. Voit halutessasi lisätä useammankin tiedoston.
         </Typography>
         <Typography>
-          eLSA:sta lataamassasi tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä
-          otteluita. Ne voi jättää tiedostoon, muuntaja ei käsittelee niitä.
+          eLSA:n tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä otteluita. Ne voi
+          jättää tiedostoon, muuntaja ei käsittelee niitä.
         </Typography>
 
         <Typography variant="h3">3. Säädä asetukset</Typography>
