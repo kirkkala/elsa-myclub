@@ -14,6 +14,7 @@ interface SelectFieldProps extends BaseFormFieldProps {
   value?: string
   placeholder?: string
   freeSolo?: boolean
+  disableClearable?: boolean
 }
 
 export default function SelectField({
@@ -29,6 +30,7 @@ export default function SelectField({
   onChange,
   disabled,
   freeSolo = false,
+  disableClearable = true,
 }: SelectFieldProps) {
   // Internal state for uncontrolled mode (when value prop is not provided)
   const [internalValue, setInternalValue] = useState<SelectOption | string | null>(() => {
@@ -95,6 +97,7 @@ export default function SelectField({
         fullWidth
         size="small"
         disablePortal
+        disableClearable={disableClearable}
         openOnFocus
         freeSolo={freeSolo}
         autoSelect={freeSolo}

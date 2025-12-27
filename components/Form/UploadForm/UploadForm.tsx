@@ -315,6 +315,7 @@ export default function UploadForm() {
             Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
             description="Etsi joukkue listalta tai kirjoita kuten se on MyClubissa."
+            disableClearable={false}
             options={groupsData.groups.map((option) => ({
               value: option,
               label: option,
