@@ -1,24 +1,35 @@
 "use client"
 
-import { useState } from "react"
-import styles from "./UploadForm.module.scss"
-import FileUpload from "../FileUpload/FileUpload"
-import SelectField from "../SelectField/SelectField"
-import { LuCalendar, LuClock, LuUsers, LuDownload } from "react-icons/lu"
-import { CiBasketball } from "react-icons/ci"
-import Button from "../Button/Button"
-import SelectOrInput from "../SelectOrInput/SelectOrInput"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import DownloadIcon from "@mui/icons-material/Download"
+import PeopleIcon from "@mui/icons-material/People"
+import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
+import Alert from "@mui/material/Alert"
+import AlertTitle from "@mui/material/AlertTitle"
+import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Link from "@mui/material/Link"
+import Typography from "@mui/material/Typography"
+import { useState, useCallback } from "react"
+
+import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import type { MyClubExcelRow } from "@/utils/excel"
+
 import groupsData from "../../../config/groups.json"
 import Preview from "../../Preview/Preview"
-import type { MyClubExcelRow } from "@/utils/excel"
-import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import Button from "../Button/Button"
+import FileUpload from "../FileUpload/FileUpload"
+import IOSSwitch from "../IOSSwitch/IOSSwitch"
+import SelectField from "../SelectField/SelectField"
 
 interface ApiErrorResponse {
   message: string
 }
 
 interface FormValues {
-  file: File | null
+  files: File[]
   year: string
   duration: string
   meetingTime: string
@@ -32,12 +43,13 @@ export default function UploadForm() {
   const [error, setError] = useState("")
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isDemoMode, setIsDemoMode] = useState(false)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
 
   const [formValues, setFormValues] = useState<FormValues>({
-    file: null,
+    files: [],
     year: String(currentYear),
     duration: "90",
     meetingTime: "0",
@@ -46,29 +58,68 @@ export default function UploadForm() {
     registration: "Valituille henkilöille",
   })
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0] || null
-    setFormValues((prev) => ({ ...prev, file }))
+  const handleFilesChange = useCallback(
+    (files: File[]): void => {
+      setFormValues((prev) => ({ ...prev, files }))
+      setShowSuccess(false)
+      setPreviewData([])
+      setIsDemoMode(false)
+
+      if (files.length > 0) {
+        void fetchPreview(files, formValues)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [formValues]
+  )
+
+  const handleLoadDemo = async (): Promise<void> => {
+    setError("")
     setShowSuccess(false)
     setPreviewData([])
 
-    if (file) {
-      void fetchPreview(file, formValues)
+    try {
+      const response = await fetch("/elsa-demo.xlsx")
+      if (!response.ok) {
+        throw new Error("Demo-tiedoston lataus epäonnistui")
+      }
+      const blob = await response.blob()
+      const demoFile = new File([blob], "elsa-demo.xlsx", {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      })
+
+      setFormValues((prev) => ({ ...prev, files: [demoFile] }))
+      setIsDemoMode(true)
+      void fetchPreview([demoFile], formValues)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Demo-tiedoston lataus epäonnistui")
     }
+  }
+
+  const handleStopDemo = (): void => {
+    setFormValues((prev) => ({ ...prev, files: [] }))
+    setIsDemoMode(false)
+    setPreviewData([])
+    setShowSuccess(false)
+    setError("")
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
     const { name, value } = e.target
     setFormValues((prev) => ({ ...prev, [name]: value }))
 
-    if (formValues.file) {
-      void fetchPreview(formValues.file, { ...formValues, [name]: value })
+    if (formValues.files.length > 0) {
+      void fetchPreview(formValues.files, { ...formValues, [name]: value })
     }
   }
 
-  const buildFormData = (file: File, values: FormValues): FormData => {
+  const buildFormData = (files: File[], values: FormValues): FormData => {
     const formData = new FormData()
-    formData.append("file", file)
+
+    // Append all files
+    files.forEach((file) => {
+      formData.append("files", file)
+    })
 
     if (values.year) {
       formData.append("year", values.year)
@@ -92,11 +143,11 @@ export default function UploadForm() {
     return formData
   }
 
-  const fetchPreview = async (file: File, values: FormValues): Promise<void> => {
+  const fetchPreview = async (files: File[], values: FormValues): Promise<void> => {
     setError("")
 
     try {
-      const formData = buildFormData(file, values)
+      const formData = buildFormData(files, values)
 
       const response = await fetch("/api/preview", {
         method: "POST",
@@ -124,11 +175,11 @@ export default function UploadForm() {
     setError("")
 
     try {
-      if (!formValues.file) {
+      if (formValues.files.length === 0) {
         throw new Error(API_FILE_MISSING)
       }
 
-      const formData = buildFormData(formValues.file, formValues)
+      const formData = buildFormData(formValues.files, formValues)
 
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -156,83 +207,144 @@ export default function UploadForm() {
     }
   }
 
+  const hasFiles = formValues.files.length > 0
+  const fileCount = formValues.files.length
+
   return (
-    <div className={styles.formContainer}>
+    <Box sx={{ mb: 6 }}>
       <form>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2,
+            mb: 2,
+          }}
+        >
+          {isDemoMode ? (
+            <Alert severity="info" sx={{ flex: 1, py: 0.5 }}>
+              <Typography variant="h2" sx={{ mb: 0.5, fontSize: "0.9rem", fontWeight: 500 }}>
+                Demotila aktivoitu
+              </Typography>
+              Esimerkkitiedosto{" "}
+              <Link
+                href="/elsa-demo.xlsx"
+                download="elsa-demo.xlsx"
+                title="Lataa esimerkkitiedosto tarkastelua varten"
+                sx={{ fontWeight: 500 }}
+              >
+                elsa-demo.xlsx
+              </Link>{" "}
+              lisätty lomakkeelle. Voit nyt kokeilla asetuksia, ihastella esikatselua sivun lopussa
+              ja ladata muunnetun Excel tiedoston omalle tietokoneellesi.
+            </Alert>
+          ) : (
+            <Box />
+          )}
+          <FormControlLabel
+            control={
+              <IOSSwitch
+                checked={isDemoMode}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    void handleLoadDemo()
+                  } else {
+                    handleStopDemo()
+                  }
+                }}
+              />
+            }
+            label={
+              <Typography
+                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1 }}
+              >
+                Demotila
+              </Typography>
+            }
+            labelPlacement="start"
+            sx={{ flexShrink: 0 }}
+          />
+        </Box>
+
+        {isDemoMode && <Divider sx={{ my: 2 }} />}
+
         <FileUpload
-          selectedFile={formValues.file?.name || ""}
-          onChange={handleFileChange}
-          label="eLSA excel tiedosto"
-          description="Valitse eLSA:sta hakemasi Excel tiedosto, jonka pelit haluat siirtää MyClub:iin."
+          files={formValues.files}
+          onFilesChange={handleFilesChange}
+          label="eLSA Excel-tiedosto(t)"
+          disabled={isDemoMode}
         />
 
-        <div className={styles.messageContainer}>
+        <Box sx={{ minHeight: 120, mb: 3, mt: 2 }}>
           {error && (
-            <div className={styles.errorMessage}>
-              <p>
-                <strong>🥴 Virhe:</strong> {error}
-              </p>
-            </div>
+            <Alert severity="error" sx={{ mb: 2 }}>
+              <AlertTitle>Virhe: Tiedoston prosessointi epäonnistui 🥴</AlertTitle>
+              {error}
+            </Alert>
           )}
 
           {showSuccess && !error && (
-            <div className={styles.successMessage}>
-              <p>
-                <strong>Excelin luku onnistui!</strong> 🎉
-              </p>
-              <ol>
+            <Alert severity="success" sx={{ mb: 4 }}>
+              <AlertTitle>
+                {isDemoMode
+                  ? "Demo-Excelin lataus onnistui!"
+                  : `${String(fileCount)} tiedosto${fileCount > 1 ? "a" : ""} luettu onnistuneesti!`}{" "}
+                🎉
+              </AlertTitle>
+              <Box component="ol" sx={{ pl: 2, m: 0 }}>
                 <li>Säädä asetuksia ja esikatsele muunnosta sivun lopussa.</li>
                 <li>
-                  Lataa muunnettu tiedosto "Lataa Excel" -painikkeella omalle tietokoneellesi.
+                  Lataa muunnettu tiedosto &quot;Lataa Excel&quot; -painikkeella omalle
+                  tietokoneellesi.
                 </li>
                 <li>Mene MyClubiin ja tuo tapahtumat tiedostosta.</li>
-              </ol>
-            </div>
+              </Box>
+            </Alert>
           )}
-        </div>
+        </Box>
 
-        <div className={!formValues.file || error ? styles.disabledFields : undefined}>
-          <SelectOrInput
+        <Box
+          sx={{
+            opacity: !hasFiles || error ? 0.4 : 1,
+            pointerEvents: !hasFiles || error ? "none" : "auto",
+          }}
+        >
+          <SelectField
             id="group"
-            Icon={LuUsers}
+            Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
-            description={`Valitse joukkueesi listalta tai paina "Kirjoita nimi" ja anna kuten se on MyClubissa.`}
-            switchText={{
-              toInput: {
-                action: "Kirjoita nimi",
-              },
-              toList: {
-                action: "Näytä listavalitsin (HNMKY)",
-              },
-            }}
+            description="Etsi joukkue listalta tai kirjoita kuten se on MyClubissa."
+            disableClearable={false}
             options={groupsData.groups.map((option) => ({
               value: option,
               label: option,
             }))}
-            placeholder="esim. Harlem Globetrotters"
+            placeholder="Hae tai kirjoita joukkueen nimi"
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
+            freeSolo
           />
 
           <SelectField
             id="year"
             label="2. Vuosi"
             description="Valitse vuosi, eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä."
-            Icon={LuCalendar}
+            Icon={CalendarMonthIcon}
             options={years.map((year) => ({
               value: String(year),
               label: String(year),
             }))}
             defaultValue={formValues.year}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
             id="meetingTime"
             label="3. Kokoontumisaika"
             description="Voit valita kokoontumisajan lämppää varten, valinta aikaistaa tapahtuman alkamisaikaa."
-            Icon={LuClock}
+            Icon={AccessTimeIcon}
             options={[
               { value: "0", label: "Ei aikaistusta" },
               { value: "15", label: "15 min ennen ottelun alkua" },
@@ -244,13 +356,13 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.meetingTime}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
             id="duration"
             label="4. Tapahtuman kesto"
-            Icon={LuClock}
+            Icon={AccessTimeIcon}
             options={[
               { value: "60", label: "1 tunti" },
               { value: "75", label: "1 tunti 15 minuuttia" },
@@ -260,24 +372,24 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.duration}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
             id="eventType"
             label="5. Tapahtumatyyppi"
-            Icon={CiBasketball}
+            Icon={SportsBasketballIcon}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue={formValues.eventType}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
 
           <SelectField
             id="registration"
             label="6. Ilmoittautuminen"
             description="Valitse kenelle tapahtumaan ilmoittautuminen sallitaan MyClubissa."
-            Icon={LuUsers}
+            Icon={PeopleIcon}
             options={[
               { value: "Valituille henkilöille" },
               { value: "Ryhmän jäsenille" },
@@ -285,29 +397,31 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.registration}
             onChange={handleFieldChange}
-            disabled={!formValues.file || !!error}
+            disabled={!hasFiles || !!error}
           />
-        </div>
+        </Box>
       </form>
 
       {previewData.length > 0 && (
         <>
-          <form onSubmit={handleDownload} className={styles.downloadForm}>
+          <Box sx={{ mt: 5 }}>
+            <Preview data={previewData} />
+          </Box>
+
+          <Box component="form" onSubmit={(e) => void handleDownload(e)} sx={{ mt: 3 }}>
             <Button
               type="submit"
               disabled={loading}
-              Icon={LuDownload}
+              Icon={DownloadIcon}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen Excel-tiedosto omalle
                 tietokoneellesi, muokkaa tarvittaessa ja siirry MyClubiin tuomaan tapahtumat tiedostosta.`}
             >
               {loading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
-          </form>
-
-          <Preview data={previewData} />
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   )
 }

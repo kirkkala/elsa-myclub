@@ -1,28 +1,59 @@
-import { IconType } from "react-icons"
-import styles from "./Button.module.scss"
+import Box from "@mui/material/Box"
+import MuiButton from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import { ElementType } from "react"
 
 interface ButtonProps {
   type?: "button" | "submit"
   disabled?: boolean
-  Icon?: IconType
+  Icon?: ElementType
   label?: string
   description?: string
   children: React.ReactNode
 }
 
-export default function Button({ children, ...props }: ButtonProps) {
+export default function Button({
+  children,
+  type,
+  disabled,
+  Icon,
+  label,
+  description,
+}: ButtonProps) {
   return (
-    <div className={styles.formGroup}>
-      {props.label && (
-        <label>
-          {props.Icon && <props.Icon />}
-          {props.label}
-        </label>
+    <Box>
+      {label && (
+        <Typography
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            mb: 0.5,
+            fontWeight: 500,
+          }}
+        >
+          {Icon && <Icon />}
+          {label}
+        </Typography>
       )}
-      {props.description && <div className={styles.fieldDescription}>{props.description}</div>}
-      <button type={props.type} disabled={props.disabled} className={styles.button}>
+      {description && (
+        <Typography color="text.secondary" sx={{ mb: 1 }}>
+          {description}
+        </Typography>
+      )}
+      <MuiButton
+        type={type}
+        disabled={disabled}
+        variant="contained"
+        size="large"
+        fullWidth
+        sx={{
+          py: 1.5,
+          fontSize: "1rem",
+        }}
+      >
         {children}
-      </button>
-    </div>
+      </MuiButton>
+    </Box>
   )
 }

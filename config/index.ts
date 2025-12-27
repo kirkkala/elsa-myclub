@@ -1,5 +1,6 @@
-import packageJson from "../package.json"
 import process from "process"
+
+import packageJson from "../package.json"
 
 // Site Configuration
 const SITE_CONFIG = {
@@ -53,5 +54,24 @@ const SEO_CONFIG = {
   },
 } as const
 
+// Pages Configuration (single source of truth for navigation and sitemap)
+const PAGES = [
+  {
+    path: "/",
+    label: "Etusivu",
+    sitemap: { changeFrequency: "monthly" as const, priority: 1 },
+  },
+  {
+    path: "/docs",
+    label: "Lisätietoja ja käyttöohjeet",
+    sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
+  },
+  {
+    path: "/changelog",
+    label: "Versiohistoria",
+    sitemap: { changeFrequency: "weekly" as const, priority: 0.5 },
+  },
+]
+
 // Export everything after definitions
-export { SITE_CONFIG, SEO_CONFIG }
+export { SITE_CONFIG, SEO_CONFIG, PAGES }

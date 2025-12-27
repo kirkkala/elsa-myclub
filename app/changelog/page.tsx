@@ -1,16 +1,18 @@
-import type { Metadata } from "next"
 import fs from "fs"
 import path from "path"
 import process from "process"
+
+import Box from "@mui/material/Box"
 import matter from "gray-matter"
+import type { Metadata } from "next"
 import { remark } from "remark"
 import html from "remark-html"
-import { SITE_CONFIG } from "../../config"
-import BackLink from "../../components/BackLink/BackLink"
-import Info from "../../components/Info/Info"
-import Header from "../../components/Header/Header"
+
 import Footer from "../../components/Footer/Footer"
+import Header from "../../components/Header/Header"
 import Layout from "../../components/Layout/Layout"
+import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
+import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
   title: "Versiohistoria",
@@ -39,11 +41,9 @@ export default async function Changelog() {
   return (
     <Layout>
       <Header />
-      <BackLink />
-      <Info title="Versiohistoria" expandable={false}>
-        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-      </Info>
-      <BackLink />
+      <SectionAccordion title="Versiohistoria" expandable={false}>
+        <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      </SectionAccordion>
       <Footer />
     </Layout>
   )

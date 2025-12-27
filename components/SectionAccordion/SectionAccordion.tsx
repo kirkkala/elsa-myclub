@@ -1,0 +1,116 @@
+"use client"
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import Accordion from "@mui/material/Accordion"
+import AccordionDetails from "@mui/material/AccordionDetails"
+import AccordionSummary from "@mui/material/AccordionSummary"
+import Typography from "@mui/material/Typography"
+import { useState, useCallback } from "react"
+
+interface SectionAccordionProps {
+  title: string
+  expandable?: boolean
+  defaultOpen?: boolean
+  children: React.ReactNode
+  id?: string
+}
+
+// Helper function to generate URL-safe ID from title
+const generateId = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/ä/g, "a")
+    .replace(/ö/g, "o")
+    .replace(/å/g, "a")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+}
+
+// Helper function to get open sections from URL hash
+const getOpenSections = (): string[] => {
+  if (typeof window === "undefined") {
+    return []
+  }
+  const hash = window.location.hash.substring(1)
+  return hash ? hash.split(",").filter(Boolean) : []
+}
+
+// Helper function to update URL hash with open sections
+const updateUrlHash = (openSections: string[]): void => {
+  if (typeof window === "undefined") {
+    return
+  }
+
+  if (openSections.length > 0) {
+    window.history.replaceState(null, "", `#${openSections.join(",")}`)
+  } else {
+    const url = window.location.pathname + window.location.search
+    window.history.replaceState(null, "", url)
+  }
+}
+
+export default function SectionAccordion({
+  title,
+  expandable = true,
+  defaultOpen = false,
+  children,
+  id,
+}: SectionAccordionProps) {
+  const sectionId = id || generateId(title)
+
+  const titleElement = (compact?: boolean) => (
+    <Typography variant="h2" sx={compact ? { m: 0 } : undefined}>
+      {title}
+    </Typography>
+  )
+
+  // Initialize expanded state, checking URL hash on client
+  const [expanded, setExpanded] = useState(() => {
+    if (typeof window === "undefined") {
+      return defaultOpen
+    }
+    const openSections = getOpenSections()
+    return openSections.includes(sectionId) || defaultOpen
+  })
+
+  const handleChange = useCallback(
+    (_event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded)
+
+      // Update URL hash after the toggle
+      const openSections = getOpenSections()
+
+      if (isExpanded) {
+        if (!openSections.includes(sectionId)) {
+          openSections.push(sectionId)
+        }
+      } else {
+        const index = openSections.indexOf(sectionId)
+        if (index > -1) {
+          openSections.splice(index, 1)
+        }
+      }
+
+      updateUrlHash(openSections)
+    },
+    [sectionId]
+  )
+
+  return (
+    <Accordion
+      expanded={expandable ? expanded : true}
+      onChange={expandable ? handleChange : undefined}
+      id={sectionId}
+      defaultExpanded={!expandable}
+      slotProps={{ heading: { component: "h2" } }}
+    >
+      <AccordionSummary
+        expandIcon={expandable ? <ExpandMoreIcon /> : undefined}
+        sx={!expandable ? { cursor: "default !important" } : undefined}
+      >
+        {titleElement(true)}
+      </AccordionSummary>
+      <AccordionDetails>{children}</AccordionDetails>
+    </Accordion>
+  )
+}

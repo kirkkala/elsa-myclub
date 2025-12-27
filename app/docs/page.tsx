@@ -1,13 +1,17 @@
+import GitHubIcon from "@mui/icons-material/GitHub"
+import HistoryIcon from "@mui/icons-material/History"
+import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+import MuiLink from "@mui/material/Link"
+import Typography from "@mui/material/Typography"
 import type { Metadata } from "next"
-import Link from "next/link"
 import Image from "next/image"
-import { LuBookMarked, LuGithub } from "react-icons/lu"
-import { SITE_CONFIG } from "../../config"
-import Layout from "../../components/Layout/Layout"
-import Header from "../../components/Header/Header"
-import Info from "../../components/Info/Info"
-import BackLink from "../../components/BackLink/BackLink"
+
 import Footer from "../../components/Footer/Footer"
+import Header from "../../components/Header/Header"
+import Layout from "../../components/Layout/Layout"
+import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
+import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
   title: `Dokumentaatio`,
@@ -22,172 +26,151 @@ export default function Docs() {
   return (
     <Layout>
       <Header />
-      <BackLink />
-      <Info title="Tietoja sovelluksesta" expandable defaultOpen={false}>
-        <p>
+      <SectionAccordion title="Tietoja sovelluksesta" expandable defaultOpen={false}>
+        <Typography>
           {SITE_CONFIG.name}n avulla voit muuntaa{" "}
-          <Link href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
+          <MuiLink href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
             eLSA
-          </Link>
+          </MuiLink>
           :sta ladatun joukkeen sarjapelien Excel-tiedoston{" "}
-          <Link href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
+          <MuiLink href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
             MyClub
-          </Link>
+          </MuiLink>
           :in kanssa yhteensopivaksi tuontitiedostoksi.
-        </p>
-        <h3>Kenelle sovellus on tarkoitettu?</h3>
-        <p>
+        </Typography>
+        <Typography variant="h3">Kenelle sovellus on tarkoitettu?</Typography>
+        <Typography>
           Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
-          taustahenkilölle ketkä siirtävät pelejä eLSA:sta MyClub:iin.
-        </p>
-        <p>
-          <Link href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
+          taustahenkilölle ketkä siirtävät otteluita eLSA:sta MyClub:iin.
+        </Typography>
+        <Typography>
+          <MuiLink href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
             Helsingin NMKY
-          </Link>{" "}
+          </MuiLink>{" "}
           seuran joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös
           käsin niin myös muiden seurojen joukkueet voivat vapaasti hyödyntää sovellusta.
-        </p>
-        <h3>Tietosuojaseloste</h3>
-        <p>
+        </Typography>
+        <Typography variant="h3">Tietosuojaseloste</Typography>
+        <Typography>
           Sovellus ei kerää tietoa käyttäjistä tai sovellukseen ladatuista tiedostoista.
           Sovellukseen ladattuja tiedostoja ei tallenneta muualle kuin käyttäjän omalle
           tietokoneelle.
-        </p>
-        <p>
-          Applikaation käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto
-          ei tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
-        </p>
-      </Info>
+        </Typography>
+        <Typography>
+          Sovelluksen käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto ei
+          tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
+        </Typography>
+      </SectionAccordion>
 
-      <Info title="Käyttöohjeet" expandable defaultOpen={false}>
-        <ol>
-          <li>
-            <strong>Hae ottelut eLSA:sta</strong>
-            <p>
-              Kirjaudu{" "}
-              <Link href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
-                elsa.basket.fi
-              </Link>
-              , siirry joukkueesi "Ottelut" -välilehdelle ja lataa ottelutiedosto Excel-muodossa.
-              <Image
-                src="/images/docs/elsa-excel-download.png"
-                alt="eLSA Excel-tiedoston lataaminen"
-                width={887}
-                height={346}
-                className="image-embed"
-              />
-            </p>
-            <p>
-              Mikäli eLSA:sta haetussa excelissä on pelattuja pelejä tai pelejä joita ei vielä ole
-              asetettu tietylle päivälle, ne jätetään automaattisesti huomioimatta
-              muunnostiedostosta.
-            </p>
-          </li>
-          <li>
-            <strong>Siirrä tiedosto sovellukseen</strong>
-            <p>
-              Mene sovelluksen <Link href="/">etusivulle</Link>, "Valitse tiedosto..." ja valitse
-              eLSA:sta lataamasi Excel muunnosta varten.
-            </p>
-          </li>
-          <li>
-            <strong>Säädä asetukset</strong>
-            <ol>
-              <li>
-                <strong>Joukkue (MyClub ryhmä)</strong>: Tämän tiedon avulla pelien tuonti
-                yhdistetään oikeaan ryhmään MyClubissa. Valitse joukkueesi listalta tai kirjoita
-                nimi kuten se on MyClubissa mikäli joukkueesi ei ole valintalistalla.
-              </li>
-              <li>
-                <strong>Vuosi</strong>: eLSA tiedostosta puuttuu vuosiluku päivämäärien yhteydessä
-                joten vuosi tulee valita. Mikäli tiedoston pelit osuvat ovat eri vuosille, voit
-                muokata niitä excelissä omalla koneellasi tiedoston lataamisen jälkeen.
-              </li>
-              <li>
-                <strong>Kokoontumisaika</strong>: Valitse kuinka paljon ennen ottelun alkua
-                joukkueen tulee olla paikalla lämmittelyä varten. Valinta aikaistaa tapahtuman
-                alkuaikaa MyClubissa sekä lisää MyClub-tapahtuman kuvaukseen tiedon erikseen lämppä-
-                ja otteluajan alusta.
-              </li>
-              <li>
-                <strong>Tapahtuman kesto</strong>: Valitse tapahtuman kesto. Tämän perusteella
-                lasketaan tapahtuman alkamis- ja päättymisaika mahdollinen kokoontumisaika
-                huomioiden.
-              </li>
-              <li>
-                <strong>Tapahtumatyyppi</strong>: Valitse tapahtuman tyyppi MyClubiin. "Ottelu" on
-                yleensä paras valinta sarjapelejä varten.
-              </li>
-              <li>
-                <strong>Ilmoittautuminen</strong>: Valitse kenelle ilmoittautuminen tapahtumaan
-                MyClubissa on sallittu. "Valituille henkilöille" on yleensä paras valinta
-                sarjapeleille. Näin valmentaja voi avata ilmoittautumisen vain kokoonpanoon
-                lisätyille pelaajille.
-              </li>
-            </ol>
-          </li>
-          <li>
-            <strong>Esikatsele muunnosta</strong>
-            <p>
-              Voit esikatsella muunnostiedoston sisältöä ennen sen lataamista omalle koneelle.
-              Esikatselu päivittyy reaaliaikaisesti kun muutat asetuksia.
-            </p>
-          </li>
-          <li>
-            <strong>Lataa tiedosto</strong>
-            <p>
-              Kun näyttää hyvältä, painma "Lataa Excel" ja tallenna tiedosto tietokoneellesi.
-              Tarvittaessa voit muokata muunnostiedostoa omalla koneellasi lataamisen jälkeen.
-            </p>
-          </li>
-          <li>
-            <strong>Vie tiedosto MyClub:iin</strong>
-            <p>Kirjaudu MyClub:iin, siirry tapahtumien hallintaan ja valitse "Tuo tapahtumia".</p>
-            <p>
-              Ohjeet MyClubin dokumentaatiossa:{" "}
-              <Link
-                href="https://docs.myclub.fi/article/1213-tapahtumien-tuonti"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Tapahtumat → Tapahtumien tuonti
-              </Link>
-              .
-            </p>
-          </li>
-        </ol>
-      </Info>
+      <SectionAccordion title="Käyttöohjeet" expandable defaultOpen={false}>
+        <Typography variant="h3">1. Hae ottelutiedosto eLSA:sta</Typography>
+        <Typography>
+          Kirjaudu{" "}
+          <MuiLink href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
+            elsa.basket.fi
+          </MuiLink>
+          , valitse joukkue ja siirry &quot;Ottelut&quot;-välilehdelle. Lataa Excel-tiedosto omalle
+          tietokoneellesi.
+        </Typography>
+        <Box sx={{ mb: 3 }}>
+          <Image
+            src="/images/docs/elsa-excel-download.png"
+            alt="eLSA Excel-tiedoston lataaminen"
+            width={887}
+            height={346}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+            }}
+          />
+        </Box>
 
-      <Info title="Lisätietoja ja palaute" expandable defaultOpen={false}>
-        <p>
+        <Typography variant="h3">2. Vie tiedosto(t) sovellukseen</Typography>
+        <Typography>
+          Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja pudota tai valitse eLSA:n
+          excel-tiedosto niille varattuun kohtaan. Voit halutessasi lisätä useammankin tiedoston.
+        </Typography>
+        <Typography>
+          eLSA:n tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä otteluita. Ne voi
+          jättää tiedostoon, muuntaja ei käsittelee niitä.
+        </Typography>
+
+        <Typography variant="h3">3. Säädä asetukset</Typography>
+        <Box component="ul">
+          <li>
+            <strong>Joukkue</strong>: Valitse listalta tai kirjoita nimi kuten se on MyClubissa.
+          </li>
+          <li>
+            <strong>Vuosi</strong>: eLSA:n tiedostossa ei ole vuosilukuja, se tulee valita erikseen
+            jotta MyClub osaa luoda tapahtuman oikein.
+          </li>
+          <li>
+            <strong>Kokoontumisaika</strong>: Aikaistaa tapahtuman alkuaikaa sekä lisää tiedon
+            lämppä- ja otteluajan alusta tapahtuman kuvaukseen.
+          </li>
+          <li>
+            <strong>Tapahtuman kesto</strong>: Määrittää tapahtuman keston.
+          </li>
+          <li>
+            <strong>Ilmoittautuminen</strong>: Kenelle tapahtuma näkyy MyClubissa. &quot;Valituille
+            henkilöille&quot; on usein paras valinta sarjapeleihin.
+          </li>
+        </Box>
+
+        <Typography variant="h3">4. Esikatsele ja lataa</Typography>
+        <Typography>
+          Tarkastele muunnosta esikatelussa, ja paina &quot;Lataa Excel&quot; saadaksesi
+          ottelutiedoston omalle tietokoneellesi. Voit tarvittaessa muokata tiedostoa lataamisen
+          jälkeen.
+        </Typography>
+
+        <Typography variant="h3">5. Tuo ottelutiedosto MyClubiin</Typography>
+        <Typography>
+          Kirjaudu MyClubiin ja siirry kohtaan &quot;Tapahtumien hallinta&quot; → &quot;Tuo
+          tapahtumia&quot;.
+        </Typography>
+        <Typography>
+          Katso myös MyClubin ohjeet:{" "}
+          <MuiLink
+            href="https://docs.myclub.fi/article/1213-tapahtumien-tuonti"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tapahtumien tuonti
+          </MuiLink>
+          .
+        </Typography>
+      </SectionAccordion>
+
+      <SectionAccordion title="Lisätietoja ja palaute" expandable defaultOpen={false}>
+        <Typography>
           Löysitkö bugin tai keksit parannusehdotuksen?
-          <br />
-          Laita viestiä Timolle osoitteeseen{" "}
-          <a href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</a>.
-        </p>
-        <p>
-          Haluatko osallistua applikaation kehittämiseen?
-          <br />
-          Katso koodit GitHubissa ja tee pull request.
-        </p>
-        <hr />
-        <ul className="list-reset">
-          <li>
-            <LuBookMarked /> Sovelluksen <Link href="/changelog">versiohistoria</Link>
-          </li>
-          <li>
-            <LuGithub /> Lähdekoodi{" "}
-            <Link
+          <br />→ Laita viestiä Timolle osoitteeseen{" "}
+          <MuiLink href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</MuiLink>.
+        </Typography>
+        <Typography>
+          Haluatko osallistua sovelluksen kehittämiseen?
+          <br />→ Katso koodit GitHubissa ja tee pull request.
+        </Typography>
+        <Divider />
+        <Box sx={{ mt: 2 }}>
+          <Typography sx={{ mb: 0.5 }}>
+            <HistoryIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
+            <MuiLink href="/changelog">Versiohistoria</MuiLink>
+          </Typography>
+          <Typography>
+            <GitHubIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
+            Lähdekoodi{" "}
+            <MuiLink
               href={SITE_CONFIG.links.githubAppRepoUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHubissa
-            </Link>
-          </li>
-        </ul>
-      </Info>
-      <BackLink />
+            </MuiLink>
+          </Typography>
+        </Box>
+      </SectionAccordion>
       <Footer />
     </Layout>
   )

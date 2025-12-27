@@ -4,11 +4,11 @@ import typescriptParser from "@typescript-eslint/parser"
 import nextPlugin from "@next/eslint-plugin-next"
 import reactPlugin from "eslint-plugin-react"
 import reactHooksPlugin from "eslint-plugin-react-hooks"
+import importPlugin from "eslint-plugin-import"
 import globals from "globals"
 
 export default [
   js.configs.recommended,
-  // Main configuration for TypeScript/React files
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -16,9 +16,7 @@ export default [
       parserOptions: {
         ecmaVersion: 2024,
         sourceType: "module",
-        ecmaFeatures: {
-          jsx: true,
-        },
+        ecmaFeatures: { jsx: true },
         project: "./tsconfig.json",
       },
       globals: {
@@ -33,108 +31,58 @@ export default [
       "@next/next": nextPlugin,
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
+      import: importPlugin,
     },
     rules: {
-      // TypeScript rules
-      "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/explicit-function-return-type": "off", // Disabled for React 19 inference
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
-      "@typescript-eslint/no-floating-promises": "error",
-      "@typescript-eslint/no-non-null-assertion": "warn", // Relaxed from error
-      "@typescript-eslint/no-unnecessary-condition": "warn",
-
-      // General strict rules
-      // quotes: ["error", "double"], // Disabled to avoid conflict with Prettier
-      "no-console": ["error", { allow: ["warn", "error"] }],
-      eqeqeq: "error",
-      curly: "error",
-      "no-var": "error",
-      "prefer-const": "error",
-      "no-unused-expressions": "error",
-      "no-unused-vars": "off", // Disabled in favor of @typescript-eslint/no-unused-vars
-      "no-shadow": "error",
-      "no-return-await": "error",
-      "require-await": "error",
-      "no-throw-literal": "error",
-      "no-param-reassign": "error",
-
-      // React specific rules
-      "react/jsx-boolean-value": "error",
-      "react/jsx-no-useless-fragment": "error",
-      "react/no-array-index-key": "error",
-      "react/no-unused-prop-types": "error",
-
-      // React Hooks rules
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-
-      // Next.js rules
+      // Extend recommended configs
+      ...typescript.configs["strict-type-checked"].rules,
+      ...reactPlugin.configs.recommended.rules,
+      ...reactPlugin.configs["jsx-runtime"].rules,
+      ...reactHooksPlugin.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
+
+      // Overrides
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "no-console": ["error", { allow: ["warn", "error"] }],
+      "no-unused-vars": "off",
+
+      // Import ordering
+      "import/order": [
+        "error",
+        {
+          groups: ["builtin", "external", "internal", ["parent", "sibling", "index"]],
+          pathGroups: [{ pattern: "@/**", group: "internal", position: "before" }],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
     },
     settings: {
-      react: {
-        version: "detect",
-      },
-      next: {
-        rootDir: ".",
-      },
+      react: { version: "detect" },
+      next: { rootDir: "." },
+      "import/resolver": { typescript: true, node: true },
     },
   },
-  // Configuration for API routes (Node.js environment)
+  // Environment overrides
   {
     files: ["app/api/**/*.{js,ts}"],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-    },
+    languageOptions: { globals: { ...globals.node } },
   },
-  // Configuration for App Router server components (Node.js environment)
   {
     files: ["app/**/page.tsx", "app/**/layout.tsx"],
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
-      },
-    },
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
-  // Configuration for test files
   {
     files: ["**/*.test.{js,ts,tsx}", "**/__tests__/**/*.{js,ts,tsx}", "jest.setup.js"],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-        ...globals.node,
-      },
-    },
-    rules: {
-      "@typescript-eslint/no-non-null-assertion": "off", // Allow in tests
-    },
+    languageOptions: { globals: { ...globals.jest, ...globals.node } },
+    rules: { "@typescript-eslint/no-non-null-assertion": "off" },
   },
-  // Configuration for next.config.js (ES modules)
   {
-    files: ["next.config.js"],
-    languageOptions: {
-      sourceType: "module",
-      globals: {
-        ...globals.node,
-      },
-    },
-  },
-  // Configuration for Jest files (ES modules)
-  {
-    files: ["jest.setup.js", "jest.config.js"],
-    languageOptions: {
-      sourceType: "module",
-      globals: {
-        ...globals.node,
-      },
-    },
+    files: ["next.config.js", "jest.setup.js", "jest.config.js"],
+    languageOptions: { sourceType: "module", globals: { ...globals.node } },
   },
   {
     ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "dist/**", "eslint.config.js"],

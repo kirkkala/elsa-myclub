@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react"
-import Preview from "../Preview"
+
 import type { MyClubExcelRow } from "@/utils/excel"
+
+import Preview from "../Preview"
 
 const mockData: MyClubExcelRow[] = [
   {

@@ -4,9 +4,17 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v1.1.3 (UNRELEASED)
+## v2.0.0 (UNRELEASED)
 
-- Pelatut pelit pois MyClub tuontitiedostosta ❌
+- Käyttöliittymäremontti, [Material UI](https://mui.com/material-ui) 🤖
+- Usean tiedoston yhtäaikainen prosessointi ([dropzone.js](https://react-dropzone.js.org/)) 📂
+- Joukkuevalinnan hakutoiminto 🔎
+- Ohjeistuksien parannukset 📖
+- Demotila 🎬
+
+## v1.1.3 (17.12.2025)
+
+- Jo pelattujen sekä asettelemattomian otteluiden huomiotta jättäminen 🧹
 
 ## v1.1.2 (14.12.2025)
 

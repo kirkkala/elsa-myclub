@@ -1,5 +1,7 @@
 import { Buffer } from "buffer"
+
 import * as XLSX from "xlsx"
+
 import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR } from "./error"
 
 /**
@@ -39,8 +41,8 @@ export const excelUtils = {
     const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
 
     const year = String(fields.year || new Date().getFullYear())
-    const duration = parseInt(String(fields.duration || "75"), 10)
-    const meetingTime = parseInt(String(fields.meetingTime || "0"), 10)
+    const duration = parseInt(fields.duration || "75", 10)
+    const meetingTime = parseInt(fields.meetingTime || "0", 10)
 
     const processedData: MyClubExcelRow[] = jsonData
       .map((row: ElsaxcelRow): MyClubExcelRow | null => {
@@ -89,7 +91,7 @@ export const excelUtils = {
   },
 
   normalizeDate(date: string | number): string {
-    const dateStr = typeof date === "number" ? date.toFixed(2) : String(date)
+    const dateStr = typeof date === "number" ? date.toFixed(2) : date
     const cleanDate = dateStr.replace(",", ".")
     const parts = cleanDate.split(".")
 
@@ -103,7 +105,7 @@ export const excelUtils = {
     return `${day}.${month}.`
   },
 
-  formatDateTime(date: string, time: string, year: string | number): string {
+  formatDateTime(date: string, time: string, year: string): string {
     return `${date}${year} ${time}:00`
   },
 

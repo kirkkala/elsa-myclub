@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react"
+
 import { SITE_CONFIG } from "../../config"
 
 export const testPageElements = (
@@ -9,10 +10,8 @@ export const testPageElements = (
     it("renders header, footer, and semantic structure", () => {
       render(<PageComponent {...props} />)
 
-      // Header with logos and version
+      // Header with version
       expect(screen.getByRole("banner")).toBeInTheDocument()
-      expect(screen.getByAltText("eLSA")).toBeInTheDocument()
-      expect(screen.getByAltText("MyClub")).toBeInTheDocument()
       expect(screen.queryAllByText(SITE_CONFIG.version).length).toBeGreaterThanOrEqual(1)
 
       // Footer with author and links
@@ -25,11 +24,6 @@ export const testPageElements = (
       expect(screen.getByRole("main")).toBeInTheDocument()
       expect(screen.getAllByRole("heading").length).toBeGreaterThan(0)
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1)
-
-      // Back navigation
-      const backLinks = screen.getAllByRole("link", { name: /Etusivulle/ })
-      expect(backLinks.length).toBeGreaterThan(0)
-      expect(backLinks.find((link) => link.getAttribute("href") === "/")).toBeInTheDocument()
     })
   })
 }

@@ -1,10 +1,10 @@
-import { IconType } from "react-icons"
+import { ElementType } from "react"
 
 export interface BaseFormFieldProps {
   id: string
   label: string
   description?: string
-  Icon: IconType
+  Icon: ElementType
   required?: boolean
   disabled?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
