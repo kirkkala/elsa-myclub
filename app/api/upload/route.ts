@@ -1,37 +1,22 @@
-import { Buffer } from "buffer"
-
 import { NextRequest, NextResponse } from "next/server"
 import * as XLSX from "xlsx"
 
 import { formatErrorMessage, logError } from "@/utils/error"
 import { excelUtils, type MyClubExcelRow } from "@/utils/excel"
+import { parseFormData } from "@/utils/formData"
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-
-    // Extract fields and files from FormData
-    const fields: Record<string, string> = {}
-    const fileBuffers: Buffer[] = []
-
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        fileBuffers.push(Buffer.from(await value.arrayBuffer()))
-      } else {
-        fields[key] = value
-      }
-    }
+    const { fields, fileBuffers } = await parseFormData(formData)
 
     if (fileBuffers.length === 0) {
       return NextResponse.json({ message: "No files provided" }, { status: 400 })
     }
 
-    // Process all files and merge results
-    const allData: MyClubExcelRow[] = []
-    for (const fileBuffer of fileBuffers) {
-      const processedData = excelUtils.parseExcelBuffer(fileBuffer, fields)
-      allData.push(...processedData)
-    }
+    const allData: MyClubExcelRow[] = fileBuffers.flatMap((buffer) =>
+      excelUtils.parseExcelBuffer(buffer, fields)
+    )
 
     const newWorkbook = XLSX.utils.book_new()
     const newSheet = XLSX.utils.json_to_sheet(allData)
@@ -39,11 +24,9 @@ export async function POST(request: NextRequest) {
 
     const buffer = XLSX.write(newWorkbook, { type: "buffer", bookType: "xlsx" }) as Buffer
 
-    const filename = "elsa-myclub-import.xlsx"
-
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": 'attachment; filename="elsa-myclub-import.xlsx"',
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       },
     })

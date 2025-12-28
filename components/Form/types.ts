@@ -5,7 +5,6 @@ export interface BaseFormFieldProps {
   label: string
   description?: string
   Icon: ElementType
-  required?: boolean
   disabled?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }

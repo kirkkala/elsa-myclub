@@ -20,11 +20,11 @@ const SITE_CONFIG = {
   },
 } as const
 
-// SEO Configuration
+// Search engine optimization
 const SEO_CONFIG = {
   pages: {
     home: {
-      title: SITE_CONFIG.name,
+      title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
       description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
       openGraph: {
         title: `${SITE_CONFIG.name} - Helpota jojotöitä`,
@@ -33,23 +33,12 @@ const SEO_CONFIG = {
     },
   },
   defaults: {
-    openGraph: {
-      type: "website",
-      siteName: SITE_CONFIG.name,
-    },
     additionalMetaTags: [
       {
         name: "keywords",
         content: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
       },
-      {
-        name: "author",
-        content: SITE_CONFIG.author.name,
-      },
-      {
-        name: "version",
-        content: SITE_CONFIG.version,
-      },
+      { name: "author", content: SITE_CONFIG.author.name },
     ],
   },
 } as const

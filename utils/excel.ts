@@ -4,10 +4,6 @@ import * as XLSX from "xlsx"
 
 import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR } from "./error"
 
-/**
- * Represents a row from eLSA Excel file
- * @interface ElsaxcelRow
- */
 interface ElsaxcelRow {
   Pvm: string | number
   Klo: string
@@ -18,10 +14,6 @@ interface ElsaxcelRow {
   Tulos: string
 }
 
-/**
- * Represents a processed row in MyClub format
- * @interface MyClubExcelRow
- */
 export interface MyClubExcelRow {
   Nimi: string
   Ryhmä: string
@@ -109,6 +101,10 @@ export const excelUtils = {
     return `${date}${year} ${time}:00`
   },
 
+  formatTime(date: Date): string {
+    return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
+  },
+
   calculateEventTimes(
     gameTime: string,
     meetingMinutes: number,
@@ -117,13 +113,10 @@ export const excelUtils = {
     const [hours, minutes] = gameTime.replace(" ", "").split(":").map(Number)
     const gameDate = new Date(2000, 0, 1, hours, minutes)
 
-    const startDate = new Date(gameDate.getTime() - meetingMinutes * 60000)
-    const startTime = `${startDate.getHours().toString().padStart(2, "0")}:${startDate.getMinutes().toString().padStart(2, "0")}`
-
-    const endDate = new Date(gameDate.getTime() + durationMinutes * 60000)
-    const endTime = `${endDate.getHours().toString().padStart(2, "0")}:${endDate.getMinutes().toString().padStart(2, "0")}`
-
-    return { startTime, endTime }
+    return {
+      startTime: this.formatTime(new Date(gameDate.getTime() - meetingMinutes * 60000)),
+      endTime: this.formatTime(new Date(gameDate.getTime() + durationMinutes * 60000)),
+    }
   },
 
   formatSeriesName(fullSeries: string): string {
@@ -132,24 +125,16 @@ export const excelUtils = {
   },
 
   formatEventName(series: string, homeTeam: string, awayTeam: string): string {
-    const formattedSeries = this.formatSeriesName(series)
-    return formattedSeries
-      ? `${formattedSeries} ${homeTeam} - ${awayTeam}`
-      : `${homeTeam} - ${awayTeam}`
+    const prefix = this.formatSeriesName(series)
+    return prefix ? `${prefix} ${homeTeam} - ${awayTeam}` : `${homeTeam} - ${awayTeam}`
   },
 
   createDescription(originalTime: string, meetingTime: number): string {
     const gameStart = `Peli alkaa: ${originalTime}`
-
-    if (meetingTime === 0) {
-      return gameStart
-    }
+    if (meetingTime === 0) return gameStart
 
     const [hours, minutes] = originalTime.replace(" ", "").split(":").map(Number)
-    const date = new Date(2000, 0, 1, hours, minutes)
-    date.setMinutes(date.getMinutes() - meetingTime)
-    const warmupTime = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`
-
-    return `Lämppä: ${warmupTime}, ${gameStart}`
+    const date = new Date(2000, 0, 1, hours, minutes - meetingTime)
+    return `Lämppä: ${this.formatTime(date)}, ${gameStart}`
   },
 }

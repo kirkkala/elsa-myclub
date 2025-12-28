@@ -58,12 +58,6 @@ export default function SectionAccordion({
 }: SectionAccordionProps) {
   const sectionId = id || generateId(title)
 
-  const titleElement = (compact?: boolean) => (
-    <Typography variant="h2" sx={compact ? { m: 0 } : undefined}>
-      {title}
-    </Typography>
-  )
-
   // Initialize expanded state, checking URL hash on client
   const [expanded, setExpanded] = useState(() => {
     if (typeof window === "undefined") {
@@ -108,7 +102,9 @@ export default function SectionAccordion({
         expandIcon={expandable ? <ExpandMoreIcon /> : undefined}
         sx={!expandable ? { cursor: "default !important" } : undefined}
       >
-        {titleElement(true)}
+        <Typography variant="h2" sx={{ m: 0 }}>
+          {title}
+        </Typography>
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>
     </Accordion>
