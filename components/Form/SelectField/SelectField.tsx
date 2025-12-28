@@ -23,7 +23,6 @@ export default function SelectField({
   description,
   Icon,
   options,
-  required,
   defaultValue,
   value,
   placeholder,
@@ -107,7 +106,6 @@ export default function SelectField({
             name={id}
             label={label}
             placeholder={placeholder}
-            required={required}
             helperText={description}
             slotProps={{
               input: {

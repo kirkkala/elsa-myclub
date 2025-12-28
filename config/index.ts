@@ -33,23 +33,12 @@ const SEO_CONFIG = {
     },
   },
   defaults: {
-    openGraph: {
-      type: "website",
-      siteName: SITE_CONFIG.name,
-    },
     additionalMetaTags: [
       {
         name: "keywords",
         content: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
       },
-      {
-        name: "author",
-        content: SITE_CONFIG.author.name,
-      },
-      {
-        name: "version",
-        content: SITE_CONFIG.version,
-      },
+      { name: "author", content: SITE_CONFIG.author.name },
     ],
   },
 } as const

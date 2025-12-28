@@ -16,14 +16,7 @@ interface PreviewProps {
 }
 
 export default function Preview({ data }: PreviewProps) {
-  if (!data.length) {
-    return null
-  }
-
-  const getRowKey = (row: MyClubExcelRow): string => {
-    const id = `${row.Alkaa}-${row.Päättyy}`.replace(/\W/g, "_")
-    return id
-  }
+  if (!data.length) return null
 
   return (
     <Box
@@ -58,7 +51,7 @@ export default function Preview({ data }: PreviewProps) {
           </TableHead>
           <TableBody>
             {data.map((row, index) => (
-              <TableRow key={getRowKey(row)} hover>
+              <TableRow key={`${row.Alkaa}-${row.Päättyy}`} hover>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{row.Nimi}</TableCell>
                 <TableCell>{row.Alkaa}</TableCell>

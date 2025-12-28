@@ -115,31 +115,14 @@ export default function UploadForm() {
 
   const buildFormData = (files: File[], values: FormValues): FormData => {
     const formData = new FormData()
-
-    // Append all files
     files.forEach((file) => {
       formData.append("files", file)
     })
-
-    if (values.year) {
-      formData.append("year", values.year)
-    }
-    if (values.duration) {
-      formData.append("duration", values.duration)
-    }
-    if (values.meetingTime) {
-      formData.append("meetingTime", values.meetingTime)
-    }
-    if (values.group) {
-      formData.append("group", values.group)
-    }
-    if (values.eventType) {
-      formData.append("eventType", values.eventType)
-    }
-    if (values.registration) {
-      formData.append("registration", values.registration)
-    }
-
+    Object.entries(values).forEach(([key, value]) => {
+      if (key !== "files" && value && typeof value === "string") {
+        formData.append(key, value)
+      }
+    })
     return formData
   }
 
