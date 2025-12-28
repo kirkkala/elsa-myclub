@@ -61,9 +61,6 @@ const theme = createTheme({
       fontWeight: 500,
     },
   },
-  shape: {
-    borderRadius: 6,
-  },
   components: {
     MuiCssBaseline: {
       styleOverrides: {

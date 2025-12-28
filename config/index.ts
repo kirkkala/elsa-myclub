@@ -20,11 +20,11 @@ const SITE_CONFIG = {
   },
 } as const
 
-// SEO Configuration
+// Search engine optimization
 const SEO_CONFIG = {
   pages: {
     home: {
-      title: SITE_CONFIG.name,
+      title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
       description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
       openGraph: {
         title: `${SITE_CONFIG.name} - Helpota jojotöitä`,
