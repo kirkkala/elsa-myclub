@@ -12,8 +12,8 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 
 ### Prerequisites
 
-- Node.js (version in `.nvmrc`)
-- npm
+- **Node.js** (version in `.nvmrc`, e.g. `nvm use`)
+- **pnpm** – install with `npm install -g pnpm` or enable [Corepack](https://nodejs.org/api/corepack.html): `corepack enable`
 
 ## Project Structure
 
@@ -53,8 +53,8 @@ The application converts eLSA basketball schedule Excel files to MyClub-compatib
 
 ```bash
 nvm use              # Use correct Node version
-npm install          # Install dependencies
-npm run dev          # Start dev server at http://localhost:3000
+pnpm install         # Install dependencies
+pnpm dev             # Start dev server at http://localhost:3000
 ```
 
 ### Environment Variables (Optional)
@@ -67,23 +67,23 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000  # Defaults to production URL
 ### Available Scripts
 
 ```bash
-npm run dev            # Development server
-npm run build          # Production build
-npm run start          # Production server
-npm run lint           # Check linting
-npm run lint:fix       # Fix linting errors
-npm test               # Run tests
-npm run test:watch     # Tests in watch mode
-npm run test:coverage  # Coverage report
-npm run format         # Format with Prettier
-npm run format:check   # Check formatting
+pnpm dev              # Development server
+pnpm build            # Production build
+pnpm start            # Production server
+pnpm lint             # Check linting
+pnpm lint:fix         # Fix linting errors
+pnpm test             # Run tests
+pnpm test:watch       # Tests in watch mode
+pnpm test:coverage    # Coverage report
+pnpm format           # Format with Prettier
+pnpm format:check     # Check formatting
 ```
 
 ### Versioning
 
 Follows [Semantic Versioning](https://semver.org/). To release a new version:
 
-1. Update `version` in `package.json` and run `npm i`
+1. Update `version` in `package.json` and run `pnpm install`
 2. Add entry to `CHANGELOG.md` (in Finnish)
 3. Commit: `Bump version to x.x.x`
 
@@ -104,9 +104,9 @@ vercel --prod
 Tests run automatically on GitHub Actions. Local testing:
 
 ```bash
-npm test               # All tests
-npm run test:watch     # Watch mode
-npm run test:coverage  # Coverage report
+pnpm test              # All tests
+pnpm test:watch        # Watch mode
+pnpm test:coverage      # Coverage report
 ```
 
 ## Code Quality
@@ -114,9 +114,9 @@ npm run test:coverage  # Coverage report
 ESLint is configured with strict TypeScript rules and React Compiler support:
 
 ```bash
-npm run lint           # Check for issues
-npm run lint:fix       # Auto-fix issues
-npm run format         # Format with Prettier
+pnpm lint              # Check for issues
+pnpm lint:fix          # Auto-fix issues
+pnpm format            # Format with Prettier
 ```
 
 Configuration is in `eslint.config.js` using the flat config format.

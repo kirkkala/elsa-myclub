@@ -3,6 +3,7 @@
   "version": "2.0.1",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.27.0",
   "author": {
     "name": "Timo Kirkkala",
     "email": "timo.kirkkala@gmail.com",
@@ -18,9 +19,9 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "node --no-deprecation ./node_modules/.bin/jest",
-    "test:watch": "node --no-deprecation ./node_modules/.bin/jest --watch",
-    "test:coverage": "node --no-deprecation ./node_modules/.bin/jest --coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
