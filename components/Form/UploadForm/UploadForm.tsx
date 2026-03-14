@@ -152,7 +152,7 @@ export default function UploadForm() {
     }
   }
 
-  const handleDownload = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleDownload = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setLoading(true)
     setError("")

@@ -25,7 +25,7 @@ const SEO_CONFIG = {
   title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
   description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
   openGraph: {
-    title: `${SITE_CONFIG.name}`,
+    title: SITE_CONFIG.name,
     description: "Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
     image: `${SITE_CONFIG.baseUrl}/images/elsa-myclub-og.png`,
   },
