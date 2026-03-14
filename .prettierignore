@@ -6,9 +6,18 @@ out
 
 # Dependencies
 node_modules
+.pnpm-store
 
 # Coverage reports
 coverage
+
+# Lock files (auto-generated)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Config (often hand-formatted)
+eslint.config.js
 
 # Other
 .git

@@ -85,6 +85,6 @@ export default [
     languageOptions: { sourceType: "module", globals: { ...globals.node } },
   },
   {
-    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "dist/**", "eslint.config.js"],
+    ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "dist/**", "eslint.config.js", ".pnpm-store/**", "pnpm-lock.yaml"],
   },
 ]

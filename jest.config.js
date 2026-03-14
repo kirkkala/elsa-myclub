@@ -12,6 +12,8 @@ const customJestConfig = {
   },
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
+    "<rootDir>/pnpm-lock.yaml",
+    "<rootDir>/.pnpm-store/",
     "<rootDir>/.next/",
     "<rootDir>/__tests__/mocks/",
   ],
