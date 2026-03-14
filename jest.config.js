@@ -10,13 +10,7 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },
-  testPathIgnorePatterns: [
-    "<rootDir>/node_modules/",
-    "<rootDir>/pnpm-lock.yaml",
-    "<rootDir>/.pnpm-store/",
-    "<rootDir>/.next/",
-    "<rootDir>/__tests__/mocks/",
-  ],
+  testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
 }
 
 export default createJestConfig(customJestConfig)

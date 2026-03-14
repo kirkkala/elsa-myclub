@@ -57,9 +57,6 @@ importers:
       '@biomejs/biome':
         specifier: ^1.9.0
         version: 1.9.4
-      '@jest/test-sequencer':
-        specifier: ^30.2.0
-        version: 30.3.0
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1

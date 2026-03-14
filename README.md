@@ -70,13 +70,11 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000  # Defaults to production URL
 pnpm dev              # Development server
 pnpm build            # Production build
 pnpm start            # Production server
-pnpm lint             # Check linting
-pnpm lint:fix         # Fix linting errors
+pnpm lint             # Check lint and format
+pnpm lint:fix         # Fix and format
 pnpm test             # Run tests
 pnpm test:watch       # Tests in watch mode
 pnpm test:coverage    # Coverage report
-pnpm format           # Format and fix
-pnpm format:check     # Check formatting
 ```
 
 ### Versioning
@@ -115,8 +113,7 @@ Biome handles linting and formatting:
 
 ```bash
 pnpm lint              # Check for issues
-pnpm lint:fix          # Auto-fix issues
-pnpm format            # Format code
+pnpm lint:fix          # Auto-fix and format
 ```
 
 Configuration is in `biome.json`.
