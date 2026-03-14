@@ -14,12 +14,7 @@ import SectionAccordion from "../../components/SectionAccordion/SectionAccordion
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
-  title: `Dokumentaatio`,
-  description: "Ohjeet ja tietoa eLSA → MyClub sovelluksen käytöstä",
-  openGraph: {
-    title: `${SITE_CONFIG.name} dokumentaatio`,
-    description: "Lue käyttöohjeet ja tietoa sovelluksen käytöstä",
-  },
+  title: "Dokumentaatio",
 }
 
 export default function Docs() {

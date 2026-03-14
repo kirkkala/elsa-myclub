@@ -7,10 +7,10 @@ import { ThemeRegistry } from "../theme"
 
 export const metadata: Metadata = {
   title: {
-    default: SEO_CONFIG.pages.home.title,
-    template: `%s | ${SEO_CONFIG.pages.home.title}`,
+    default: SEO_CONFIG.title,
+    template: `%s | ${SEO_CONFIG.title}`,
   },
-  description: SEO_CONFIG.pages.home.description,
+  description: SEO_CONFIG.description,
   robots: {
     index: true,
     follow: true,
@@ -24,22 +24,19 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: SEO_CONFIG.pages.home.openGraph.title,
-    title: SEO_CONFIG.pages.home.openGraph.title,
-    description: SEO_CONFIG.pages.home.openGraph.description,
+    siteName: SEO_CONFIG.openGraph.title,
+    title: SEO_CONFIG.openGraph.title,
+    description: SEO_CONFIG.openGraph.description,
+    images: [{ url: SEO_CONFIG.openGraph.image }],
   },
   twitter: {
     card: "summary_large_image",
-    title: SEO_CONFIG.pages.home.openGraph.title,
-    description: SEO_CONFIG.pages.home.openGraph.description,
+    title: SEO_CONFIG.openGraph.title,
+    description: SEO_CONFIG.openGraph.description,
+    images: [SEO_CONFIG.openGraph.image],
   },
-  keywords: SEO_CONFIG.defaults.additionalMetaTags.find((tag) => tag.name === "keywords")?.content,
-  authors: [
-    {
-      name:
-        SEO_CONFIG.defaults.additionalMetaTags.find((tag) => tag.name === "author")?.content || "",
-    },
-  ],
+  keywords: SEO_CONFIG.keywords,
+  authors: [{ name: SEO_CONFIG.author }],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
