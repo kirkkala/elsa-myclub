@@ -45,7 +45,7 @@ const PAGES = [
   },
   {
     path: "/docs",
-    label: "Dokumentaatio",
+    label: "Tietoja",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
   {
