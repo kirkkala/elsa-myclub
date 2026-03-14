@@ -4,6 +4,13 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.0.2 (UNRELEASED)
+
+- OG Image ja jakotoiminnallisuuden metatiedot 🖼️
+- Kevätsiivous
+  - eslint → [biome](https://biomejs.dev/)) 🧹🤖
+  - npm → [pnpm](https://pnpm.io/pnpm-vs-npm) ⚡️🤓
+
 ## v2.0.1 (28.12.2025)
 
 - Toteutuksen joulusiivous 🧹🦾

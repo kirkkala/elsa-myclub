@@ -12,15 +12,9 @@ import Footer from "../../components/Footer/Footer"
 import Header from "../../components/Header/Header"
 import Layout from "../../components/Layout/Layout"
 import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
-import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
   title: "Versiohistoria",
-  description: `${SITE_CONFIG.name} versiohistoria ja viimeisimmät päivitykset`,
-  openGraph: {
-    title: `${SITE_CONFIG.name} - versiohistoria`,
-    description: "Versiohistoria ja viimeisimmät päivitykset",
-  },
 }
 
 async function getChangelogContent() {

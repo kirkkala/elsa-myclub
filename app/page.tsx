@@ -8,8 +8,8 @@ export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: SEO_CONFIG.pages.home.title,
-    description: SEO_CONFIG.pages.home.description,
+    name: SEO_CONFIG.title,
+    description: SEO_CONFIG.description,
     applicationCategory: "UtilityApplication",
     operatingSystem: "Any",
     offers: {

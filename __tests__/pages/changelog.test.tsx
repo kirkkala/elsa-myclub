@@ -1,5 +1,5 @@
 import fs from "fs"
-import path from "path"
+import type path from "path"
 
 import { render, screen } from "@testing-library/react"
 

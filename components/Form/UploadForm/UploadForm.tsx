@@ -12,7 +12,7 @@ import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
-import { useState, useCallback } from "react"
+import { useCallback, useState } from "react"
 
 import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
@@ -69,7 +69,6 @@ export default function UploadForm() {
         void fetchPreview(files, formValues)
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [formValues]
   )
 
@@ -152,7 +151,7 @@ export default function UploadForm() {
     }
   }
 
-  const handleDownload = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleDownload = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setLoading(true)
     setError("")

@@ -20,27 +20,17 @@ const SITE_CONFIG = {
   },
 } as const
 
-// Search engine optimization
+// Search engine optimization (same metadata for all pages)
 const SEO_CONFIG = {
-  pages: {
-    home: {
-      title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
-      description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
-      openGraph: {
-        title: `${SITE_CONFIG.name} - Helpota jojotöitä`,
-        description: "Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
-      },
-    },
+  title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
+  description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
+  openGraph: {
+    title: SITE_CONFIG.name,
+    description: "Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
+    image: `${SITE_CONFIG.baseUrl}/images/elsa-myclub-og.png`,
   },
-  defaults: {
-    additionalMetaTags: [
-      {
-        name: "keywords",
-        content: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
-      },
-      { name: "author", content: SITE_CONFIG.author.name },
-    ],
-  },
+  keywords: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
+  author: SITE_CONFIG.author.name,
 } as const
 
 // Pages Configuration (single source of truth for navigation and sitemap)
@@ -52,7 +42,7 @@ const PAGES = [
   },
   {
     path: "/docs",
-    label: "Lisätietoja ja käyttöohjeet",
+    label: "Dokumentaatio",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
   {
