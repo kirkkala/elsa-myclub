@@ -4,7 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
-## v2.0.2 (UNRELEASED)
+## v2.0.3 (14.3.2026)
+
+- OG metatag url ja type mukaan 🔧
+
+## v2.0.2 (14.3.2026)
 
 - OG Image ja jakotoiminnallisuuden metatiedot 🖼️
 - Kevätsiivous

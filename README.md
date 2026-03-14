@@ -81,9 +81,9 @@ pnpm test:coverage    # Coverage report
 
 Follows [Semantic Versioning](https://semver.org/). To release a new version:
 
-1. Update `version` in `package.json` and run `pnpm install`
+1. Update `version` in `package.json`
 2. Add entry to `CHANGELOG.md` (in Finnish)
-3. Commit: `Bump version to x.x.x`
+3. Commit: `Bump to version x.x.x`
 
 ## Configuration
 
