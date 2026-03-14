@@ -1,8 +1,8 @@
-import { Buffer } from "buffer"
+import type { Buffer } from "buffer"
 
 import * as XLSX from "xlsx"
 
-import { EXCEL_VALIDATION_ERROR, EXCEL_DATE_FORMAT_ERROR } from "./error"
+import { EXCEL_DATE_FORMAT_ERROR, EXCEL_VALIDATION_ERROR } from "./error"
 
 interface ElsaxcelRow {
   Pvm: string | number
@@ -33,8 +33,8 @@ export const excelUtils = {
     const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
 
     const year = String(fields.year || new Date().getFullYear())
-    const duration = parseInt(fields.duration || "75", 10)
-    const meetingTime = parseInt(fields.meetingTime || "0", 10)
+    const duration = Number.parseInt(fields.duration || "75", 10)
+    const meetingTime = Number.parseInt(fields.meetingTime || "0", 10)
 
     const processedData: MyClubExcelRow[] = jsonData
       .map((row: ElsaxcelRow): MyClubExcelRow | null => {

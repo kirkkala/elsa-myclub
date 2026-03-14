@@ -45,7 +45,6 @@ describe("SelectField", () => {
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         target: expect.objectContaining({
           name: "test",
           value: "opt2",

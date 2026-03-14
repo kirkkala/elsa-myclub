@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, within } from "@testing-library/react"
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react"
 import "@testing-library/jest-dom"
 
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
@@ -56,7 +56,6 @@ const dropFilesAndWaitForPreview = async (files: File[]) => {
 
 const mockDownloadEnvironment = () => {
   const mockClick = jest.fn()
-  /* eslint-disable @typescript-eslint/no-deprecated */
   const originalCreateElement = document.createElement.bind(document)
   const originalAppendChild = document.body.appendChild.bind(document.body)
 
@@ -75,7 +74,6 @@ const mockDownloadEnvironment = () => {
       document.body.appendChild = originalAppendChild
     },
   }
-  /* eslint-enable @typescript-eslint/no-deprecated */
 }
 
 describe("UploadForm", () => {

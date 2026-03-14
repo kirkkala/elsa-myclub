@@ -4,9 +4,9 @@ import Autocomplete from "@mui/material/Autocomplete"
 import Box from "@mui/material/Box"
 import InputAdornment from "@mui/material/InputAdornment"
 import TextField from "@mui/material/TextField"
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
 
-import { BaseFormFieldProps, SelectOption } from "../types"
+import type { BaseFormFieldProps, SelectOption } from "../types"
 
 interface SelectFieldProps extends BaseFormFieldProps {
   options: SelectOption[]

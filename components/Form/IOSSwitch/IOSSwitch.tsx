@@ -1,7 +1,7 @@
 "use client"
 
-import { styled } from "@mui/material/styles"
 import Switch from "@mui/material/Switch"
+import { styled } from "@mui/material/styles"
 
 const IOSSwitch = styled(Switch)(({ theme }) => ({
   width: 42,

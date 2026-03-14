@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 
 import Docs from "../../app/docs/page"
 import { testPageElements } from "../shared/page-elements.test"

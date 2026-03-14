@@ -9,7 +9,6 @@ jest.mock("xlsx", () => ({
 }))
 
 const mockRead = jest.mocked(XLSX.read)
-// eslint-disable-next-line @typescript-eslint/unbound-method
 const mockSheetToJson = jest.mocked(XLSX.utils.sheet_to_json)
 
 // Test helpers
@@ -205,7 +204,6 @@ describe("Excel utilities", () => {
       setupMockXLSX([mockRow()])
 
       const normalizeDateSpy = jest.spyOn(excelUtils, "normalizeDate").mockImplementation(() => {
-        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw "string error"
       })
 
