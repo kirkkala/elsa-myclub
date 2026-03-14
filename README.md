@@ -8,7 +8,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 - **Material UI 7** (MUI) for components and styling
 - **xlsx** (SheetJS) for Excel processing
 - **Jest** + React Testing Library
-- **ESLint** with TypeScript and React Compiler plugins
+- **Biome** for linting and formatting
 
 ### Prerequisites
 
@@ -75,7 +75,7 @@ pnpm lint:fix         # Fix linting errors
 pnpm test             # Run tests
 pnpm test:watch       # Tests in watch mode
 pnpm test:coverage    # Coverage report
-pnpm format           # Format with Prettier
+pnpm format           # Format and fix
 pnpm format:check     # Check formatting
 ```
 
@@ -111,15 +111,15 @@ pnpm test:coverage      # Coverage report
 
 ## Code Quality
 
-ESLint is configured with strict TypeScript rules and React Compiler support:
+Biome handles linting and formatting:
 
 ```bash
 pnpm lint              # Check for issues
 pnpm lint:fix          # Auto-fix issues
-pnpm format            # Format with Prettier
+pnpm format            # Format code
 ```
 
-Configuration is in `eslint.config.js` using the flat config format.
+Configuration is in `biome.json`.
 
 ## Credits
 
