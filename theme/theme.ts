@@ -81,6 +81,10 @@ const theme = createTheme({
         ul: {
           paddingLeft: "1.25rem",
           marginLeft: 0,
+          marginTop: ".25rem",
+        },
+        h3: {
+          marginBottom: 0,
         },
       },
     },

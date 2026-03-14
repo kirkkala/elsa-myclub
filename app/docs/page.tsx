@@ -14,7 +14,7 @@ import SectionAccordion from "../../components/SectionAccordion/SectionAccordion
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
-  title: "Dokumentaatio",
+  title: "Tietoja",
 }
 
 export default function Docs() {

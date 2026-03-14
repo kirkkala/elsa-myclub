@@ -27,6 +27,9 @@ const SEO_CONFIG = {
   openGraph: {
     title: SITE_CONFIG.name,
     description: "Muunna eLSA:n excel tiedostot MyClub-yhteensopiviksi parilla klikkauksella",
+    url: SITE_CONFIG.baseUrl,
+    type: "website",
+    siteName: SITE_CONFIG.name,
     image: `${SITE_CONFIG.baseUrl}/images/elsa-myclub-og.png`,
   },
   keywords: "HNMKY, eLSA, MyClub, basketball, koripallo, excel, converter, muunnin",
@@ -42,7 +45,7 @@ const PAGES = [
   },
   {
     path: "/docs",
-    label: "Dokumentaatio",
+    label: "Tietoja",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
   {

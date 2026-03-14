@@ -23,10 +23,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    type: "website",
-    siteName: SEO_CONFIG.openGraph.title,
     title: SEO_CONFIG.openGraph.title,
     description: SEO_CONFIG.openGraph.description,
+    url: SEO_CONFIG.openGraph.url,
+    type: SEO_CONFIG.openGraph.type,
+    siteName: SEO_CONFIG.openGraph.siteName,
     images: [{ url: SEO_CONFIG.openGraph.image }],
   },
   twitter: {
