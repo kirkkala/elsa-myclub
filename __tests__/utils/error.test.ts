@@ -7,7 +7,7 @@ import {
   logError,
 } from "@/utils/error"
 
-// Store original console.error to work with jest.setup.js
+// Store original console.error to work with jest.setup.ts
 const originalConsoleError = console.error
 const mockConsoleError = jest.fn()
 

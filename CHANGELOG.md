@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.0.5 (29.3.2026)
+
+- Pure typescript 🤓👨🏻‍💻
+- npm tieoturvapäivitykset 🔐
+
 ## v2.0.4 (21.3.2026)
 
 - NextJS tietoturvapäivitys 🔐
