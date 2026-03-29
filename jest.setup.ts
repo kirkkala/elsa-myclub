@@ -17,7 +17,7 @@ jest.mock("next/navigation", () => ({
 const originalConsoleError = console.error
 
 beforeAll(() => {
-  console.error = (...args) => {
+  console.error = (...args: unknown[]) => {
     // Check if this is the jsdom navigation error by looking at the error message
     const errorString = String(args[0])
 
