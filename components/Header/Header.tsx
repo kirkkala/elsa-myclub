@@ -40,6 +40,7 @@ export default function Header() {
           alt=""
           width={65}
           height={40}
+          priority
           style={{ objectFit: "contain", backgroundColor: "#004176", padding: 8, borderRadius: 6 }}
         />
         <MagicIcon
@@ -54,6 +55,7 @@ export default function Header() {
           alt=""
           width={50}
           height={50}
+          priority
           style={{ objectFit: "contain" }}
         />
       </Box>
