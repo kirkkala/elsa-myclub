@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.0.6 (11.4.2026)
+
+- Nextjs security update [CVE-2026-23869](https://vercel.com/changelog/summary-of-cve-2026-23869) 👮🏻‍♂️
+
 ## v2.0.5 (29.3.2026)
 
 - Pure typescript 🤓👨🏻‍💻
