@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.0.7 (22.5.2026)
+
+- Joukkueet kaudelle 2026/2027 🫂
+- NextJS (`16.2.6`) ja React tietoturvapäivitykset 🔐
+
 ## v2.0.6 (11.4.2026)
 
 - Nextjs security update [CVE-2026-23869](https://vercel.com/changelog/summary-of-cve-2026-23869) 👮🏻‍♂️
