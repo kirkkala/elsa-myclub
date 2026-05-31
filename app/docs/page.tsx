@@ -15,10 +15,14 @@ export default function Docs() {
   return (
     <Layout>
       <Box component="section" sx={{ mb: 4 }}>
-        <Typography variant="h2" component="h2">
+        <Typography variant="h1" component="h1">
           Käyttöohjeet
         </Typography>
-        <Typography variant="h3">1. Hae ottelutiedosto eLSA:sta</Typography>
+        <Typography>
+          Käyttöohjeet sovelluksen käyttöön. Seuraa alla listatut vaiheet yksitellen muuntaaksesi
+          eLSA:n excel tiedostot MyClub-yhteensopiviksi.
+        </Typography>
+        <Typography variant="h2">1. Hae ottelutiedosto eLSA:sta</Typography>
         <Typography>
           Kirjaudu{" "}
           <MuiLink href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
@@ -40,7 +44,7 @@ export default function Docs() {
           />
         </Box>
 
-        <Typography variant="h3">2. Vie tiedosto(t) sovellukseen</Typography>
+        <Typography variant="h2">2. Vie tiedosto(t) sovellukseen</Typography>
         <Typography>
           Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja pudota tai valitse eLSA:n
           excel-tiedosto niille varattuun kohtaan. Voit halutessasi lisätä useammankin tiedoston.
@@ -50,7 +54,7 @@ export default function Docs() {
           jättää tiedostoon, muuntaja ei käsittelee niitä.
         </Typography>
 
-        <Typography variant="h3">3. Säädä asetukset</Typography>
+        <Typography variant="h2">3. Säädä asetukset</Typography>
         <Box component="ul">
           <li>
             <strong>Joukkue</strong>: Valitse listalta tai kirjoita nimi kuten se on MyClubissa.
@@ -72,14 +76,14 @@ export default function Docs() {
           </li>
         </Box>
 
-        <Typography variant="h3">4. Esikatsele ja lataa</Typography>
+        <Typography variant="h2">4. Esikatsele ja lataa</Typography>
         <Typography>
           Tarkastele muunnosta esikatelussa, ja paina &quot;Lataa Excel&quot; saadaksesi
           ottelutiedoston omalle tietokoneellesi. Voit tarvittaessa muokata tiedostoa lataamisen
           jälkeen.
         </Typography>
 
-        <Typography variant="h3">5. Tuo ottelutiedosto MyClubiin</Typography>
+        <Typography variant="h2">5. Tuo ottelutiedosto MyClubiin</Typography>
         <Typography>
           Kirjaudu MyClubiin ja siirry kohtaan &quot;Tapahtumien hallinta&quot; → &quot;Tuo
           tapahtumia&quot;.

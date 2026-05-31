@@ -77,6 +77,7 @@ const navTabsSx = {
 
 export default function Header() {
   const pathname = usePathname()
+  const isHomePage = pathname === "/"
   const isChangelogPage = pathname === CHANGELOG_PATH
   const activeTab = PAGES.some((page) => page.path === pathname) ? pathname : false
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -132,7 +133,7 @@ export default function Header() {
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexGrow: 1, minWidth: 0 }}>
               <Typography
                 variant="h1"
-                component="h1"
+                component={isHomePage ? "h1" : "div"}
                 noWrap
                 sx={{ m: 0, fontSize: { xs: "1rem", sm: "1.4rem" } }}
               >

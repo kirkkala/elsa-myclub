@@ -22,7 +22,7 @@ const SITE_CONFIG = {
 
 // Search engine optimization (same metadata for all pages)
 const SEO_CONFIG = {
-  title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
+  title: `${SITE_CONFIG.name} | HNMKY`,
   description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
   openGraph: {
     title: SITE_CONFIG.name,

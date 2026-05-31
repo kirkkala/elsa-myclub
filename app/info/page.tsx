@@ -18,7 +18,7 @@ export default function Info() {
   return (
     <Layout>
       <Box component="section" sx={{ mb: 4 }}>
-        <Typography variant="h2" component="h2">
+        <Typography variant="h1" component="h1">
           Tietoa sovelluksesta
         </Typography>
         <Typography>

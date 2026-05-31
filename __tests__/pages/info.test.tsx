@@ -4,7 +4,7 @@ import Info from "../../app/info/page"
 import { testPageElements } from "../shared/page-elements.test"
 
 describe("Info Page", () => {
-  testPageElements(Info)
+  testPageElements(Info, {}, "/info")
 
   it("renders content sections", () => {
     render(<Info />)

@@ -4,7 +4,7 @@ import Docs from "../../app/docs/page"
 import { testPageElements } from "../shared/page-elements.test"
 
 describe("Docs Page", () => {
-  testPageElements(Docs)
+  testPageElements(Docs, {}, "/docs")
 
   it("renders the instructions section", () => {
     render(<Docs />)

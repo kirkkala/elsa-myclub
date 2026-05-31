@@ -1,12 +1,22 @@
 import { render, screen } from "@testing-library/react"
+import { usePathname } from "next/navigation"
 
 import { SITE_CONFIG } from "../../config"
 
 export const testPageElements = (
   PageComponent: React.ComponentType<Record<string, unknown>>,
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
+  pathname = "/"
 ) => {
   describe("Generic Page Elements", () => {
+    beforeEach(() => {
+      ;(usePathname as jest.Mock).mockReturnValue(pathname)
+    })
+
+    afterEach(() => {
+      ;(usePathname as jest.Mock).mockReturnValue("/")
+    })
+
     it("renders header, footer, and semantic structure", () => {
       render(<PageComponent {...props} />)
 
