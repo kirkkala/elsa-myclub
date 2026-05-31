@@ -151,7 +151,7 @@ export default function Header() {
                   }}
                 />
               ) : (
-                <Link href={CHANGELOG_PATH}>
+                <Link href={CHANGELOG_PATH} style={{ textDecoration: "none" }}>
                   <Chip
                     label={SITE_CONFIG.version}
                     size="small"

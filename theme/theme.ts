@@ -72,10 +72,9 @@ const theme = createTheme({
         },
         a: {
           color: hnmkyRed,
-          textDecoration: "none",
+          textDecorationColor: alpha(hnmkyRed, 0.4),
           "&:hover": {
-            textDecoration: "underline",
-            textDecorationStyle: "dotted",
+            textDecorationColor: hnmkyRed,
           },
         },
         ul: {
@@ -141,19 +140,6 @@ const theme = createTheme({
           backgroundColor: paleGray,
           fontWeight: 700,
           color: mediumGray,
-        },
-      },
-    },
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          color: hnmkyRed,
-          fontWeight: 500,
-          textDecoration: "none",
-          "&:hover": {
-            textDecoration: "underline",
-            textDecorationStyle: "dotted",
-          },
         },
       },
     },
