@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps) {
         <Container
           maxWidth={false}
           sx={{
-            maxWidth: 600,
+            maxWidth: 780,
             py: 3,
           }}
         >
