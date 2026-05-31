@@ -3,15 +3,14 @@ import path from "path"
 import process from "process"
 
 import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import matter from "gray-matter"
 import type { Metadata } from "next"
 import { remark } from "remark"
 import html from "remark-html"
 
 import Footer from "../../components/Footer/Footer"
-import Header from "../../components/Header/Header"
 import Layout from "../../components/Layout/Layout"
-import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 
 export const metadata: Metadata = {
   title: "Versiohistoria",
@@ -22,10 +21,7 @@ async function getChangelogContent() {
   const fileContents = fs.readFileSync(changelogPath, "utf8")
   const { content } = matter(fileContents)
 
-  // Increase heading level by one to have better semantics on the page
-  const shiftedContent = content.replace(/^(#+)/gm, "#$1")
-
-  const processedContent = await remark().use(html).process(shiftedContent)
+  const processedContent = await remark().use(html).process(content)
   return processedContent.toString()
 }
 
@@ -34,10 +30,10 @@ export default async function Changelog() {
 
   return (
     <Layout>
-      <Header />
-      <SectionAccordion title="Versiohistoria" expandable={false}>
-        <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
-      </SectionAccordion>
+      <Typography variant="h1" component="h1">
+        Versiohistoria
+      </Typography>
+      <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
       <Footer />
     </Layout>
   )

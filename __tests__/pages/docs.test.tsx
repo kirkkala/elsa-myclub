@@ -1,35 +1,30 @@
-import { fireEvent, render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 
 import Docs from "../../app/docs/page"
 import { testPageElements } from "../shared/page-elements.test"
 
 describe("Docs Page", () => {
-  testPageElements(Docs)
+  testPageElements(Docs, {}, "/docs")
 
-  it("renders content sections", () => {
+  it("renders the instructions section", () => {
     render(<Docs />)
 
-    expect(screen.getByText("Tietoja sovelluksesta")).toBeInTheDocument()
-    expect(screen.getByText("Käyttöohjeet")).toBeInTheDocument()
-    expect(screen.getByText("Lisätietoja ja palaute")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Käyttöohjeet" })).toBeInTheDocument()
+    expect(screen.getByText("1. Hae ottelutiedosto eLSA:sta")).toBeInTheDocument()
   })
 
-  it("includes external links when accordion is expanded", () => {
+  it("includes external links", () => {
     render(<Docs />)
 
-    // First expand the "Tietoja sovelluksesta" accordion to access its links
-    const tietojaButton = screen.getByRole("button", { name: /Tietoja sovelluksesta/i })
-    fireEvent.click(tietojaButton)
-
-    // External links should be present after expanding the accordion
-    expect(screen.getByRole("link", { name: /eLSA/i })).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /MyClub/i })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "elsa.basket.fi" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Tapahtumien tuonti" })).toBeInTheDocument()
   })
 
   it("has footer with author info", () => {
     render(<Docs />)
 
-    expect(screen.getByText(/Timo Kirkkala/)).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /GitHub/i })).toBeInTheDocument()
+    const footer = screen.getByRole("contentinfo")
+    expect(within(footer).getByText(/Timo Kirkkala/)).toBeInTheDocument()
+    expect(within(footer).getByRole("link", { name: /GitHub/i })).toBeInTheDocument()
   })
 })

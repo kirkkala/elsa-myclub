@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.1.0 (31.5.2026)
+
+- Käyttöliittymäuudistus, header/valikko 🎨
+- Käyttöohjeet omalle sivulle 📚
+
 ## v2.0.7 (22.5.2026)
 
 - Joukkueet kaudelle 2026/2027 🫂

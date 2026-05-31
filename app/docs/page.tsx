@@ -1,64 +1,28 @@
-import GitHubIcon from "@mui/icons-material/GitHub"
-import HistoryIcon from "@mui/icons-material/History"
 import Box from "@mui/material/Box"
-import Divider from "@mui/material/Divider"
 import MuiLink from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 import type { Metadata } from "next"
 import Image from "next/image"
 
 import Footer from "../../components/Footer/Footer"
-import Header from "../../components/Header/Header"
 import Layout from "../../components/Layout/Layout"
-import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
-import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
-  title: "Tietoja",
+  title: "Käyttöohjeet",
 }
 
 export default function Docs() {
   return (
     <Layout>
-      <Header />
-      <SectionAccordion title="Tietoja sovelluksesta" expandable defaultOpen={false}>
-        <Typography>
-          {SITE_CONFIG.name}n avulla voit muuntaa{" "}
-          <MuiLink href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
-            eLSA
-          </MuiLink>
-          :sta ladatun joukkeen sarjapelien Excel-tiedoston{" "}
-          <MuiLink href={SITE_CONFIG.links.myclub} target="_blank" rel="noopener noreferrer">
-            MyClub
-          </MuiLink>
-          :in kanssa yhteensopivaksi tuontitiedostoksi.
-        </Typography>
-        <Typography variant="h3">Kenelle sovellus on tarkoitettu?</Typography>
-        <Typography>
-          Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
-          taustahenkilölle ketkä siirtävät otteluita eLSA:sta MyClub:iin.
+      <Box component="section" sx={{ mb: 4 }}>
+        <Typography variant="h1" component="h1">
+          Käyttöohjeet
         </Typography>
         <Typography>
-          <MuiLink href="https://www.hnmky.fi" target="_blank" rel="noopener noreferrer">
-            Helsingin NMKY
-          </MuiLink>{" "}
-          seuran joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös
-          käsin niin myös muiden seurojen joukkueet voivat vapaasti hyödyntää sovellusta.
+          Käyttöohjeet sovelluksen käyttöön. Seuraa alla listatut vaiheet yksitellen muuntaaksesi
+          eLSA:n excel tiedostot MyClub-yhteensopiviksi.
         </Typography>
-        <Typography variant="h3">Tietosuojaseloste</Typography>
-        <Typography>
-          Sovellus ei kerää tietoa käyttäjistä tai sovellukseen ladatuista tiedostoista.
-          Sovellukseen ladattuja tiedostoja ei tallenneta muualle kuin käyttäjän omalle
-          tietokoneelle.
-        </Typography>
-        <Typography>
-          Sovelluksen käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto ei
-          tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
-        </Typography>
-      </SectionAccordion>
-
-      <SectionAccordion title="Käyttöohjeet" expandable defaultOpen={false}>
-        <Typography variant="h3">1. Hae ottelutiedosto eLSA:sta</Typography>
+        <Typography variant="h2">1. Hae ottelutiedosto eLSA:sta</Typography>
         <Typography>
           Kirjaudu{" "}
           <MuiLink href="https://elsa.basket.fi" target="_blank" rel="noopener noreferrer">
@@ -80,7 +44,7 @@ export default function Docs() {
           />
         </Box>
 
-        <Typography variant="h3">2. Vie tiedosto(t) sovellukseen</Typography>
+        <Typography variant="h2">2. Vie tiedosto(t) sovellukseen</Typography>
         <Typography>
           Siirry sovelluksen <MuiLink href="/">etusivulle</MuiLink> ja pudota tai valitse eLSA:n
           excel-tiedosto niille varattuun kohtaan. Voit halutessasi lisätä useammankin tiedoston.
@@ -90,7 +54,7 @@ export default function Docs() {
           jättää tiedostoon, muuntaja ei käsittelee niitä.
         </Typography>
 
-        <Typography variant="h3">3. Säädä asetukset</Typography>
+        <Typography variant="h2">3. Säädä asetukset</Typography>
         <Box component="ul">
           <li>
             <strong>Joukkue</strong>: Valitse listalta tai kirjoita nimi kuten se on MyClubissa.
@@ -112,14 +76,14 @@ export default function Docs() {
           </li>
         </Box>
 
-        <Typography variant="h3">4. Esikatsele ja lataa</Typography>
+        <Typography variant="h2">4. Esikatsele ja lataa</Typography>
         <Typography>
           Tarkastele muunnosta esikatelussa, ja paina &quot;Lataa Excel&quot; saadaksesi
           ottelutiedoston omalle tietokoneellesi. Voit tarvittaessa muokata tiedostoa lataamisen
           jälkeen.
         </Typography>
 
-        <Typography variant="h3">5. Tuo ottelutiedosto MyClubiin</Typography>
+        <Typography variant="h2">5. Tuo ottelutiedosto MyClubiin</Typography>
         <Typography>
           Kirjaudu MyClubiin ja siirry kohtaan &quot;Tapahtumien hallinta&quot; → &quot;Tuo
           tapahtumia&quot;.
@@ -135,37 +99,7 @@ export default function Docs() {
           </MuiLink>
           .
         </Typography>
-      </SectionAccordion>
-
-      <SectionAccordion title="Lisätietoja ja palaute" expandable defaultOpen={false}>
-        <Typography>
-          Löysitkö bugin tai keksit parannusehdotuksen?
-          <br />→ Laita viestiä Timolle osoitteeseen{" "}
-          <MuiLink href="mailto:timo.kirkkala@gmail.com">timo.kirkkala@gmail.com</MuiLink>.
-        </Typography>
-        <Typography>
-          Haluatko osallistua sovelluksen kehittämiseen?
-          <br />→ Katso koodit GitHubissa ja tee pull request.
-        </Typography>
-        <Divider />
-        <Box sx={{ mt: 2 }}>
-          <Typography sx={{ mb: 0.5 }}>
-            <HistoryIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
-            <MuiLink href="/changelog">Versiohistoria</MuiLink>
-          </Typography>
-          <Typography>
-            <GitHubIcon fontSize="small" sx={{ verticalAlign: "middle", mr: 0.5 }} />
-            Lähdekoodi{" "}
-            <MuiLink
-              href={SITE_CONFIG.links.githubAppRepoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHubissa
-            </MuiLink>
-          </Typography>
-        </Box>
-      </SectionAccordion>
+      </Box>
       <Footer />
     </Layout>
   )

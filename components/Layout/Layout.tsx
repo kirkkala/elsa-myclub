@@ -1,29 +1,35 @@
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 
+import Header from "../Header/Header"
+import Notification from "../Notification/Notification"
+
 interface LayoutProps {
   children: React.ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <Box
-      component="main"
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Container
-        maxWidth={false}
+    <>
+      <Header />
+      <Notification />
+      <Box
+        component="main"
         sx={{
-          maxWidth: 600,
-          py: 3,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {children}
-      </Container>
-    </Box>
+        <Container
+          maxWidth={false}
+          sx={{
+            maxWidth: 780,
+            py: 3,
+          }}
+        >
+          {children}
+        </Container>
+      </Box>
+    </>
   )
 }

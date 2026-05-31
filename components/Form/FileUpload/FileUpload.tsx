@@ -3,18 +3,16 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Close"
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
-import SendIcon from "@mui/icons-material/Send"
 import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
 import FormControl from "@mui/material/FormControl"
 import FormHelperText from "@mui/material/FormHelperText"
-import FormLabel from "@mui/material/FormLabel"
 import Typography from "@mui/material/Typography"
 import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 
 interface FileUploadProps {
-  label: string
+  label?: string
   description?: string
   files: File[]
   onFilesChange: (files: File[]) => void
@@ -56,19 +54,6 @@ export default function FileUpload({
 
   return (
     <FormControl fullWidth>
-      <FormLabel
-        htmlFor="file"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 0.5,
-          fontWeight: 600,
-          mb: 0.5,
-          color: "text.primary",
-        }}
-      >
-        <SendIcon sx={{ fontSize: "1rem" }} /> {label}
-      </FormLabel>
       <FormHelperText sx={{ mx: 0, mb: 1 }}>{description}</FormHelperText>
 
       <Box
@@ -97,7 +82,7 @@ export default function FileUpload({
               },
         }}
       >
-        <input {...getInputProps()} data-testid="file-input" aria-label={label} />
+        <input {...getInputProps({ id: "file" })} data-testid="file-input" aria-label={label} />
 
         {hasFiles ? (
           <CheckCircleIcon sx={{ fontSize: 40, color: "success.main" }} />

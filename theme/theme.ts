@@ -4,6 +4,8 @@ import { alpha, createTheme } from "@mui/material/styles"
 
 // Brand colors
 const hnmkyRed = "#ff4238"
+// The brand red is slightly too bright for links, darkening it slightly improves readability.
+const linkRed = "#d1362e"
 
 // Grays
 const darkGray = "#1f2937"
@@ -47,7 +49,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    fontSize: 12.8,
+    fontSize: 14,
     h1: {
       fontSize: "1.75rem",
       fontWeight: 700,
@@ -65,17 +67,17 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         html: {
-          overflowX: "hidden",
-        },
-        body: {
-          overflowX: "scroll",
+          // Use `clip` (not `hidden`/`scroll`) so the viewport stays the scroll
+          // container and `position: sticky` on the AppBar works. This still
+          // clips the horizontal overflow from the full-bleed Preview table.
+          overflowX: "clip",
         },
         a: {
-          color: hnmkyRed,
-          textDecoration: "none",
+          color: linkRed,
+          fontWeight: 700,
+          textDecorationColor: alpha(linkRed, 0.4),
           "&:hover": {
-            textDecoration: "underline",
-            textDecorationStyle: "dotted",
+            textDecorationColor: linkRed,
           },
         },
         ul: {
@@ -112,20 +114,16 @@ const theme = createTheme({
         size: "small",
       },
     },
-    MuiAccordion: {
+    MuiLink: {
       styleOverrides: {
         root: {
-          margin: "0",
-        },
-      },
-    },
-    MuiAccordionSummary: {
-      styleOverrides: {
-        root: ({ theme }) => ({
+          color: linkRed,
+          fontWeight: 700,
+          textDecorationColor: alpha(linkRed, 0.4),
           "&:hover": {
-            backgroundColor: alpha(theme.palette.divider, 0.4),
+            textDecorationColor: linkRed,
           },
-        }),
+        },
       },
     },
     MuiTableCell: {
@@ -141,19 +139,6 @@ const theme = createTheme({
           backgroundColor: paleGray,
           fontWeight: 700,
           color: mediumGray,
-        },
-      },
-    },
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          color: hnmkyRed,
-          fontWeight: 500,
-          textDecoration: "none",
-          "&:hover": {
-            textDecoration: "underline",
-            textDecorationStyle: "dotted",
-          },
         },
       },
     },

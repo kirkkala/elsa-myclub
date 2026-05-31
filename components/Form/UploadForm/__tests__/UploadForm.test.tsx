@@ -233,13 +233,11 @@ describe("UploadForm", () => {
     expect(screen.queryByText(/Virhe/i)).not.toBeInTheDocument()
   })
 
-  it("does not trigger preview when changing fields without file", () => {
+  it("hides settings fields and does not call preview without a file", () => {
     render(<UploadForm />)
 
-    // Fields are disabled when no file is selected
-    const comboboxes = screen.getAllByRole("combobox")
-    // Try to interact with a combobox - it should be disabled
-    expect(comboboxes[1]).toBeDisabled() // Year dropdown
+    // Settings fields stay hidden until a file is read successfully
+    expect(screen.queryAllByRole("combobox")).toHaveLength(0)
 
     // Should not call fetch since no file is selected
     expect(global.fetch).not.toHaveBeenCalled()
@@ -415,11 +413,36 @@ describe("UploadForm", () => {
         ),
     }
 
+    // Toggling the switch on opens a confirmation dialog; activate from there.
+    const enableDemoMode = async () => {
+      fireEvent.click(screen.getByRole("switch"))
+      const confirmButton = await screen.findByRole("button", { name: /Aktivoi demotila/i })
+      fireEvent.click(confirmButton)
+      // Wait for the dialog to close so the rest of the UI is interactive again
+      await waitFor(() => {
+        expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
+      })
+    }
+
     it("renders demo switch with label", () => {
       render(<UploadForm />)
 
       expect(screen.getByText("Demotila")).toBeInTheDocument()
       expect(screen.getByRole("switch", { name: "Demotila" })).toBeInTheDocument()
+    })
+
+    it("opens an explanatory dialog before enabling demo mode", async () => {
+      render(<UploadForm />)
+
+      fireEvent.click(screen.getByRole("switch"))
+
+      // Dialog explains what demo mode is and offers to enable it
+      expect(await screen.findByRole("alertdialog")).toBeInTheDocument()
+      expect(screen.getByText(/Aktivoi demotila\?/i)).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: /Aktivoi demotila/i })).toBeInTheDocument()
+
+      // Demo file is not fetched until the user confirms
+      expect(global.fetch).not.toHaveBeenCalled()
     })
 
     it("loads demo file when switch is enabled", async () => {
@@ -430,9 +453,8 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for demo info alert to appear
       await waitFor(() => {
@@ -450,9 +472,8 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for download button (indicates preview loaded)
       await waitFor(() => {
@@ -467,9 +488,8 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for demo-specific success message
       await waitFor(() => {
@@ -484,17 +504,16 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for demo to load
       await waitFor(() => {
         expect(screen.getByText(DEMO_INFO_TEXT)).toBeInTheDocument()
       })
 
-      // Disable demo mode
-      fireEvent.click(demoSwitch)
+      // Disable demo mode (switch is on now, toggling off needs no dialog)
+      fireEvent.click(screen.getByRole("switch"))
 
       // Demo info should be hidden
       await waitFor(() => {
@@ -512,9 +531,8 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for error message
       await waitFor(() => {
@@ -529,9 +547,8 @@ describe("UploadForm", () => {
 
       render(<UploadForm />)
 
-      // Enable demo mode
-      const demoSwitch = screen.getByRole("switch")
-      fireEvent.click(demoSwitch)
+      // Enable demo mode (via confirmation dialog)
+      await enableDemoMode()
 
       // Wait for demo to load
       await waitFor(() => {

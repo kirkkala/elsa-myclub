@@ -28,7 +28,7 @@ export default function Footer() {
           }}
         />{" "}
         by{" "}
-        <MuiLink href={SITE_CONFIG.links.githubAuthorUrl} target="_blank" rel="noopener noreferrer">
+        <MuiLink href={SITE_CONFIG.links.authorHomepageUrl} target="_blank" rel="noopener">
           {SITE_CONFIG.author.name}
         </MuiLink>
       </Typography>

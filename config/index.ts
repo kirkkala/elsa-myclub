@@ -15,14 +15,30 @@ const SITE_CONFIG = {
   links: {
     githubAuthorUrl: packageJson.author.url,
     githubAppRepoUrl: packageJson.repository.url,
+    authorHomepageUrl: "https://kirkkala.com",
     elsa: "https://elsa.basket.fi/",
     myclub: "https://hnmky.myclub.fi/",
   },
 } as const
 
+// Site-wide notification banner shown on every page. Use this to communicate
+// known issues to users, e.g. a bug being fixed or an eLSA Excel format change.
+// Set `enabled: false` to hide it.
+//   - severity "alert":   red banner for urgent/breaking issues
+//   - severity "warning": amber banner for heads-up notices
+const NOTIFICATION: {
+  enabled: boolean
+  severity: "alert" | "warning"
+  message: string
+} = {
+  enabled: false,
+  severity: "warning",
+  message: "Notifikaatioviesti...",
+}
+
 // Search engine optimization (same metadata for all pages)
 const SEO_CONFIG = {
-  title: `${SITE_CONFIG.name} (${SITE_CONFIG.version})`,
+  title: `${SITE_CONFIG.name} | HNMKY`,
   description: "Nettiappi eLSA excel tiedostojen muuntamiseen MyClub-yhteensopiviksi",
   openGraph: {
     title: SITE_CONFIG.name,
@@ -44,16 +60,16 @@ const PAGES = [
     sitemap: { changeFrequency: "monthly" as const, priority: 1 },
   },
   {
-    path: "/docs",
-    label: "Tietoja",
+    path: "/info",
+    label: "Tietoa sovelluksesta",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
   {
-    path: "/changelog",
-    label: "Versiohistoria",
-    sitemap: { changeFrequency: "weekly" as const, priority: 0.5 },
+    path: "/docs",
+    label: "Käyttöohjeet",
+    sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
 ]
 
 // Export everything after definitions
-export { SITE_CONFIG, SEO_CONFIG, PAGES }
+export { SITE_CONFIG, SEO_CONFIG, PAGES, NOTIFICATION }

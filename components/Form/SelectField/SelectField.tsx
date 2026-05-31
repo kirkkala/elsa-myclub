@@ -119,9 +119,6 @@ export default function SelectField({
                   </>
                 ),
               },
-              formHelperText: {
-                id: description ? `${id}-description` : undefined,
-              },
               htmlInput: {
                 ...params.inputProps,
                 "aria-label": label,
