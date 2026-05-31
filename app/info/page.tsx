@@ -32,7 +32,7 @@ export default function Info() {
           </MuiLink>
           :in kanssa yhteensopivaksi tuontitiedostoksi.
         </Typography>
-        <Typography variant="h3">Kenelle sovellus on tarkoitettu?</Typography>
+        <Typography variant="h2">Kenelle sovellus on tarkoitettu?</Typography>
         <Typography>
           Sovellus on avoin ja vapaasti käytettävissä kenelle tahansa koripalloseuran
           taustahenkilölle ketkä siirtävät otteluita eLSA:sta MyClub:iin.
@@ -44,7 +44,7 @@ export default function Info() {
           seuran joukkueiden ryhmät on valittavissa listalta mutta joukkueen nimen voi antaa myös
           käsin niin myös muiden seurojen joukkueet voivat vapaasti hyödyntää sovellusta.
         </Typography>
-        <Typography variant="h3">Tietosuojaseloste</Typography>
+        <Typography variant="h2">Tietosuojaseloste</Typography>
         <Typography>
           Sovellus ei kerää tietoa käyttäjistä tai sovellukseen ladatuista tiedostoista.
           Sovellukseen ladattuja tiedostoja ei tallenneta muualle kuin käyttäjän omalle
