@@ -21,6 +21,21 @@ const SITE_CONFIG = {
   },
 } as const
 
+// Site-wide notification banner shown on every page. Use this to communicate
+// known issues to users, e.g. a bug being fixed or an eLSA Excel format change.
+// Set `enabled: false` to hide it.
+//   - severity "alert":   red banner for urgent/breaking issues
+//   - severity "warning": amber banner for heads-up notices
+const NOTIFICATION: {
+  enabled: boolean
+  severity: "alert" | "warning"
+  message: string
+} = {
+  enabled: false,
+  severity: "warning",
+  message: "Notifikaatioviesti...",
+}
+
 // Search engine optimization (same metadata for all pages)
 const SEO_CONFIG = {
   title: `${SITE_CONFIG.name} | HNMKY`,
@@ -57,4 +72,4 @@ const PAGES = [
 ]
 
 // Export everything after definitions
-export { SITE_CONFIG, SEO_CONFIG, PAGES }
+export { SITE_CONFIG, SEO_CONFIG, PAGES, NOTIFICATION }
