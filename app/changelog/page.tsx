@@ -21,10 +21,7 @@ async function getChangelogContent() {
   const fileContents = fs.readFileSync(changelogPath, "utf8")
   const { content } = matter(fileContents)
 
-  // Increase heading level by one to have better semantics on the page
-  const shiftedContent = content.replace(/^(#+)/gm, "#$1")
-
-  const processedContent = await remark().use(html).process(shiftedContent)
+  const processedContent = await remark().use(html).process(content)
   return processedContent.toString()
 }
 
@@ -33,7 +30,7 @@ export default async function Changelog() {
 
   return (
     <Layout>
-      <Typography variant="h2" component="h2">
+      <Typography variant="h1" component="h1">
         Versiohistoria
       </Typography>
       <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
