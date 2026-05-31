@@ -16,7 +16,6 @@ export default function Layout({ children }: LayoutProps) {
       <Box
         component="main"
         sx={{
-          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}

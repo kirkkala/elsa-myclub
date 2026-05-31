@@ -49,7 +49,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    fontSize: 12.8,
+    fontSize: 14,
     h1: {
       fontSize: "1.75rem",
       fontWeight: 700,
