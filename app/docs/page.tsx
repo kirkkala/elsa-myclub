@@ -8,7 +8,6 @@ import type { Metadata } from "next"
 import Image from "next/image"
 
 import Footer from "../../components/Footer/Footer"
-import Header from "../../components/Header/Header"
 import Layout from "../../components/Layout/Layout"
 import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 import { SITE_CONFIG } from "../../config"
@@ -20,7 +19,6 @@ export const metadata: Metadata = {
 export default function Docs() {
   return (
     <Layout>
-      <Header />
       <SectionAccordion title="Tietoja sovelluksesta" expandable defaultOpen={false}>
         <Typography>
           {SITE_CONFIG.name}n avulla voit muuntaa{" "}

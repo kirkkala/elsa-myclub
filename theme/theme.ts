@@ -65,10 +65,10 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         html: {
-          overflowX: "hidden",
-        },
-        body: {
-          overflowX: "scroll",
+          // Use `clip` (not `hidden`/`scroll`) so the viewport stays the scroll
+          // container and `position: sticky` on the AppBar works. This still
+          // clips the horizontal overflow from the full-bleed Preview table.
+          overflowX: "clip",
         },
         a: {
           color: hnmkyRed,

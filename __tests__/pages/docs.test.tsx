@@ -22,8 +22,8 @@ describe("Docs Page", () => {
     fireEvent.click(tietojaButton)
 
     // External links should be present after expanding the accordion
-    expect(screen.getByRole("link", { name: /eLSA/i })).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: /MyClub/i })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "eLSA" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "MyClub" })).toBeInTheDocument()
   })
 
   it("has footer with author info", () => {
