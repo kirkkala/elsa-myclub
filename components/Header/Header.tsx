@@ -137,9 +137,7 @@ export default function Header() {
                 noWrap
                 sx={{ m: 0, fontSize: { xs: "1rem", sm: "1.4rem" } }}
               >
-                <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-                  {SITE_CONFIG.name}
-                </Link>
+                {SITE_CONFIG.name}
               </Typography>
               {isChangelogPage ? (
                 <Chip
