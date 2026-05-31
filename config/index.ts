@@ -15,6 +15,7 @@ const SITE_CONFIG = {
   links: {
     githubAuthorUrl: packageJson.author.url,
     githubAppRepoUrl: packageJson.repository.url,
+    authorHomepageUrl: "https://kirkkala.com",
     elsa: "https://elsa.basket.fi/",
     myclub: "https://hnmky.myclub.fi/",
   },
