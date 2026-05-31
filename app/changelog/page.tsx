@@ -3,6 +3,7 @@ import path from "path"
 import process from "process"
 
 import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
 import matter from "gray-matter"
 import type { Metadata } from "next"
 import { remark } from "remark"
@@ -10,7 +11,6 @@ import html from "remark-html"
 
 import Footer from "../../components/Footer/Footer"
 import Layout from "../../components/Layout/Layout"
-import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 
 export const metadata: Metadata = {
   title: "Versiohistoria",
@@ -33,9 +33,10 @@ export default async function Changelog() {
 
   return (
     <Layout>
-      <SectionAccordion title="Versiohistoria" expandable={false}>
-        <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
-      </SectionAccordion>
+      <Typography variant="h2" component="h2">
+        Versiohistoria
+      </Typography>
+      <Box dangerouslySetInnerHTML={{ __html: contentHtml }} />
       <Footer />
     </Layout>
   )

@@ -9,7 +9,6 @@ import Image from "next/image"
 
 import Footer from "../../components/Footer/Footer"
 import Layout from "../../components/Layout/Layout"
-import SectionAccordion from "../../components/SectionAccordion/SectionAccordion"
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
@@ -19,7 +18,10 @@ export const metadata: Metadata = {
 export default function Docs() {
   return (
     <Layout>
-      <SectionAccordion title="Tietoja sovelluksesta" expandable defaultOpen={false}>
+      <Box component="section" sx={{ mb: 4 }}>
+        <Typography variant="h2" component="h2">
+          Tietoja sovelluksesta
+        </Typography>
         <Typography>
           {SITE_CONFIG.name}n avulla voit muuntaa{" "}
           <MuiLink href={SITE_CONFIG.links.elsa} target="_blank" rel="noopener noreferrer">
@@ -53,9 +55,12 @@ export default function Docs() {
           Sovelluksen käytöstä kerätään yksilöimätöntä statistiikkaa analytiikkaa varten. Sivusto ei
           tallenna evästeitä eli keksejä käyttäjän tietokoneelle.
         </Typography>
-      </SectionAccordion>
+      </Box>
 
-      <SectionAccordion title="Käyttöohjeet" expandable defaultOpen={false}>
+      <Box component="section" sx={{ mb: 4 }}>
+        <Typography variant="h2" component="h2">
+          Käyttöohjeet
+        </Typography>
         <Typography variant="h3">1. Hae ottelutiedosto eLSA:sta</Typography>
         <Typography>
           Kirjaudu{" "}
@@ -133,9 +138,12 @@ export default function Docs() {
           </MuiLink>
           .
         </Typography>
-      </SectionAccordion>
+      </Box>
 
-      <SectionAccordion title="Lisätietoja ja palaute" expandable defaultOpen={false}>
+      <Box component="section" sx={{ mb: 4 }}>
+        <Typography variant="h2" component="h2">
+          Lisätietoja ja palaute
+        </Typography>
         <Typography>
           Löysitkö bugin tai keksit parannusehdotuksen?
           <br />→ Laita viestiä Timolle osoitteeseen{" "}
@@ -163,7 +171,7 @@ export default function Docs() {
             </MuiLink>
           </Typography>
         </Box>
-      </SectionAccordion>
+      </Box>
       <Footer />
     </Layout>
   )

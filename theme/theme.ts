@@ -111,22 +111,6 @@ const theme = createTheme({
         size: "small",
       },
     },
-    MuiAccordion: {
-      styleOverrides: {
-        root: {
-          margin: "0",
-        },
-      },
-    },
-    MuiAccordionSummary: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          "&:hover": {
-            backgroundColor: alpha(theme.palette.divider, 0.4),
-          },
-        }),
-      },
-    },
     MuiTableCell: {
       styleOverrides: {
         root: {
