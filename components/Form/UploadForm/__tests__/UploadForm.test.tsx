@@ -233,13 +233,11 @@ describe("UploadForm", () => {
     expect(screen.queryByText(/Virhe/i)).not.toBeInTheDocument()
   })
 
-  it("does not trigger preview when changing fields without file", () => {
+  it("hides settings fields and does not call preview without a file", () => {
     render(<UploadForm />)
 
-    // Fields are disabled when no file is selected
-    const comboboxes = screen.getAllByRole("combobox")
-    // Try to interact with a combobox - it should be disabled
-    expect(comboboxes[1]).toBeDisabled() // Year dropdown
+    // Settings fields stay hidden until a file is read successfully
+    expect(screen.queryAllByRole("combobox")).toHaveLength(0)
 
     // Should not call fetch since no file is selected
     expect(global.fetch).not.toHaveBeenCalled()

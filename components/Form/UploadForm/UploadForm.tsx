@@ -201,7 +201,6 @@ export default function UploadForm() {
     }
   }
 
-  const hasFiles = formValues.files.length > 0
   const fileCount = formValues.files.length
 
   return (
@@ -318,12 +317,7 @@ export default function UploadForm() {
           )}
         </Box>
 
-        <Box
-          sx={{
-            opacity: !hasFiles || error ? 0.4 : 1,
-            pointerEvents: !hasFiles || error ? "none" : "auto",
-          }}
-        >
+        <Box sx={{ display: showSuccess ? "block" : "none" }}>
           <SelectField
             id="group"
             Icon={PeopleIcon}
@@ -336,7 +330,6 @@ export default function UploadForm() {
             }))}
             placeholder="Hae tai kirjoita joukkueen nimi"
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
             freeSolo
           />
 
@@ -351,7 +344,6 @@ export default function UploadForm() {
             }))}
             defaultValue={formValues.year}
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -370,7 +362,6 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.meetingTime}
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -386,7 +377,6 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.duration}
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -396,7 +386,6 @@ export default function UploadForm() {
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
             defaultValue={formValues.eventType}
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
           />
 
           <SelectField
@@ -411,7 +400,6 @@ export default function UploadForm() {
             ]}
             defaultValue={formValues.registration}
             onChange={handleFieldChange}
-            disabled={!hasFiles || !!error}
           />
         </Box>
       </form>

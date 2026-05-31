@@ -19,9 +19,9 @@ describe("FileUpload", () => {
     jest.clearAllMocks()
   })
 
-  it("renders label and description", () => {
+  it("renders an accessible file input and description", () => {
     render(<FileUpload {...mockProps} />)
-    expect(screen.getByText("eLSA excel tiedosto")).toBeInTheDocument()
+    expect(screen.getByLabelText("eLSA excel tiedosto")).toBeInTheDocument()
     expect(screen.getByText("Valitse Excel tiedosto")).toBeInTheDocument()
   })
 
