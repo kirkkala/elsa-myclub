@@ -53,11 +53,6 @@ const PAGES = [
     label: "Käyttöohjeet",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
-  {
-    path: "/changelog",
-    label: "Versiohistoria",
-    sitemap: { changeFrequency: "weekly" as const, priority: 0.5 },
-  },
 ]
 
 // Export everything after definitions
