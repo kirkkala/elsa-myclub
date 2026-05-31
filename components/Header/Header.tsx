@@ -6,6 +6,7 @@ import HistoryIcon from "@mui/icons-material/History"
 import HomeIcon from "@mui/icons-material/Home"
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 import MenuIcon from "@mui/icons-material/Menu"
+import MenuBookIcon from "@mui/icons-material/MenuBook"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
@@ -31,13 +32,14 @@ const CHANGELOG_PATH = "/changelog"
 
 const PAGE_ICONS: Record<string, typeof HomeIcon> = {
   "/": HomeIcon,
-  "/docs": InfoOutlinedIcon,
+  "/info": InfoOutlinedIcon,
+  "/docs": MenuBookIcon,
   "/changelog": HistoryIcon,
 }
 
 const navTabsSx = {
   alignSelf: "flex-end",
-  display: { xs: "none", sm: "flex" },
+  display: { xs: "none", md: "flex" },
   "& .MuiTabs-indicator": {
     display: "none",
   },
@@ -193,7 +195,7 @@ export default function Header() {
             <IconButton
               aria-label="Avaa valikko"
               onClick={() => setDrawerOpen(true)}
-              sx={{ display: { xs: "inline-flex", sm: "none" }, mr: 1 }}
+              sx={{ display: { xs: "inline-flex", md: "none" }, mr: 1 }}
             >
               <MenuIcon />
             </IconButton>

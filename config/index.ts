@@ -44,8 +44,13 @@ const PAGES = [
     sitemap: { changeFrequency: "monthly" as const, priority: 1 },
   },
   {
+    path: "/info",
+    label: "Tietoa sovelluksesta",
+    sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
+  },
+  {
     path: "/docs",
-    label: "Tietoja",
+    label: "Käyttöohjeet",
     sitemap: { changeFrequency: "monthly" as const, priority: 0.8 },
   },
   {
