@@ -4,6 +4,8 @@ import { alpha, createTheme } from "@mui/material/styles"
 
 // Brand colors
 const hnmkyRed = "#ff4238"
+// The brand red is slightly too bright for links, darkening it slightly improves readability.
+const linkRed = "#d1362e"
 
 // Grays
 const darkGray = "#1f2937"
@@ -71,10 +73,11 @@ const theme = createTheme({
           overflowX: "clip",
         },
         a: {
-          color: hnmkyRed,
-          textDecorationColor: alpha(hnmkyRed, 0.4),
+          color: linkRed,
+          fontWeight: 700,
+          textDecorationColor: alpha(linkRed, 0.4),
           "&:hover": {
-            textDecorationColor: hnmkyRed,
+            textDecorationColor: linkRed,
           },
         },
         ul: {
@@ -109,6 +112,18 @@ const theme = createTheme({
     MuiSelect: {
       defaultProps: {
         size: "small",
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: linkRed,
+          fontWeight: 700,
+          textDecorationColor: alpha(linkRed, 0.4),
+          "&:hover": {
+            textDecorationColor: linkRed,
+          },
+        },
       },
     },
     MuiTableCell: {

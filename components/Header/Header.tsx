@@ -49,6 +49,10 @@ const navTabsSx = {
     px: { xs: 1, sm: 2 },
     fontSize: { xs: "0.75rem", sm: "0.875rem" },
     position: "relative",
+    color: "text.primary",
+    "&.Mui-selected": {
+      color: "primary.main",
+    },
     "& .MuiSvgIcon-root": {
       fontSize: { xs: "1.1rem", sm: "1.3rem" },
     },
