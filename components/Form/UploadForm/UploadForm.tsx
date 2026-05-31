@@ -8,6 +8,12 @@ import SportsBasketballIcon from "@mui/icons-material/SportsBasketball"
 import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import Box from "@mui/material/Box"
+import MuiButton from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import DialogTitle from "@mui/material/DialogTitle"
 import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
@@ -44,6 +50,7 @@ export default function UploadForm() {
   const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
   const [isDemoMode, setIsDemoMode] = useState(false)
+  const [demoDialogOpen, setDemoDialogOpen] = useState(false)
 
   const currentYear = new Date().getFullYear()
   const years = [currentYear, currentYear + 1]
@@ -101,6 +108,11 @@ export default function UploadForm() {
     setPreviewData([])
     setShowSuccess(false)
     setError("")
+  }
+
+  const handleConfirmDemo = (): void => {
+    setDemoDialogOpen(false)
+    void handleLoadDemo()
   }
 
   const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
@@ -206,20 +218,7 @@ export default function UploadForm() {
         >
           {isDemoMode ? (
             <Alert severity="info" sx={{ flex: 1, py: 0.5 }}>
-              <Typography variant="h2" sx={{ mb: 0.5, fontSize: "0.9rem", fontWeight: 500 }}>
-                Demotila aktivoitu
-              </Typography>
-              Esimerkkitiedosto{" "}
-              <Link
-                href="/elsa-demo.xlsx"
-                download="elsa-demo.xlsx"
-                title="Lataa esimerkkitiedosto tarkastelua varten"
-                sx={{ fontWeight: 500 }}
-              >
-                elsa-demo.xlsx
-              </Link>{" "}
-              lisätty lomakkeelle. Voit nyt kokeilla asetuksia, ihastella esikatselua sivun lopussa
-              ja ladata muunnetun Excel tiedoston omalle tietokoneellesi.
+              Demotila aktivoitu.
             </Alert>
           ) : (
             <Box />
@@ -230,7 +229,7 @@ export default function UploadForm() {
                 checked={isDemoMode}
                 onChange={(e) => {
                   if (e.target.checked) {
-                    void handleLoadDemo()
+                    setDemoDialogOpen(true)
                   } else {
                     handleStopDemo()
                   }
@@ -248,6 +247,39 @@ export default function UploadForm() {
             sx={{ flexShrink: 0 }}
           />
         </Box>
+
+        <Dialog
+          open={demoDialogOpen}
+          onClose={() => setDemoDialogOpen(false)}
+          role="alertdialog"
+          aria-labelledby="demo-dialog-title"
+          aria-describedby="demo-dialog-description"
+          maxWidth="xs"
+        >
+          <DialogTitle id="demo-dialog-title">Aktivoi demotila?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="demo-dialog-description" component="div">
+              <Box component="p">
+                Demotilassa lomakkeelle ladataan valmis esimerkkitiedosto{" "}
+                <Link href="/elsa-demo.xlsx" download="elsa-demo.xlsx" sx={{ fontWeight: 500 }}>
+                  elsa-demo.xlsx
+                </Link>
+                , jotta voit kokeilla muunninta ilman omaa eLSA-tiedostoa.
+              </Box>
+              <Box component="p">
+                Huomaathan, että demotila on vain esimerkkitiedosto, voit kokeilla muunninta ilman
+                omaa eLSA-tiedostoa, ja voit ladata muunnetun esimerkkitiedoston tietokoneellesi
+                mutta älä käytä tiedostoa MyClubin tapahtumien tuomiseen.
+              </Box>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <MuiButton onClick={() => setDemoDialogOpen(false)}>Peruuta</MuiButton>
+            <MuiButton onClick={handleConfirmDemo} variant="contained" autoFocus>
+              Aktivoi demotila
+            </MuiButton>
+          </DialogActions>
+        </Dialog>
 
         {isDemoMode && <Divider sx={{ my: 2 }} />}
 

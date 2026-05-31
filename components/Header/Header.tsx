@@ -190,11 +190,11 @@ export default function Header() {
               })}
             </Tabs>
 
-          <IconButton
-            aria-label="Avaa valikko"
-            onClick={() => setDrawerOpen(true)}
-            sx={{ display: { xs: "inline-flex", sm: "none" }, mr: 1 }}
-          >
+            <IconButton
+              aria-label="Avaa valikko"
+              onClick={() => setDrawerOpen(true)}
+              sx={{ display: { xs: "inline-flex", sm: "none" }, mr: 1 }}
+            >
               <MenuIcon />
             </IconButton>
           </Toolbar>
