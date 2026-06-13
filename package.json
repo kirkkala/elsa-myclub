@@ -52,7 +52,6 @@
     "@vitest/coverage-v8": "^4.1.8",
     "happy-dom": "^20.10.3",
     "typescript": "^5.9.3",
-    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.8"
   }
 }
