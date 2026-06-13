@@ -53,5 +53,10 @@
     "happy-dom": "^20.10.3",
     "typescript": "^5.9.3",
     "vitest": "^4.1.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "postcss@<8.5.10": ">=8.5.10"
+    }
   }
 }
