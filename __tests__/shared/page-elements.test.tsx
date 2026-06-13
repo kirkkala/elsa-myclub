@@ -10,11 +10,11 @@ export const testPageElements = (
 ) => {
   describe("Generic Page Elements", () => {
     beforeEach(() => {
-      ;(usePathname as jest.Mock).mockReturnValue(pathname)
+      vi.mocked(usePathname).mockReturnValue(pathname)
     })
 
     afterEach(() => {
-      ;(usePathname as jest.Mock).mockReturnValue("/")
+      vi.mocked(usePathname).mockReturnValue("/")
     })
 
     it("renders header, footer, and semantic structure", () => {

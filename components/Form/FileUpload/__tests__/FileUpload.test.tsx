@@ -11,12 +11,12 @@ const mockProps = {
   label: "eLSA excel tiedosto",
   description: "Valitse Excel tiedosto",
   files: [] as File[],
-  onFilesChange: jest.fn(),
+  onFilesChange: vi.fn(),
 }
 
 describe("FileUpload", () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it("renders an accessible file input and description", () => {
@@ -43,7 +43,7 @@ describe("FileUpload", () => {
   })
 
   it("calls onFilesChange when files are selected via input", async () => {
-    const onFilesChange = jest.fn()
+    const onFilesChange = vi.fn()
     render(<FileUpload {...mockProps} onFilesChange={onFilesChange} />)
 
     const input = screen.getByTestId("file-input")
@@ -57,7 +57,7 @@ describe("FileUpload", () => {
   })
 
   it("allows removing individual files", () => {
-    const onFilesChange = jest.fn()
+    const onFilesChange = vi.fn()
     const files = [createMockFile("test1.xlsx"), createMockFile("test2.xlsx")]
     render(<FileUpload {...mockProps} files={files} onFilesChange={onFilesChange} />)
 
@@ -83,7 +83,7 @@ describe("FileUpload", () => {
   })
 
   it("prevents duplicate files by name when adding new files", async () => {
-    const onFilesChange = jest.fn()
+    const onFilesChange = vi.fn()
     const existingFile = createMockFile("test.xlsx")
     render(<FileUpload {...mockProps} files={[existingFile]} onFilesChange={onFilesChange} />)
 

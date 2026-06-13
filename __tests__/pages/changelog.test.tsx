@@ -1,27 +1,22 @@
 import fs from "fs"
-import type path from "path"
 
 import { render, screen } from "@testing-library/react"
 
 import Changelog from "../../app/changelog/page"
 
-jest.mock("fs", () => ({
-  readFileSync: jest.fn(() =>
-    jest
-      .requireActual<typeof fs>("fs")
-      .readFileSync(
-        jest.requireActual<typeof path>("path").join(process.cwd(), "CHANGELOG.md"),
-        "utf8"
-      )
-  ),
-}))
-jest.mock("gray-matter", () => (content: string) => ({ content, data: {} }))
-jest.mock("remark", () => ({
+vi.mock("fs", async () => {
+  const actual = await vi.importActual<typeof import("fs")>("fs")
+  const { join } = await vi.importActual<typeof import("path")>("path")
+  const readFileSync = vi.fn(() => actual.readFileSync(join(process.cwd(), "CHANGELOG.md"), "utf8"))
+  return { ...actual, default: { ...actual, readFileSync }, readFileSync }
+})
+vi.mock("gray-matter", () => ({ default: (content: string) => ({ content, data: {} }) }))
+vi.mock("remark", () => ({
   remark: () => ({
     use: () => ({ process: (content: string) => Promise.resolve({ toString: () => content }) }),
   }),
 }))
-jest.mock("remark-html", () => ({ default: () => ({}) }))
+vi.mock("remark-html", () => ({ default: () => ({}) }))
 
 describe("Changelog", () => {
   // Skip generic page elements test for async server components
@@ -34,7 +29,7 @@ describe("Changelog", () => {
   })
 
   it("handles file read errors gracefully", async () => {
-    jest.mocked(fs.readFileSync).mockImplementationOnce(() => {
+    vi.mocked(fs.readFileSync).mockImplementationOnce(() => {
       throw new Error("File not found")
     })
 

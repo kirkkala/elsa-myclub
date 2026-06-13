@@ -7,7 +7,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 - **Next.js 16** (App Router) + **React 19** + **TypeScript**
 - **Material UI 7** (MUI) for components and styling
 - **xlsx** (SheetJS) for Excel processing
-- **Jest** + React Testing Library
+- **Vitest** + React Testing Library
 - **Biome** for linting and formatting
 
 ### Prerequisites
@@ -19,7 +19,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 
 ```
 elsa-myclub/
-├── __tests__/              # Jest tests
+├── __tests__/              # Vitest tests
 ├── app/                    # Next.js App Router
 │   ├── api/                # API routes (preview, upload)
 │   ├── changelog/          # Version history page

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react"
 import { NOTIFICATION } from "../../../config"
 import Notification from "../Notification"
 
-jest.mock("../../../config", () => ({
+vi.mock("../../../config", () => ({
   NOTIFICATION: { enabled: false, severity: "warning", message: "" },
 }))
 
