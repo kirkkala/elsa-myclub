@@ -3,13 +3,13 @@ import * as XLSX from "xlsx"
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 import { excelUtils } from "@/utils/excel"
 
-jest.mock("xlsx", () => ({
-  read: jest.fn(),
-  utils: { sheet_to_json: jest.fn() },
+vi.mock("xlsx", () => ({
+  read: vi.fn(),
+  utils: { sheet_to_json: vi.fn() },
 }))
 
-const mockRead = jest.mocked(XLSX.read)
-const mockSheetToJson = jest.mocked(XLSX.utils.sheet_to_json)
+const mockRead = vi.mocked(XLSX.read)
+const mockSheetToJson = vi.mocked(XLSX.utils.sheet_to_json)
 
 // Test helpers
 const mockRow = (overrides = {}) => ({
@@ -103,7 +103,7 @@ describe("Excel utilities", () => {
   })
 
   describe("parseExcelBuffer", () => {
-    beforeEach(() => jest.clearAllMocks())
+    beforeEach(() => vi.clearAllMocks())
 
     it("should parse valid Excel data successfully", () => {
       setupMockXLSX([mockRow({ Kenttä: "Test Arena", Koti: "Team A", Vieras: "Team B" })])
@@ -186,7 +186,7 @@ describe("Excel utilities", () => {
     })
 
     it("should handle rows with processing errors gracefully", () => {
-      const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
+      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined)
       setupMockXLSX([mockRow(), mockRow({ Pvm: "invalid-date", Koti: "C", Vieras: "D" })])
 
       const result = parseBuffer(mockFields)
@@ -200,10 +200,10 @@ describe("Excel utilities", () => {
     })
 
     it("should handle non-Error exceptions during processing", () => {
-      const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation()
+      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => undefined)
       setupMockXLSX([mockRow()])
 
-      const normalizeDateSpy = jest.spyOn(excelUtils, "normalizeDate").mockImplementation(() => {
+      const normalizeDateSpy = vi.spyOn(excelUtils, "normalizeDate").mockImplementation(() => {
         throw "string error"
       })
 

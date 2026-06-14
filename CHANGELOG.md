@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.1.1 (14.6.2026)
+
+- Testiautomaatio: Jest migraatio vitest testauskirjastoon 🤖
+
 ## v2.1.0 (31.5.2026)
 
 - Käyttöliittymäuudistus, header/valikko 🎨

@@ -7,9 +7,9 @@ import {
   logError,
 } from "@/utils/error"
 
-// Store original console.error to work with jest.setup.ts
+// Store original console.error to work with vitest.setup.ts
 const originalConsoleError = console.error
-const mockConsoleError = jest.fn()
+const mockConsoleError = vi.fn()
 
 describe("Error utilities", () => {
   beforeAll(() => {

@@ -1,12 +1,15 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react"
-import "@testing-library/jest-dom"
+import { createEvent, fireEvent, render, screen, waitFor, within } from "@testing-library/react"
+import type { Mock } from "vitest"
 
 import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
 
 import UploadForm from "../UploadForm"
 
 // Mock fetch globally
-global.fetch = jest.fn()
+global.fetch = vi.fn()
+
+// Loosely-typed accessor so per-test mock responses can be partial objects
+const mockFetch = () => global.fetch as unknown as Mock
 
 // Test constants
 const DOWNLOAD_BUTTON_TEXT = /lataa excel/i
@@ -39,12 +42,13 @@ const mockSuccessfulPreviewResponse = {
 
 const dropFiles = (files: File[]) => {
   const dropzone = screen.getByTestId("dropzone")
-  fireEvent.drop(dropzone, {
-    dataTransfer: {
-      files,
-      types: ["Files"],
-    },
+  // happy-dom builds a real DragEvent whose dataTransfer would override an init
+  // object, so create the event and pin our own dataTransfer onto it instead.
+  const event = createEvent.drop(dropzone)
+  Object.defineProperty(event, "dataTransfer", {
+    value: { files, types: ["Files"] },
   })
+  fireEvent(dropzone, event)
 }
 
 const dropFilesAndWaitForPreview = async (files: File[]) => {
@@ -55,17 +59,17 @@ const dropFilesAndWaitForPreview = async (files: File[]) => {
 }
 
 const mockDownloadEnvironment = () => {
-  const mockClick = jest.fn()
+  const mockClick = vi.fn()
   const originalCreateElement = document.createElement.bind(document)
   const originalAppendChild = document.body.appendChild.bind(document.body)
 
-  document.createElement = jest.fn().mockReturnValue({
+  document.createElement = vi.fn().mockReturnValue({
     href: "",
     download: "",
     click: mockClick,
-    remove: jest.fn(),
+    remove: vi.fn(),
   }) as typeof document.createElement
-  document.body.appendChild = jest.fn() as typeof document.body.appendChild
+  document.body.appendChild = vi.fn() as typeof document.body.appendChild
 
   return {
     mockClick,
@@ -78,30 +82,25 @@ const mockDownloadEnvironment = () => {
 
 describe("UploadForm", () => {
   // Mock URL methods
-  const mockCreateObjectURL = jest.fn()
-  const mockRevokeObjectURL = jest.fn()
+  const mockCreateObjectURL = vi.fn()
+  const mockRevokeObjectURL = vi.fn()
 
   beforeEach(() => {
     // Reset all mocks before each test
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
-    // Mock URL methods
-    Object.defineProperty(window, "URL", {
-      value: {
-        createObjectURL: mockCreateObjectURL,
-        revokeObjectURL: mockRevokeObjectURL,
-      },
-      writable: true,
-    })
+    // Stub only the object-URL helpers so the global URL constructor stays intact
+    URL.createObjectURL = mockCreateObjectURL
+    URL.revokeObjectURL = mockRevokeObjectURL
 
     mockCreateObjectURL.mockReturnValue("blob:test-url")
     // Set default successful response
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockSuccessfulPreviewResponse)
+    mockFetch().mockResolvedValue(mockSuccessfulPreviewResponse)
   })
 
   afterEach(() => {
     // Clean up any DOM modifications
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   it("renders all form elements", () => {
@@ -137,7 +136,7 @@ describe("UploadForm", () => {
 
   it("handles preview API error correctly", async () => {
     // Mock the preview API to return an error
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    mockFetch().mockResolvedValueOnce({
       ok: false,
       json: () => Promise.resolve({ message: "Test error message" }),
     })
@@ -164,8 +163,8 @@ describe("UploadForm", () => {
     expect(comboboxes.length).toBeGreaterThan(0)
 
     // The first call was the initial preview, clear that
-    ;(global.fetch as jest.Mock).mockClear()
-    ;(global.fetch as jest.Mock).mockResolvedValue(mockSuccessfulPreviewResponse)
+    mockFetch().mockClear()
+    mockFetch().mockResolvedValue(mockSuccessfulPreviewResponse)
 
     // Open a dropdown and change value
     fireEvent.mouseDown(comboboxes[1]) // Year dropdown
@@ -183,7 +182,7 @@ describe("UploadForm", () => {
 
   it("displays error message when Excel file has incorrect format", async () => {
     // Mock the fetch response for an error case
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    mockFetch().mockResolvedValueOnce({
       ok: false,
       json: () =>
         Promise.resolve({
@@ -204,7 +203,7 @@ describe("UploadForm", () => {
 
   it("clears error message when new file is selected", async () => {
     // First mock an error response, then a successful response
-    ;(global.fetch as jest.Mock)
+    mockFetch()
       .mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ message: "Excel-tiedoston prosessointi epäonnistui." }),
@@ -250,7 +249,7 @@ describe("UploadForm", () => {
     await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock successful download response
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    mockFetch().mockResolvedValueOnce({
       ok: true,
       blob: () =>
         Promise.resolve(
@@ -283,7 +282,7 @@ describe("UploadForm", () => {
     await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock download API error
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    mockFetch().mockResolvedValueOnce({
       ok: false,
       json: () => Promise.resolve({ message: "Download failed" }),
     })
@@ -302,7 +301,7 @@ describe("UploadForm", () => {
     render(<UploadForm />)
 
     // Mock network error
-    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"))
+    mockFetch().mockRejectedValueOnce(new Error("Network error"))
 
     // Upload file
     dropFiles([createMockExcelFile()])
@@ -320,7 +319,7 @@ describe("UploadForm", () => {
     await dropFilesAndWaitForPreview([createMockExcelFile()])
 
     // Mock network error for download
-    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Download network error"))
+    mockFetch().mockRejectedValueOnce(new Error("Download network error"))
 
     // Trigger download
     const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
@@ -343,7 +342,7 @@ describe("UploadForm", () => {
     const delayedDownload = new Promise<Response>((resolve) => {
       resolveDownload = resolve
     })
-    ;(global.fetch as jest.Mock).mockReturnValueOnce(delayedDownload)
+    mockFetch().mockReturnValueOnce(delayedDownload)
 
     // Trigger download
     const downloadButton = screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })
@@ -447,7 +446,7 @@ describe("UploadForm", () => {
 
     it("loads demo file when switch is enabled", async () => {
       // First call: fetch demo file, second call: preview API
-      ;(global.fetch as jest.Mock)
+      mockFetch()
         .mockResolvedValueOnce(mockDemoFileResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
@@ -466,7 +465,7 @@ describe("UploadForm", () => {
     })
 
     it("shows preview after demo file is loaded", async () => {
-      ;(global.fetch as jest.Mock)
+      mockFetch()
         .mockResolvedValueOnce(mockDemoFileResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
@@ -482,7 +481,7 @@ describe("UploadForm", () => {
     })
 
     it("shows demo-specific success message when demo file is loaded", async () => {
-      ;(global.fetch as jest.Mock)
+      mockFetch()
         .mockResolvedValueOnce(mockDemoFileResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
@@ -498,7 +497,7 @@ describe("UploadForm", () => {
     })
 
     it("clears demo state when switch is disabled", async () => {
-      ;(global.fetch as jest.Mock)
+      mockFetch()
         .mockResolvedValueOnce(mockDemoFileResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 
@@ -525,7 +524,7 @@ describe("UploadForm", () => {
     })
 
     it("shows error when demo file fetch fails", async () => {
-      ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch().mockResolvedValueOnce({
         ok: false,
       })
 
@@ -541,7 +540,7 @@ describe("UploadForm", () => {
     })
 
     it("disables dropzone when in demo mode", async () => {
-      ;(global.fetch as jest.Mock)
+      mockFetch()
         .mockResolvedValueOnce(mockDemoFileResponse)
         .mockResolvedValueOnce(mockSuccessfulPreviewResponse)
 

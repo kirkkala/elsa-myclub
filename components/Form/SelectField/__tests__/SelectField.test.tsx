@@ -32,7 +32,7 @@ describe("SelectField", () => {
 
   it("calls onChange when selection changes", async () => {
     const user = userEvent.setup()
-    const onChange = jest.fn()
+    const onChange = vi.fn()
     render(<SelectField {...mockProps} onChange={onChange} />)
 
     // Open the autocomplete
