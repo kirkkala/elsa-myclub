@@ -4,6 +4,10 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.1.2 (5.7.2026)
+
+- NextJS päivitys v16.2.10 🛠️
+
 ## v2.1.1 (14.6.2026)
 
 - Testiautomaatio: Jest migraatio vitest testauskirjastoon 🤖
