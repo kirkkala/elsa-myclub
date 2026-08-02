@@ -4,6 +4,11 @@
 This changelog is printed on the application at /changelog
 -->
 
+## v2.1.3 (2.8.2026)
+
+- npm-pakettien päivitykset (NextJS `16.2.12`) 🛠️
+- sharp tietoturvapäivitys, libvips ([GHSA-f88m-g3jw-g9cj](https://github.com/advisories/GHSA-f88m-g3jw-g9cj)) 🔐
+
 ## v2.1.2 (5.7.2026)
 
 - NextJS päivitys v16.2.10 🛠️
