@@ -85,6 +85,13 @@ Follows [Semantic Versioning](https://semver.org/). To release a new version:
 2. Add entry to `CHANGELOG.md` (in Finnish)
 3. Commit: `Bump to version x.x.x`
 
+`CHANGELOG.md` is **user-facing** (rendered at `/changelog`). Only list changes end
+users care about (features, UI, UX, content). Keep technical notes — dependency/npm
+bumps, NextJS/React versions, security patches, refactors, tests, tooling — out of it
+and put them in the [GitHub Releases](https://github.com/kirkkala/elsa-myclub/releases)
+instead. For a maintenance-only release with no user-visible change, add a single line
+(e.g. `- Ylläpitopäivityksiä 🛠️`) so the version stays in sync with the header version chip.
+
 ## Configuration
 
 **Team Names**: Update `config/groups.json` with your organization's MyClub team names.
