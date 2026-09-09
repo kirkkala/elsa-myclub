@@ -4,6 +4,10 @@ muutokset; tekniset päivitykset kuuluvat GitHub Releaseihin. Ylläpitovälivers
 riittää yksi rivi (esim. "- Ylläpitopäivityksiä 🛠️").
 -->
 
+## 2.1.5 (9.9.2026)
+
+- Ylläpito- ja tietoturvapäivityksiä 🛠️🔐
+
 ## 2.1.4 (17.8.2026)
 
 - Versiohistoriasivun parannukset ja selkeytys 📜✨
