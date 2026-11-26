@@ -108,19 +108,20 @@ export default function SelectField({
             placeholder={placeholder}
             helperText={description}
             slotProps={{
+              ...params.slotProps,
               input: {
-                ...params.InputProps,
+                ...params.slotProps.input,
                 startAdornment: (
                   <>
                     <InputAdornment position="start">
                       <Icon sx={{ fontSize: "1.25rem" }} />
                     </InputAdornment>
-                    {params.InputProps.startAdornment}
+                    {params.slotProps.input.startAdornment}
                   </>
                 ),
               },
               htmlInput: {
-                ...params.inputProps,
+                ...params.slotProps.htmlInput,
                 "aria-label": label,
               },
             }}
