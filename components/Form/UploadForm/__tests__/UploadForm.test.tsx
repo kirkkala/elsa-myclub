@@ -45,8 +45,14 @@ const dropFiles = (files: File[]) => {
   // happy-dom builds a real DragEvent whose dataTransfer would override an init
   // object, so create the event and pin our own dataTransfer onto it instead.
   const event = createEvent.drop(dropzone)
+  // react-dropzone reads dropped files from `items`, as browsers expose them.
+  const items = files.map((file) => ({
+    kind: "file",
+    type: file.type,
+    getAsFile: () => file,
+  }))
   Object.defineProperty(event, "dataTransfer", {
-    value: { files, types: ["Files"] },
+    value: { files, items, types: ["Files"] },
   })
   fireEvent(dropzone, event)
 }

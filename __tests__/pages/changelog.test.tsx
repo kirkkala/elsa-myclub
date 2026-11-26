@@ -1,6 +1,5 @@
-import fs from "fs"
-
 import { fireEvent, render, screen } from "@testing-library/react"
+import fs from "fs"
 
 import ChangelogList from "../../app/changelog/ChangelogList"
 import Changelog from "../../app/changelog/page"

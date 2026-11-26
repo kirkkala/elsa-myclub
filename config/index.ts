@@ -72,4 +72,4 @@ const PAGES = [
 ]
 
 // Export everything after definitions
-export { SITE_CONFIG, SEO_CONFIG, PAGES, NOTIFICATION }
+export { NOTIFICATION, PAGES, SEO_CONFIG, SITE_CONFIG }

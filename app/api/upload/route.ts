@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import * as XLSX from "xlsx"
 
 import { formatErrorMessage, logError } from "@/utils/error"
-import { type MyClubExcelRow, excelUtils } from "@/utils/excel"
+import { excelUtils, type MyClubExcelRow } from "@/utils/excel"
 import { parseFormData } from "@/utils/formData"
 
 export async function POST(request: NextRequest) {

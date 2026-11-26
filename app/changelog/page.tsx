@@ -1,8 +1,7 @@
 import fs from "fs"
+import type { Metadata } from "next"
 import path from "path"
 import process from "process"
-
-import type { Metadata } from "next"
 import { remark } from "remark"
 import html from "remark-html"
 
