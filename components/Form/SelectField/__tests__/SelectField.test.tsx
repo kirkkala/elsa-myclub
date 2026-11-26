@@ -14,7 +14,8 @@ const mockProps = {
     { value: "opt2", label: "Option 2" },
     { value: "opt3" }, // No label - tests value fallback
   ],
-  defaultValue: "opt1",
+  value: "opt1",
+  onChange: vi.fn(),
 }
 
 describe("SelectField", () => {
@@ -43,14 +44,7 @@ describe("SelectField", () => {
     const option2 = screen.getByRole("option", { name: "Option 2" })
     await user.click(option2)
 
-    expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({
-        target: expect.objectContaining({
-          name: "test",
-          value: "opt2",
-        }),
-      })
-    )
+    expect(onChange).toHaveBeenCalledWith("opt2")
   })
 
   it("allows searching/filtering options", async () => {

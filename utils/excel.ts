@@ -1,10 +1,8 @@
-import type { Buffer } from "buffer"
-
 import * as XLSX from "xlsx"
 
 import { EXCEL_DATE_FORMAT_ERROR, EXCEL_VALIDATION_ERROR } from "./error"
 
-interface ElsaxcelRow {
+interface ElsaExcelRow {
   Pvm: string | number
   Klo: string
   Kenttä: string
@@ -30,14 +28,14 @@ export const excelUtils = {
   parseExcelBuffer(buffer: Buffer, fields: Record<string, string>): MyClubExcelRow[] {
     const workbook = XLSX.read(buffer)
     const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
-    const jsonData = XLSX.utils.sheet_to_json<ElsaxcelRow>(firstSheet)
+    const jsonData = XLSX.utils.sheet_to_json<ElsaExcelRow>(firstSheet)
 
     const year = String(fields.year || new Date().getFullYear())
     const duration = Number.parseInt(fields.duration || "75", 10)
     const meetingTime = Number.parseInt(fields.meetingTime || "0", 10)
 
     const processedData: MyClubExcelRow[] = jsonData
-      .map((row: ElsaxcelRow): MyClubExcelRow | null => {
+      .map((row: ElsaExcelRow): MyClubExcelRow | null => {
         // If game has results it's probably in the past so no need to add to MyClub calendar
         if (row.Tulos && /^\d+.+\d+$/.test(row.Tulos.trim())) {
           return null

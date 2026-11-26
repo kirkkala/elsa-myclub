@@ -1,6 +1,4 @@
-import Footer from "../components/Footer/Footer"
 import UploadForm from "../components/Form/UploadForm/UploadForm"
-import Layout from "../components/Layout/Layout"
 import { SEO_CONFIG } from "../config"
 
 export default function Home() {
@@ -19,13 +17,12 @@ export default function Home() {
   }
 
   return (
-    <Layout>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <UploadForm />
-      <Footer />
-    </Layout>
+    </>
   )
 }

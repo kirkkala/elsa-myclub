@@ -8,7 +8,6 @@ import Chip from "@mui/material/Chip"
 import FormControl from "@mui/material/FormControl"
 import FormHelperText from "@mui/material/FormHelperText"
 import Typography from "@mui/material/Typography"
-import { useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 
 interface FileUploadProps {
@@ -26,14 +25,11 @@ export default function FileUpload({
   description,
   disabled = false,
 }: FileUploadProps): React.ReactElement {
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const existingNames = new Set(files.map((f) => f.name))
-      const newFiles = acceptedFiles.filter((f) => !existingNames.has(f.name))
-      onFilesChange([...files, ...newFiles])
-    },
-    [files, onFilesChange]
-  )
+  const onDrop = (acceptedFiles: File[]) => {
+    const existingNames = new Set(files.map((f) => f.name))
+    const newFiles = acceptedFiles.filter((f) => !existingNames.has(f.name))
+    onFilesChange([...files, ...newFiles])
+  }
 
   const removeFile = (fileName: string, e: React.MouseEvent) => {
     e.stopPropagation()

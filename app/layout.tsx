@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from "next"
 
+import Layout from "../components/Layout/Layout"
 import { SEO_CONFIG } from "../config"
 import { ThemeRegistry } from "../theme"
 
@@ -44,7 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fi">
       <body>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <Layout>{children}</Layout>
+        </ThemeRegistry>
         <SpeedInsights />
         <Analytics />
       </body>

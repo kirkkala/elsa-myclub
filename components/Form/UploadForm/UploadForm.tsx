@@ -18,7 +18,7 @@ import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 
 import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
@@ -44,6 +44,8 @@ interface FormValues {
   registration: string
 }
 
+const GROUP_OPTIONS = groupsData.groups.map((group) => ({ value: group }))
+
 export default function UploadForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -53,7 +55,6 @@ export default function UploadForm() {
   const [demoDialogOpen, setDemoDialogOpen] = useState(false)
 
   const currentYear = new Date().getFullYear()
-  const years = [currentYear, currentYear + 1]
 
   const [formValues, setFormValues] = useState<FormValues>({
     files: [],
@@ -65,19 +66,16 @@ export default function UploadForm() {
     registration: "Valituille henkilöille",
   })
 
-  const handleFilesChange = useCallback(
-    (files: File[]): void => {
-      setFormValues((prev) => ({ ...prev, files }))
-      setShowSuccess(false)
-      setPreviewData([])
-      setIsDemoMode(false)
+  const handleFilesChange = (files: File[]): void => {
+    setFormValues((prev) => ({ ...prev, files }))
+    setShowSuccess(false)
+    setPreviewData([])
+    setIsDemoMode(false)
 
-      if (files.length > 0) {
-        void fetchPreview(files, formValues)
-      }
-    },
-    [formValues]
-  )
+    if (files.length > 0) {
+      void fetchPreview(files, formValues)
+    }
+  }
 
   const handleLoadDemo = async (): Promise<void> => {
     setError("")
@@ -115,25 +113,27 @@ export default function UploadForm() {
     void handleLoadDemo()
   }
 
-  const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
-    const { name, value } = e.target
-    setFormValues((prev) => ({ ...prev, [name]: value }))
+  const handleFieldChange =
+    (name: Exclude<keyof FormValues, "files">) =>
+    (value: string): void => {
+      const values = { ...formValues, [name]: value }
+      setFormValues(values)
 
-    if (formValues.files.length > 0) {
-      void fetchPreview(formValues.files, { ...formValues, [name]: value })
+      if (values.files.length > 0) {
+        void fetchPreview(values.files, values)
+      }
     }
-  }
 
   const buildFormData = (files: File[], values: FormValues): FormData => {
     const formData = new FormData()
-    files.forEach((file) => {
+    for (const file of files) {
       formData.append("files", file)
-    })
-    Object.entries(values).forEach(([key, value]) => {
-      if (key !== "files" && value && typeof value === "string") {
+    }
+    for (const [key, value] of Object.entries(values)) {
+      if (typeof value === "string" && value) {
         formData.append(key, value)
       }
-    })
+    }
     return formData
   }
 
@@ -324,12 +324,10 @@ export default function UploadForm() {
             label="1. Joukkue (MyClub ryhmä)"
             description="Etsi joukkue listalta tai kirjoita kuten se on MyClubissa."
             disableClearable={false}
-            options={groupsData.groups.map((option) => ({
-              value: option,
-              label: option,
-            }))}
+            options={GROUP_OPTIONS}
             placeholder="Hae tai kirjoita joukkueen nimi"
-            onChange={handleFieldChange}
+            value={formValues.group}
+            onChange={handleFieldChange("group")}
             freeSolo
           />
 
@@ -338,12 +336,9 @@ export default function UploadForm() {
             label="2. Vuosi"
             description="Valitse vuosi, eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä."
             Icon={CalendarMonthIcon}
-            options={years.map((year) => ({
-              value: String(year),
-              label: String(year),
-            }))}
-            defaultValue={formValues.year}
-            onChange={handleFieldChange}
+            options={[{ value: String(currentYear) }, { value: String(currentYear + 1) }]}
+            value={formValues.year}
+            onChange={handleFieldChange("year")}
           />
 
           <SelectField
@@ -360,8 +355,8 @@ export default function UploadForm() {
               { value: "75", label: "1 h 15 min ennen ottelun alkua" },
               { value: "90", label: "1 h 30 min ennen ottelun alkua" },
             ]}
-            defaultValue={formValues.meetingTime}
-            onChange={handleFieldChange}
+            value={formValues.meetingTime}
+            onChange={handleFieldChange("meetingTime")}
           />
 
           <SelectField
@@ -375,8 +370,8 @@ export default function UploadForm() {
               { value: "105", label: "1 tunti 45 minuuttia" },
               { value: "120", label: "2 tuntia" },
             ]}
-            defaultValue={formValues.duration}
-            onChange={handleFieldChange}
+            value={formValues.duration}
+            onChange={handleFieldChange("duration")}
           />
 
           <SelectField
@@ -384,8 +379,8 @@ export default function UploadForm() {
             label="5. Tapahtumatyyppi"
             Icon={SportsBasketballIcon}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
-            defaultValue={formValues.eventType}
-            onChange={handleFieldChange}
+            value={formValues.eventType}
+            onChange={handleFieldChange("eventType")}
           />
 
           <SelectField
@@ -398,8 +393,8 @@ export default function UploadForm() {
               { value: "Ryhmän jäsenille" },
               { value: "Seuralle" },
             ]}
-            defaultValue={formValues.registration}
-            onChange={handleFieldChange}
+            value={formValues.registration}
+            onChange={handleFieldChange("registration")}
           />
         </Box>
       </form>

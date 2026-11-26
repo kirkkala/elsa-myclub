@@ -51,7 +51,7 @@ export default function Preview({ data }: PreviewProps) {
           </TableHead>
           <TableBody>
             {data.map((row, index) => (
-              <TableRow key={`${row.Alkaa}-${row.Päättyy}`} hover>
+              <TableRow key={`${row.Nimi}-${row.Alkaa}`} hover>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{row.Nimi}</TableCell>
                 <TableCell>{row.Alkaa}</TableCell>

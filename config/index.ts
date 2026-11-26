@@ -1,5 +1,3 @@
-import process from "process"
-
 import packageJson from "../package.json"
 
 // Site Configuration
@@ -9,11 +7,8 @@ const SITE_CONFIG = {
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "https://elsa-myclub.hnmky.fi",
   author: {
     name: packageJson.author.name,
-    email: packageJson.author.email,
-    url: packageJson.author.url,
   },
   links: {
-    githubAuthorUrl: packageJson.author.url,
     githubAppRepoUrl: packageJson.repository.url,
     authorHomepageUrl: "https://kirkkala.com",
     elsa: "https://elsa.basket.fi/",

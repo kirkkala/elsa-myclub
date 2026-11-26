@@ -1,12 +1,9 @@
 import fs from "fs"
 import type { Metadata } from "next"
 import path from "path"
-import process from "process"
 import { remark } from "remark"
 import html from "remark-html"
 
-import Footer from "../../components/Footer/Footer"
-import Layout from "../../components/Layout/Layout"
 import ChangelogList from "./ChangelogList"
 import { type ChangelogEntry, parseChangelogBlocks } from "./parseChangelog"
 
@@ -32,12 +29,5 @@ async function getChangelogEntries(): Promise<ChangelogEntry[]> {
 }
 
 export default async function Changelog() {
-  const entries = await getChangelogEntries()
-
-  return (
-    <Layout>
-      <ChangelogList entries={entries} />
-      <Footer />
-    </Layout>
-  )
+  return <ChangelogList entries={await getChangelogEntries()} />
 }
