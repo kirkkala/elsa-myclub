@@ -21,7 +21,7 @@ import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 import { useRef, useState } from "react"
 
-import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import { API_CONNECTION_FAILED, API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
 
 import groupsData from "../../../config/groups.json"
@@ -31,9 +31,15 @@ import FileUpload from "../FileUpload/FileUpload"
 import IOSSwitch from "../IOSSwitch/IOSSwitch"
 import SelectField from "../SelectField/SelectField"
 
-interface ApiErrorResponse {
-  message: string
+// JSON body of the API routes; null when the server answered with something else
+interface ApiResponse {
+  data?: MyClubExcelRow[]
+  message?: string
+  fileName?: string
 }
+
+const readJson = (response: Response): Promise<ApiResponse | null> =>
+  (response.json() as Promise<ApiResponse>).catch(() => null)
 
 interface FormValues {
   files: File[]
@@ -92,7 +98,7 @@ export default function UploadForm() {
     try {
       const response = await fetch("/elsa-demo.xlsx")
       if (!response.ok) {
-        throw new Error("Demo-tiedoston lataus epäonnistui")
+        throw new Error(response.statusText)
       }
       const blob = await response.blob()
       const demoFile = new File([blob], "elsa-demo.xlsx", {
@@ -102,8 +108,8 @@ export default function UploadForm() {
       setFormValues((prev) => ({ ...prev, files: [demoFile] }))
       setIsDemoMode(true)
       void fetchPreview([demoFile], formValues)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Demo-tiedoston lataus epäonnistui")
+    } catch {
+      setError("Demo-tiedoston lataus epäonnistui")
     }
   }
 
@@ -169,24 +175,22 @@ export default function UploadForm() {
         signal: request.signal,
       })
 
-      const data = (await response.json()) as {
-        data: MyClubExcelRow[]
-        message?: string
-        fileName?: string
-      }
+      const body = await readJson(response)
       if (request.signal.aborted) return
 
-      if (!response.ok) {
-        setErrorFileName(data.fileName)
-        throw new Error(data.message || "Excelin lukeminen epäonnistui")
+      if (response.ok && body?.data) {
+        setPreviewData(body.data)
+        setShowSuccess(true)
+      } else {
+        setShowSuccess(false)
+        setErrorFileName(body?.fileName)
+        setError(body?.message || API_CONNECTION_FAILED)
       }
-
-      setPreviewData(data.data)
-      setShowSuccess(true)
-    } catch (err) {
+    } catch {
+      // fetch itself failed, e.g. no network connection
       if (request.signal.aborted) return
       setShowSuccess(false)
-      setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
+      setError(API_CONNECTION_FAILED)
     } finally {
       if (previewRequest.current === request) {
         previewRequest.current = null
@@ -202,19 +206,18 @@ export default function UploadForm() {
 
     try {
       if (formValues.files.length === 0) {
-        throw new Error(API_FILE_MISSING)
+        setError(API_FILE_MISSING)
+        return
       }
-
-      const formData = buildFormData(formValues.files, formValues)
 
       const response = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: buildFormData(formValues.files, formValues),
       })
 
       if (!response.ok) {
-        const errorData = (await response.json()) as ApiErrorResponse
-        throw new Error(errorData.message || API_CONVERSION_FAILED)
+        setError((await readJson(response))?.message || API_CONVERSION_FAILED)
+        return
       }
 
       const blob = await response.blob()
@@ -226,8 +229,9 @@ export default function UploadForm() {
       a.click()
       window.URL.revokeObjectURL(url)
       a.remove()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Tuntematon virhe")
+    } catch {
+      // fetch itself failed, e.g. no network connection
+      setError(API_CONNECTION_FAILED)
     } finally {
       setLoading(false)
     }

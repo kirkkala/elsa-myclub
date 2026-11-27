@@ -1,7 +1,7 @@
 import { createEvent, fireEvent, render, screen, waitFor, within } from "@testing-library/react"
 import type { Mock } from "vitest"
 
-import { EXCEL_VALIDATION_ERROR } from "@/utils/error"
+import { API_CONNECTION_FAILED, EXCEL_VALIDATION_ERROR } from "@/utils/error"
 
 import UploadForm from "../UploadForm"
 
@@ -379,7 +379,23 @@ describe("UploadForm", () => {
 
     // Wait for error message
     await waitFor(() => {
-      expect(screen.getByText(/Network error/)).toBeInTheDocument()
+      expect(screen.getByText(API_CONNECTION_FAILED)).toBeInTheDocument()
+    })
+    // The browser's own technical message is not shown to the user
+    expect(screen.queryByText(/Network error/)).not.toBeInTheDocument()
+  })
+
+  it("shows a friendly message when the server answers with something other than JSON", async () => {
+    mockFetch().mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.reject(new SyntaxError("Unexpected token '<'")),
+    })
+    render(<UploadForm />)
+
+    dropFiles([createMockExcelFile()])
+
+    await waitFor(() => {
+      expect(screen.getByText(API_CONNECTION_FAILED)).toBeInTheDocument()
     })
   })
 
@@ -398,7 +414,7 @@ describe("UploadForm", () => {
 
     // Wait for error message
     await waitFor(() => {
-      expect(screen.getByText(/Download network error/)).toBeInTheDocument()
+      expect(screen.getByText(API_CONNECTION_FAILED)).toBeInTheDocument()
     })
   })
 

@@ -72,6 +72,7 @@ pnpm build            # Production build
 pnpm start            # Production server
 pnpm lint             # Check lint and format
 pnpm lint:fix         # Fix and format
+pnpm typecheck        # TypeScript type check
 pnpm test             # Run tests
 pnpm test:watch       # Tests in watch mode
 pnpm test:coverage    # Coverage report

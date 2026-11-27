@@ -7,11 +7,13 @@ export const EXCEL_DATE_FORMAT_ERROR = (date: string | number) =>
 // API response errors
 export const API_CONVERSION_FAILED = "Tiedoston muunnos epäonnistui"
 export const API_FILE_MISSING = "Tiedosto puuttuu"
+// Shown when the server can't be reached or answers with something unexpected
+export const API_CONNECTION_FAILED =
+  "Yhteys palvelimeen epäonnistui. Tarkista verkkoyhteys ja yritä uudelleen."
 
-// Generic error formatter
-export const formatErrorMessage = (error: unknown): string => {
-  return `Tiedoston prosessointi epäonnistui. ${error instanceof Error ? error.message : String(error)}`
-}
+// Turns any thrown value into a message for the user
+export const formatErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : String(error)
 
 // Error logging utility
 export const logError = (error: unknown): void => {
