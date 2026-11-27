@@ -3,6 +3,18 @@ import { NextResponse } from "next/server"
 import { formatErrorMessage, logError } from "./error"
 import { excelUtils, type MyClubExcelRow } from "./excel"
 
+// Thrown when one uploaded file cannot be converted, so the UI can point it out
+class FileConversionError extends Error {
+  constructor(
+    readonly fileName: string,
+    cause: unknown
+  ) {
+    super(`Tiedosto "${fileName}": ${cause instanceof Error ? cause.message : String(cause)}`, {
+      cause,
+    })
+  }
+}
+
 /**
  * Shared body of the preview and upload API routes: reads the uploaded eLSA
  * files and form fields, converts them to MyClub rows and hands the rows to
@@ -28,12 +40,30 @@ export async function convertRequest(
       return NextResponse.json({ message: "No files provided" }, { status: 400 })
     }
 
-    const buffers = await Promise.all(files.map((file) => file.arrayBuffer()))
-    return respond(
-      buffers.flatMap((buffer) => excelUtils.parseExcelBuffer(Buffer.from(buffer), fields))
+    const rowsPerFile = await Promise.all(
+      files.map(async (file) => {
+        const buffer = Buffer.from(await file.arrayBuffer())
+        try {
+          return excelUtils.parseExcelBuffer(buffer, fields)
+        } catch (error) {
+          throw new FileConversionError(file.name, error)
+        }
+      })
     )
+    const rows = rowsPerFile.flat()
+
+    // The same game can be in several files (e.g. the same export added twice);
+    // keep one copy so it is not imported to MyClub as duplicate events.
+    const uniqueRows = new Map(rows.map((row) => [JSON.stringify(row), row]))
+    return respond([...uniqueRows.values()])
   } catch (error) {
     logError(error)
-    return NextResponse.json({ message: formatErrorMessage(error) }, { status: 500 })
+    return NextResponse.json(
+      {
+        message: formatErrorMessage(error),
+        fileName: error instanceof FileConversionError ? error.fileName : undefined,
+      },
+      { status: 500 }
+    )
   }
 }

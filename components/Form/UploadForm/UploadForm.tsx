@@ -9,6 +9,7 @@ import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import Box from "@mui/material/Box"
 import MuiButton from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -18,7 +19,7 @@ import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
@@ -53,6 +54,10 @@ export default function UploadForm() {
   const [showSuccess, setShowSuccess] = useState(false)
   const [isDemoMode, setIsDemoMode] = useState(false)
   const [demoDialogOpen, setDemoDialogOpen] = useState(false)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [errorFileName, setErrorFileName] = useState<string>()
+  // The preview request in flight, so a newer one (or clearing the files) can cancel it
+  const previewRequest = useRef<AbortController | null>(null)
 
   const currentYear = new Date().getFullYear()
 
@@ -74,6 +79,8 @@ export default function UploadForm() {
 
     if (files.length > 0) {
       void fetchPreview(files, formValues)
+    } else {
+      cancelPreview()
     }
   }
 
@@ -101,6 +108,7 @@ export default function UploadForm() {
   }
 
   const handleStopDemo = (): void => {
+    cancelPreview()
     setFormValues((prev) => ({ ...prev, files: [] }))
     setIsDemoMode(false)
     setPreviewData([])
@@ -137,29 +145,53 @@ export default function UploadForm() {
     return formData
   }
 
+  const cancelPreview = (): void => {
+    previewRequest.current?.abort()
+    previewRequest.current = null
+    setPreviewLoading(false)
+    setErrorFileName(undefined)
+  }
+
   const fetchPreview = async (files: File[], values: FormValues): Promise<void> => {
+    // Only the latest request may update the preview, so answers can't arrive out of order
+    previewRequest.current?.abort()
+    const request = new AbortController()
+    previewRequest.current = request
+
     setError("")
+    setErrorFileName(undefined)
+    setPreviewLoading(true)
 
     try {
-      const formData = buildFormData(files, values)
-
       const response = await fetch("/api/preview", {
         method: "POST",
-        body: formData,
+        body: buildFormData(files, values),
+        signal: request.signal,
       })
 
-      const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
+      const data = (await response.json()) as {
+        data: MyClubExcelRow[]
+        message?: string
+        fileName?: string
+      }
+      if (request.signal.aborted) return
 
       if (!response.ok) {
-        setShowSuccess(false)
+        setErrorFileName(data.fileName)
         throw new Error(data.message || "Excelin lukeminen epäonnistui")
       }
 
       setPreviewData(data.data)
       setShowSuccess(true)
     } catch (err) {
+      if (request.signal.aborted) return
       setShowSuccess(false)
       setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
+    } finally {
+      if (previewRequest.current === request) {
+        previewRequest.current = null
+        setPreviewLoading(false)
+      }
     }
   }
 
@@ -195,7 +227,7 @@ export default function UploadForm() {
       window.URL.revokeObjectURL(url)
       a.remove()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred")
+      setError(err instanceof Error ? err.message : "Tuntematon virhe")
     } finally {
       setLoading(false)
     }
@@ -286,6 +318,7 @@ export default function UploadForm() {
           files={formValues.files}
           onFilesChange={handleFilesChange}
           label="eLSA Excel-tiedosto(t)"
+          errorFileName={errorFileName}
           disabled={isDemoMode}
         />
 
@@ -294,6 +327,12 @@ export default function UploadForm() {
             <Alert severity="error" sx={{ mb: 2 }}>
               <AlertTitle>Virhe: Tiedoston prosessointi epäonnistui 🥴</AlertTitle>
               {error}
+            </Alert>
+          )}
+
+          {previewLoading && !showSuccess && !error && (
+            <Alert severity="info" icon={<CircularProgress size={20} />}>
+              Luetaan tiedostoa…
             </Alert>
           )}
 
@@ -401,7 +440,10 @@ export default function UploadForm() {
 
       {previewData.length > 0 && (
         <>
-          <Box sx={{ mt: 5 }}>
+          <Box
+            aria-busy={previewLoading}
+            sx={{ mt: 5, opacity: previewLoading ? 0.5 : 1, transition: "opacity 0.2s ease" }}
+          >
             <Preview data={previewData} />
           </Box>
 

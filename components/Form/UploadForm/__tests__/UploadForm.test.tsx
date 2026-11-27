@@ -20,24 +20,21 @@ const createMockExcelFile = (name = "test.xlsx", content = "") =>
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   })
 
+const mockSuccessfulPreviewResponseRow = {
+  Nimi: "Test Event",
+  Ryhmä: "Test Group",
+  Tapahtumatyyppi: "Ottelu",
+  Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
+  Alkaa: "2024-01-01 10:00:00",
+  Päättyy: "2024-01-01 11:00:00",
+  Ilmoittautuminen: "Valituille henkilöille",
+  Näkyvyys: "Näkyy ryhmälle",
+  Kuvaus: "Test Description",
+}
+
 const mockSuccessfulPreviewResponse = {
   ok: true,
-  json: () =>
-    Promise.resolve({
-      data: [
-        {
-          Nimi: "Test Event",
-          Ryhmä: "Test Group",
-          Tapahtumatyyppi: "Ottelu",
-          Tapahtumapaikka: "Namika Areena LIIKE ON LÄÄKE B",
-          Alkaa: "2024-01-01 10:00:00",
-          Päättyy: "2024-01-01 11:00:00",
-          Ilmoittautuminen: "Valituille henkilöille",
-          Näkyvyys: "Näkyy ryhmälle",
-          Kuvaus: "Test Description",
-        },
-      ],
-    }),
+  json: () => Promise.resolve({ data: [mockSuccessfulPreviewResponseRow] }),
 }
 
 const dropFiles = (files: File[]) => {
@@ -127,6 +124,56 @@ describe("UploadForm", () => {
     ).toBeInTheDocument()
   })
 
+  it("shows a loading message until the preview arrives", async () => {
+    let resolvePreview: (response: unknown) => void = () => undefined
+    mockFetch().mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolvePreview = resolve
+      })
+    )
+    render(<UploadForm />)
+
+    dropFiles([createMockExcelFile()])
+    expect(await screen.findByText("Luetaan tiedostoa…")).toBeInTheDocument()
+
+    resolvePreview(mockSuccessfulPreviewResponse)
+    await waitFor(() => {
+      expect(screen.queryByText("Luetaan tiedostoa…")).not.toBeInTheDocument()
+    })
+    expect(screen.getByRole("button", { name: DOWNLOAD_BUTTON_TEXT })).toBeInTheDocument()
+  })
+
+  it("ignores a preview response that arrives after a newer request", async () => {
+    const previewResponse = (name: string) => ({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: [{ ...mockSuccessfulPreviewResponseRow, Nimi: name }],
+        }),
+    })
+    let resolveFirst: (response: unknown) => void = () => undefined
+    mockFetch()
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveFirst = resolve
+        })
+      )
+      .mockResolvedValueOnce(previewResponse("Newer preview"))
+    render(<UploadForm />)
+
+    dropFiles([createMockExcelFile("first.xlsx")])
+    await screen.findByText("first.xlsx")
+    dropFiles([createMockExcelFile("second.xlsx")])
+    expect(await screen.findByText("Newer preview")).toBeInTheDocument()
+
+    resolveFirst(previewResponse("Outdated preview"))
+    await waitFor(() => {
+      expect(mockFetch()).toHaveBeenCalledTimes(2)
+    })
+    expect(screen.queryByText("Outdated preview")).not.toBeInTheDocument()
+    expect(screen.getByText("Newer preview")).toBeInTheDocument()
+  })
+
   it("shows download button after successful file upload", async () => {
     render(<UploadForm />)
 
@@ -156,6 +203,24 @@ describe("UploadForm", () => {
     await waitFor(() => {
       expect(screen.getByText("Test error message")).toBeInTheDocument()
     })
+  })
+
+  it("marks the file that failed to convert in red", async () => {
+    mockFetch().mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.resolve({ message: "Test error message", fileName: "broken.xlsx" }),
+    })
+    render(<UploadForm />)
+
+    dropFiles([createMockExcelFile("good.xlsx"), createMockExcelFile("broken.xlsx")])
+    await screen.findByText("Test error message")
+
+    expect(screen.getByText("broken.xlsx").closest(".MuiChip-root")).toHaveClass(
+      "MuiChip-colorError"
+    )
+    expect(screen.getByText("good.xlsx").closest(".MuiChip-root")).toHaveClass(
+      "MuiChip-colorSuccess"
+    )
   })
 
   it("triggers preview API call when form fields change after file upload", async () => {

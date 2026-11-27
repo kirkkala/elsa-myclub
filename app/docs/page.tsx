@@ -47,7 +47,7 @@ export default function Docs() {
       </Typography>
       <Typography>
         eLSA:n tiedostossa saattaa olla jo pelattuja sekä päivämäärättömiä otteluita. Ne voi jättää
-        tiedostoon, muuntaja ei käsittelee niitä.
+        tiedostoon, muuntaja ei käsittele niitä.
       </Typography>
 
       <Typography variant="h2">3. Säädä asetukset</Typography>
