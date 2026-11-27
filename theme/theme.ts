@@ -91,8 +91,11 @@ const theme = createTheme({
       },
     },
     MuiTypography: {
-      defaultProps: {
-        sx: { marginBottom: "1.25rem" },
+      styleOverrides: {
+        // Default spacing below every text block; override with `sx={{ mb: … }}`
+        root: {
+          marginBottom: "1.25rem",
+        },
       },
     },
     MuiButton: {

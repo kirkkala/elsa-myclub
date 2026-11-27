@@ -6,8 +6,6 @@ import MuiLink from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
 import type { Metadata } from "next"
 
-import Footer from "../../components/Footer/Footer"
-import Layout from "../../components/Layout/Layout"
 import { SITE_CONFIG } from "../../config"
 
 export const metadata: Metadata = {
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function Info() {
   return (
-    <Layout>
+    <>
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h1" component="h1">
           Tietoa sovelluksesta
@@ -88,7 +86,6 @@ export default function Info() {
           </Typography>
         </Box>
       </Box>
-      <Footer />
-    </Layout>
+    </>
   )
 }

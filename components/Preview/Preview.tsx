@@ -51,7 +51,8 @@ export default function Preview({ data }: PreviewProps) {
           </TableHead>
           <TableBody>
             {data.map((row, index) => (
-              <TableRow key={`${row.Alkaa}-${row.Päättyy}`} hover>
+              // Rows are de-duplicated by the API, so the full content is a unique key
+              <TableRow key={Object.values(row).join("|")} hover>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{row.Nimi}</TableCell>
                 <TableCell>{row.Alkaa}</TableCell>

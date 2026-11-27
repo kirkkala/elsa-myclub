@@ -1,14 +1,12 @@
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 
+import Footer from "../Footer/Footer"
 import Header from "../Header/Header"
 import Notification from "../Notification/Notification"
 
-interface LayoutProps {
-  children: React.ReactNode
-}
-
-export default function Layout({ children }: LayoutProps) {
+// Site chrome shared by every page; rendered once from the root layout.
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
@@ -28,6 +26,7 @@ export default function Layout({ children }: LayoutProps) {
           }}
         >
           {children}
+          <Footer />
         </Container>
       </Box>
     </>

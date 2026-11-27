@@ -2,7 +2,6 @@
 
 import MagicIcon from "@mui/icons-material/AutoAwesomeTwoTone"
 import CloseIcon from "@mui/icons-material/Close"
-import HistoryIcon from "@mui/icons-material/History"
 import HomeIcon from "@mui/icons-material/Home"
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"
 import MenuIcon from "@mui/icons-material/Menu"
@@ -34,7 +33,6 @@ const PAGE_ICONS: Record<string, typeof HomeIcon> = {
   "/": HomeIcon,
   "/info": InfoOutlinedIcon,
   "/docs": MenuBookIcon,
-  "/changelog": HistoryIcon,
 }
 
 const navTabsSx = {

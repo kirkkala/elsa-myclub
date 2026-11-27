@@ -1,21 +1,16 @@
-export interface ChangelogEntry {
-  version: string
-  date: string
-  system: boolean
-  contentHtml: string
-}
-
-export interface ChangelogBlock {
+interface ChangelogBlock {
   version: string
   date: string
   system: boolean
   body: string
 }
 
+export type ChangelogEntry = Omit<ChangelogBlock, "body"> & { contentHtml: string }
+
 // A release counts as a "system update" (hidden behind the toggle) when every
 // bullet is a maintenance line. Keep this in sync with the CHANGELOG convention:
 // maintenance-only releases use a single "Ylläpito…" line.
-export const MAINTENANCE_ITEM = /^-\s*ylläpito/i
+const MAINTENANCE_ITEM = /^-\s*ylläpito/i
 
 // Splits CHANGELOG.md into per-release blocks. The leading HTML comment / intro
 // (everything before the first "## " heading) is dropped. Each heading is

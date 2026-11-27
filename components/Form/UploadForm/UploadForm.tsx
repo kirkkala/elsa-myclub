@@ -9,6 +9,7 @@ import Alert from "@mui/material/Alert"
 import AlertTitle from "@mui/material/AlertTitle"
 import Box from "@mui/material/Box"
 import MuiButton from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
@@ -18,9 +19,9 @@ import Divider from "@mui/material/Divider"
 import FormControlLabel from "@mui/material/FormControlLabel"
 import Link from "@mui/material/Link"
 import Typography from "@mui/material/Typography"
-import { useCallback, useState } from "react"
+import { useRef, useState } from "react"
 
-import { API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
+import { API_CONNECTION_FAILED, API_CONVERSION_FAILED, API_FILE_MISSING } from "@/utils/error"
 import type { MyClubExcelRow } from "@/utils/excel"
 
 import groupsData from "../../../config/groups.json"
@@ -30,9 +31,15 @@ import FileUpload from "../FileUpload/FileUpload"
 import IOSSwitch from "../IOSSwitch/IOSSwitch"
 import SelectField from "../SelectField/SelectField"
 
-interface ApiErrorResponse {
-  message: string
+// JSON body of the API routes; null when the server answered with something else
+interface ApiResponse {
+  data?: MyClubExcelRow[]
+  message?: string
+  fileName?: string
 }
+
+const readJson = (response: Response): Promise<ApiResponse | null> =>
+  (response.json() as Promise<ApiResponse>).catch(() => null)
 
 interface FormValues {
   files: File[]
@@ -44,16 +51,40 @@ interface FormValues {
   registration: string
 }
 
+const GROUP_OPTIONS = groupsData.groups.map((group) => ({ value: group }))
+
+const buildFormData = (files: File[], values: FormValues): FormData => {
+  const formData = new FormData()
+  for (const file of files) {
+    formData.append("files", file)
+  }
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value === "string" && value) {
+      formData.append(key, value)
+    }
+  }
+  return formData
+}
+
+// One preview request at a time. While a preview is refreshed after a settings
+// change, the previous rows stay on screen (`loading` with rows).
+type PreviewState =
+  | { status: "idle" }
+  | { status: "loading"; rows: MyClubExcelRow[] }
+  | { status: "ready"; rows: MyClubExcelRow[] }
+  | { status: "error"; message: string; fileName?: string }
+
 export default function UploadForm() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [preview, setPreview] = useState<PreviewState>({ status: "idle" })
+  // Failure of something other than the preview: the download or the demo file
+  const [actionError, setActionError] = useState("")
+  const [downloading, setDownloading] = useState(false)
   const [isDemoMode, setIsDemoMode] = useState(false)
   const [demoDialogOpen, setDemoDialogOpen] = useState(false)
+  // The preview request in flight, so a newer one (or clearing the files) can cancel it
+  const previewRequest = useRef<AbortController | null>(null)
 
   const currentYear = new Date().getFullYear()
-  const years = [currentYear, currentYear + 1]
 
   const [formValues, setFormValues] = useState<FormValues>({
     files: [],
@@ -65,29 +96,87 @@ export default function UploadForm() {
     registration: "Valituille henkilöille",
   })
 
-  const handleFilesChange = useCallback(
-    (files: File[]): void => {
-      setFormValues((prev) => ({ ...prev, files }))
-      setShowSuccess(false)
-      setPreviewData([])
-      setIsDemoMode(false)
+  const previewData = "rows" in preview ? preview.rows : []
+  const previewLoading = preview.status === "loading"
+  const hasPreview = previewData.length > 0
+  const error = preview.status === "error" ? preview.message : actionError
+  const errorFileName = preview.status === "error" ? preview.fileName : undefined
 
-      if (files.length > 0) {
-        void fetchPreview(files, formValues)
+  const fetchPreview = async (
+    files: File[],
+    values: FormValues,
+    currentRows: MyClubExcelRow[] = []
+  ): Promise<void> => {
+    // Only the latest request may update the preview, so answers can't arrive out of order
+    previewRequest.current?.abort()
+    const request = new AbortController()
+    previewRequest.current = request
+
+    setActionError("")
+    setPreview({ status: "loading", rows: currentRows })
+
+    let result: PreviewState
+    try {
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        body: buildFormData(files, values),
+        signal: request.signal,
+      })
+      const body = await readJson(response)
+
+      result =
+        response.ok && body?.data
+          ? { status: "ready", rows: body.data }
+          : {
+              status: "error",
+              message: body?.message || API_CONNECTION_FAILED,
+              fileName: body?.fileName,
+            }
+    } catch {
+      // fetch itself failed, e.g. no network connection
+      result = { status: "error", message: API_CONNECTION_FAILED }
+    }
+
+    if (!request.signal.aborted) {
+      setPreview(result)
+    }
+  }
+
+  const clearPreview = (): void => {
+    previewRequest.current?.abort()
+    setPreview({ status: "idle" })
+    setActionError("")
+  }
+
+  const handleFilesChange = (files: File[]): void => {
+    setFormValues((prev) => ({ ...prev, files }))
+    setIsDemoMode(false)
+
+    if (files.length > 0) {
+      void fetchPreview(files, formValues)
+    } else {
+      clearPreview()
+    }
+  }
+
+  const handleFieldChange =
+    (name: Exclude<keyof FormValues, "files">) =>
+    (value: string): void => {
+      const values = { ...formValues, [name]: value }
+      setFormValues(values)
+
+      if (values.files.length > 0) {
+        void fetchPreview(values.files, values, previewData)
       }
-    },
-    [formValues]
-  )
+    }
 
   const handleLoadDemo = async (): Promise<void> => {
-    setError("")
-    setShowSuccess(false)
-    setPreviewData([])
+    clearPreview()
 
     try {
       const response = await fetch("/elsa-demo.xlsx")
       if (!response.ok) {
-        throw new Error("Demo-tiedoston lataus epäonnistui")
+        throw new Error(response.statusText)
       }
       const blob = await response.blob()
       const demoFile = new File([blob], "elsa-demo.xlsx", {
@@ -97,17 +186,15 @@ export default function UploadForm() {
       setFormValues((prev) => ({ ...prev, files: [demoFile] }))
       setIsDemoMode(true)
       void fetchPreview([demoFile], formValues)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Demo-tiedoston lataus epäonnistui")
+    } catch {
+      setActionError("Demo-tiedoston lataus epäonnistui")
     }
   }
 
   const handleStopDemo = (): void => {
+    clearPreview()
     setFormValues((prev) => ({ ...prev, files: [] }))
     setIsDemoMode(false)
-    setPreviewData([])
-    setShowSuccess(false)
-    setError("")
   }
 
   const handleConfirmDemo = (): void => {
@@ -115,74 +202,25 @@ export default function UploadForm() {
     void handleLoadDemo()
   }
 
-  const handleFieldChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>): void => {
-    const { name, value } = e.target
-    setFormValues((prev) => ({ ...prev, [name]: value }))
-
-    if (formValues.files.length > 0) {
-      void fetchPreview(formValues.files, { ...formValues, [name]: value })
-    }
-  }
-
-  const buildFormData = (files: File[], values: FormValues): FormData => {
-    const formData = new FormData()
-    files.forEach((file) => {
-      formData.append("files", file)
-    })
-    Object.entries(values).forEach(([key, value]) => {
-      if (key !== "files" && value && typeof value === "string") {
-        formData.append(key, value)
-      }
-    })
-    return formData
-  }
-
-  const fetchPreview = async (files: File[], values: FormValues): Promise<void> => {
-    setError("")
-
-    try {
-      const formData = buildFormData(files, values)
-
-      const response = await fetch("/api/preview", {
-        method: "POST",
-        body: formData,
-      })
-
-      const data = (await response.json()) as { data: MyClubExcelRow[]; message?: string }
-
-      if (!response.ok) {
-        setShowSuccess(false)
-        throw new Error(data.message || "Excelin lukeminen epäonnistui")
-      }
-
-      setPreviewData(data.data)
-      setShowSuccess(true)
-    } catch (err) {
-      setShowSuccess(false)
-      setError(err instanceof Error ? err.message : "Excelin lukeminen epäonnistui")
-    }
-  }
-
   const handleDownload = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
-    setLoading(true)
-    setError("")
+    setDownloading(true)
+    setActionError("")
 
     try {
       if (formValues.files.length === 0) {
-        throw new Error(API_FILE_MISSING)
+        setActionError(API_FILE_MISSING)
+        return
       }
-
-      const formData = buildFormData(formValues.files, formValues)
 
       const response = await fetch("/api/upload", {
         method: "POST",
-        body: formData,
+        body: buildFormData(formValues.files, formValues),
       })
 
       if (!response.ok) {
-        const errorData = (await response.json()) as ApiErrorResponse
-        throw new Error(errorData.message || API_CONVERSION_FAILED)
+        setActionError((await readJson(response))?.message || API_CONVERSION_FAILED)
+        return
       }
 
       const blob = await response.blob()
@@ -194,10 +232,11 @@ export default function UploadForm() {
       a.click()
       window.URL.revokeObjectURL(url)
       a.remove()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred")
+    } catch {
+      // fetch itself failed, e.g. no network connection
+      setActionError(API_CONNECTION_FAILED)
     } finally {
-      setLoading(false)
+      setDownloading(false)
     }
   }
 
@@ -237,7 +276,7 @@ export default function UploadForm() {
             }
             label={
               <Typography
-                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1 }}
+                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1, mb: 0 }}
               >
                 Demotila
               </Typography>
@@ -286,6 +325,7 @@ export default function UploadForm() {
           files={formValues.files}
           onFilesChange={handleFilesChange}
           label="eLSA Excel-tiedosto(t)"
+          errorFileName={errorFileName}
           disabled={isDemoMode}
         />
 
@@ -297,7 +337,13 @@ export default function UploadForm() {
             </Alert>
           )}
 
-          {showSuccess && !error && (
+          {previewLoading && !hasPreview && (
+            <Alert severity="info" icon={<CircularProgress size={20} />}>
+              Luetaan tiedostoa…
+            </Alert>
+          )}
+
+          {hasPreview && !error && (
             <Alert severity="success" sx={{ mb: 4 }}>
               <AlertTitle>
                 {isDemoMode
@@ -317,19 +363,17 @@ export default function UploadForm() {
           )}
         </Box>
 
-        <Box sx={{ display: showSuccess ? "block" : "none" }}>
+        <Box sx={{ display: hasPreview ? "block" : "none" }}>
           <SelectField
             id="group"
             Icon={PeopleIcon}
             label="1. Joukkue (MyClub ryhmä)"
             description="Etsi joukkue listalta tai kirjoita kuten se on MyClubissa."
             disableClearable={false}
-            options={groupsData.groups.map((option) => ({
-              value: option,
-              label: option,
-            }))}
+            options={GROUP_OPTIONS}
             placeholder="Hae tai kirjoita joukkueen nimi"
-            onChange={handleFieldChange}
+            value={formValues.group}
+            onChange={handleFieldChange("group")}
             freeSolo
           />
 
@@ -338,12 +382,9 @@ export default function UploadForm() {
             label="2. Vuosi"
             description="Valitse vuosi, eLSA:n tiedostossa ei ole vuotta päivämäärien yhteydessä."
             Icon={CalendarMonthIcon}
-            options={years.map((year) => ({
-              value: String(year),
-              label: String(year),
-            }))}
-            defaultValue={formValues.year}
-            onChange={handleFieldChange}
+            options={[{ value: String(currentYear) }, { value: String(currentYear + 1) }]}
+            value={formValues.year}
+            onChange={handleFieldChange("year")}
           />
 
           <SelectField
@@ -360,8 +401,8 @@ export default function UploadForm() {
               { value: "75", label: "1 h 15 min ennen ottelun alkua" },
               { value: "90", label: "1 h 30 min ennen ottelun alkua" },
             ]}
-            defaultValue={formValues.meetingTime}
-            onChange={handleFieldChange}
+            value={formValues.meetingTime}
+            onChange={handleFieldChange("meetingTime")}
           />
 
           <SelectField
@@ -375,8 +416,8 @@ export default function UploadForm() {
               { value: "105", label: "1 tunti 45 minuuttia" },
               { value: "120", label: "2 tuntia" },
             ]}
-            defaultValue={formValues.duration}
-            onChange={handleFieldChange}
+            value={formValues.duration}
+            onChange={handleFieldChange("duration")}
           />
 
           <SelectField
@@ -384,8 +425,8 @@ export default function UploadForm() {
             label="5. Tapahtumatyyppi"
             Icon={SportsBasketballIcon}
             options={[{ value: "Ottelu" }, { value: "Muu" }]}
-            defaultValue={formValues.eventType}
-            onChange={handleFieldChange}
+            value={formValues.eventType}
+            onChange={handleFieldChange("eventType")}
           />
 
           <SelectField
@@ -398,28 +439,31 @@ export default function UploadForm() {
               { value: "Ryhmän jäsenille" },
               { value: "Seuralle" },
             ]}
-            defaultValue={formValues.registration}
-            onChange={handleFieldChange}
+            value={formValues.registration}
+            onChange={handleFieldChange("registration")}
           />
         </Box>
       </form>
 
-      {previewData.length > 0 && (
+      {hasPreview && (
         <>
-          <Box sx={{ mt: 5 }}>
+          <Box
+            aria-busy={previewLoading}
+            sx={{ mt: 5, opacity: previewLoading ? 0.5 : 1, transition: "opacity 0.2s ease" }}
+          >
             <Preview data={previewData} />
           </Box>
 
           <Box component="form" onSubmit={(e) => void handleDownload(e)} sx={{ mt: 3 }}>
             <Button
               type="submit"
-              disabled={loading}
+              disabled={downloading}
               Icon={DownloadIcon}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen Excel-tiedosto omalle
                 tietokoneellesi, muokkaa tarvittaessa ja siirry MyClubiin tuomaan tapahtumat tiedostosta.`}
             >
-              {loading ? "Käsitellään..." : "Lataa Excel"}
+              {downloading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
           </Box>
         </>

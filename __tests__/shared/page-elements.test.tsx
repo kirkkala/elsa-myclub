@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import { usePathname } from "next/navigation"
 
+import Layout from "../../components/Layout/Layout"
 import { SITE_CONFIG } from "../../config"
 
 export const testPageElements = (
@@ -18,7 +19,12 @@ export const testPageElements = (
     })
 
     it("renders header, footer, and semantic structure", () => {
-      render(<PageComponent {...props} />)
+      // The root layout wraps every page in <Layout>
+      render(
+        <Layout>
+          <PageComponent {...props} />
+        </Layout>
+      )
 
       // Header with version
       expect(screen.getByRole("banner")).toBeInTheDocument()

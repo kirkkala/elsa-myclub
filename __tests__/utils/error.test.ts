@@ -32,10 +32,10 @@ describe("Error utilities", () => {
   })
 
   it("formats error messages", () => {
-    expect(formatErrorMessage(new Error("Test"))).toBe("Tiedoston prosessointi epäonnistui. Test")
-    expect(formatErrorMessage("String")).toBe("Tiedoston prosessointi epäonnistui. String")
-    expect(formatErrorMessage(null)).toBe("Tiedoston prosessointi epäonnistui. null")
-    expect(formatErrorMessage(123)).toBe("Tiedoston prosessointi epäonnistui. 123")
+    expect(formatErrorMessage(new Error("Test"))).toBe("Test")
+    expect(formatErrorMessage("String")).toBe("String")
+    expect(formatErrorMessage(null)).toBe("null")
+    expect(formatErrorMessage(123)).toBe("123")
   })
 
   it("logs errors", () => {

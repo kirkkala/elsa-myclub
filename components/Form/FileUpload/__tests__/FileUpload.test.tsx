@@ -30,7 +30,7 @@ describe("FileUpload", () => {
     expect(
       screen.getByText("Pudota eLSA:sta haetut excel-tiedostot tai klikkaa valitaksesi")
     ).toBeInTheDocument()
-    expect(screen.getByText("Tuetut tiedostomuodot: .xlsx")).toBeInTheDocument()
+    expect(screen.getByText("Tuetut tiedostomuodot: .xlsx, .xls")).toBeInTheDocument()
   })
 
   it("displays uploaded files as chips", () => {
@@ -96,6 +96,22 @@ describe("FileUpload", () => {
     await waitFor(() => {
       expect(onFilesChange).toHaveBeenCalledWith([existingFile, newFile])
     })
+    expect(screen.getByText("Samanniminen tiedosto on jo lisätty: test.xlsx")).toBeInTheDocument()
+  })
+
+  it("explains why a file of the wrong type was not added", async () => {
+    const onFilesChange = vi.fn()
+    render(<FileUpload {...mockProps} onFilesChange={onFilesChange} />)
+
+    const pdf = new File(["x"], "ottelut.pdf", { type: "application/pdf" })
+    fireEvent.change(screen.getByTestId("file-input"), { target: { files: [pdf] } })
+
+    expect(
+      await screen.findByText(
+        "Vain Excel-tiedostot (.xlsx, .xls) kelpaavat, ei lisätty: ottelut.pdf"
+      )
+    ).toBeInTheDocument()
+    expect(onFilesChange).not.toHaveBeenCalled()
   })
 
   it("shows singular text for single file", () => {

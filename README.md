@@ -5,7 +5,7 @@ A web application to convert eLSA basketball schedule Excel files to MyClub-comp
 ## Tech Stack
 
 - **Next.js 16** (App Router) + **React 19** + **TypeScript**
-- **Material UI 7** (MUI) for components and styling
+- **Material UI 9** (MUI) for components and styling
 - **xlsx** (SheetJS) for Excel processing
 - **Vitest** + React Testing Library
 - **Biome** for linting and formatting
@@ -72,6 +72,7 @@ pnpm build            # Production build
 pnpm start            # Production server
 pnpm lint             # Check lint and format
 pnpm lint:fix         # Fix and format
+pnpm typecheck        # TypeScript type check
 pnpm test             # Run tests
 pnpm test:watch       # Tests in watch mode
 pnpm test:coverage    # Coverage report

@@ -4,6 +4,14 @@ muutokset; tekniset päivitykset kuuluvat GitHub Releaseihin. Ylläpitovälivers
 riittää yksi rivi (esim. "- Ylläpitopäivityksiä 🛠️").
 -->
 
+## 2.2.0 (27.11.2026)
+
+- Selkeämpi palaute tiedostoja lisättäessä: latausilmaisin sekä ilmoitus väärästä tiedostotyypistä tai jo lisätystä tiedostosta 🚦
+- Virheellinen tiedosto nimetään virheviestissä ja korostetaan punaisella 🔴
+- Useassa tiedostossa oleva sama ottelu lisätään vain kerran 🧹
+- Suorituskykyparannukset, sivun lataus nopeutettu ⚡
+- Ylläpitopäivityksiä 🛠️
+
 ## 2.1.6 (26.11.2026)
 
 - Ylläpito- ja tietoturvapäivityksiä 🛠️🔐
