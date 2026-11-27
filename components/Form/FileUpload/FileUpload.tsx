@@ -117,6 +117,7 @@ export default function FileUpload({
           sx={{
             color: isDragActive ? "primary.main" : hasFiles ? "success.main" : "text.secondary",
             textAlign: "center",
+            mb: 0,
           }}
         >
           {isDragActive

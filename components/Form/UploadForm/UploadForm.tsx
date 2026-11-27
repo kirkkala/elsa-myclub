@@ -53,15 +53,34 @@ interface FormValues {
 
 const GROUP_OPTIONS = groupsData.groups.map((group) => ({ value: group }))
 
+const buildFormData = (files: File[], values: FormValues): FormData => {
+  const formData = new FormData()
+  for (const file of files) {
+    formData.append("files", file)
+  }
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value === "string" && value) {
+      formData.append(key, value)
+    }
+  }
+  return formData
+}
+
+// One preview request at a time. While a preview is refreshed after a settings
+// change, the previous rows stay on screen (`loading` with rows).
+type PreviewState =
+  | { status: "idle" }
+  | { status: "loading"; rows: MyClubExcelRow[] }
+  | { status: "ready"; rows: MyClubExcelRow[] }
+  | { status: "error"; message: string; fileName?: string }
+
 export default function UploadForm() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [previewData, setPreviewData] = useState<MyClubExcelRow[]>([])
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [preview, setPreview] = useState<PreviewState>({ status: "idle" })
+  // Failure of something other than the preview: the download or the demo file
+  const [actionError, setActionError] = useState("")
+  const [downloading, setDownloading] = useState(false)
   const [isDemoMode, setIsDemoMode] = useState(false)
   const [demoDialogOpen, setDemoDialogOpen] = useState(false)
-  const [previewLoading, setPreviewLoading] = useState(false)
-  const [errorFileName, setErrorFileName] = useState<string>()
   // The preview request in flight, so a newer one (or clearing the files) can cancel it
   const previewRequest = useRef<AbortController | null>(null)
 
@@ -77,23 +96,82 @@ export default function UploadForm() {
     registration: "Valituille henkilöille",
   })
 
+  const previewData = "rows" in preview ? preview.rows : []
+  const previewLoading = preview.status === "loading"
+  const hasPreview = previewData.length > 0
+  const error = preview.status === "error" ? preview.message : actionError
+  const errorFileName = preview.status === "error" ? preview.fileName : undefined
+
+  const fetchPreview = async (
+    files: File[],
+    values: FormValues,
+    currentRows: MyClubExcelRow[] = []
+  ): Promise<void> => {
+    // Only the latest request may update the preview, so answers can't arrive out of order
+    previewRequest.current?.abort()
+    const request = new AbortController()
+    previewRequest.current = request
+
+    setActionError("")
+    setPreview({ status: "loading", rows: currentRows })
+
+    let result: PreviewState
+    try {
+      const response = await fetch("/api/preview", {
+        method: "POST",
+        body: buildFormData(files, values),
+        signal: request.signal,
+      })
+      const body = await readJson(response)
+
+      result =
+        response.ok && body?.data
+          ? { status: "ready", rows: body.data }
+          : {
+              status: "error",
+              message: body?.message || API_CONNECTION_FAILED,
+              fileName: body?.fileName,
+            }
+    } catch {
+      // fetch itself failed, e.g. no network connection
+      result = { status: "error", message: API_CONNECTION_FAILED }
+    }
+
+    if (!request.signal.aborted) {
+      setPreview(result)
+    }
+  }
+
+  const clearPreview = (): void => {
+    previewRequest.current?.abort()
+    setPreview({ status: "idle" })
+    setActionError("")
+  }
+
   const handleFilesChange = (files: File[]): void => {
     setFormValues((prev) => ({ ...prev, files }))
-    setShowSuccess(false)
-    setPreviewData([])
     setIsDemoMode(false)
 
     if (files.length > 0) {
       void fetchPreview(files, formValues)
     } else {
-      cancelPreview()
+      clearPreview()
     }
   }
 
+  const handleFieldChange =
+    (name: Exclude<keyof FormValues, "files">) =>
+    (value: string): void => {
+      const values = { ...formValues, [name]: value }
+      setFormValues(values)
+
+      if (values.files.length > 0) {
+        void fetchPreview(values.files, values, previewData)
+      }
+    }
+
   const handleLoadDemo = async (): Promise<void> => {
-    setError("")
-    setShowSuccess(false)
-    setPreviewData([])
+    clearPreview()
 
     try {
       const response = await fetch("/elsa-demo.xlsx")
@@ -109,17 +187,14 @@ export default function UploadForm() {
       setIsDemoMode(true)
       void fetchPreview([demoFile], formValues)
     } catch {
-      setError("Demo-tiedoston lataus epäonnistui")
+      setActionError("Demo-tiedoston lataus epäonnistui")
     }
   }
 
   const handleStopDemo = (): void => {
-    cancelPreview()
+    clearPreview()
     setFormValues((prev) => ({ ...prev, files: [] }))
     setIsDemoMode(false)
-    setPreviewData([])
-    setShowSuccess(false)
-    setError("")
   }
 
   const handleConfirmDemo = (): void => {
@@ -127,86 +202,14 @@ export default function UploadForm() {
     void handleLoadDemo()
   }
 
-  const handleFieldChange =
-    (name: Exclude<keyof FormValues, "files">) =>
-    (value: string): void => {
-      const values = { ...formValues, [name]: value }
-      setFormValues(values)
-
-      if (values.files.length > 0) {
-        void fetchPreview(values.files, values)
-      }
-    }
-
-  const buildFormData = (files: File[], values: FormValues): FormData => {
-    const formData = new FormData()
-    for (const file of files) {
-      formData.append("files", file)
-    }
-    for (const [key, value] of Object.entries(values)) {
-      if (typeof value === "string" && value) {
-        formData.append(key, value)
-      }
-    }
-    return formData
-  }
-
-  const cancelPreview = (): void => {
-    previewRequest.current?.abort()
-    previewRequest.current = null
-    setPreviewLoading(false)
-    setErrorFileName(undefined)
-  }
-
-  const fetchPreview = async (files: File[], values: FormValues): Promise<void> => {
-    // Only the latest request may update the preview, so answers can't arrive out of order
-    previewRequest.current?.abort()
-    const request = new AbortController()
-    previewRequest.current = request
-
-    setError("")
-    setErrorFileName(undefined)
-    setPreviewLoading(true)
-
-    try {
-      const response = await fetch("/api/preview", {
-        method: "POST",
-        body: buildFormData(files, values),
-        signal: request.signal,
-      })
-
-      const body = await readJson(response)
-      if (request.signal.aborted) return
-
-      if (response.ok && body?.data) {
-        setPreviewData(body.data)
-        setShowSuccess(true)
-      } else {
-        setShowSuccess(false)
-        setErrorFileName(body?.fileName)
-        setError(body?.message || API_CONNECTION_FAILED)
-      }
-    } catch {
-      // fetch itself failed, e.g. no network connection
-      if (request.signal.aborted) return
-      setShowSuccess(false)
-      setError(API_CONNECTION_FAILED)
-    } finally {
-      if (previewRequest.current === request) {
-        previewRequest.current = null
-        setPreviewLoading(false)
-      }
-    }
-  }
-
   const handleDownload = async (e: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
-    setLoading(true)
-    setError("")
+    setDownloading(true)
+    setActionError("")
 
     try {
       if (formValues.files.length === 0) {
-        setError(API_FILE_MISSING)
+        setActionError(API_FILE_MISSING)
         return
       }
 
@@ -216,7 +219,7 @@ export default function UploadForm() {
       })
 
       if (!response.ok) {
-        setError((await readJson(response))?.message || API_CONVERSION_FAILED)
+        setActionError((await readJson(response))?.message || API_CONVERSION_FAILED)
         return
       }
 
@@ -231,9 +234,9 @@ export default function UploadForm() {
       a.remove()
     } catch {
       // fetch itself failed, e.g. no network connection
-      setError(API_CONNECTION_FAILED)
+      setActionError(API_CONNECTION_FAILED)
     } finally {
-      setLoading(false)
+      setDownloading(false)
     }
   }
 
@@ -273,7 +276,7 @@ export default function UploadForm() {
             }
             label={
               <Typography
-                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1 }}
+                sx={{ fontSize: "0.9rem", color: "text.secondary", fontWeight: 500, mr: 1, mb: 0 }}
               >
                 Demotila
               </Typography>
@@ -334,13 +337,13 @@ export default function UploadForm() {
             </Alert>
           )}
 
-          {previewLoading && !showSuccess && !error && (
+          {previewLoading && !hasPreview && (
             <Alert severity="info" icon={<CircularProgress size={20} />}>
               Luetaan tiedostoa…
             </Alert>
           )}
 
-          {showSuccess && !error && (
+          {hasPreview && !error && (
             <Alert severity="success" sx={{ mb: 4 }}>
               <AlertTitle>
                 {isDemoMode
@@ -360,7 +363,7 @@ export default function UploadForm() {
           )}
         </Box>
 
-        <Box sx={{ display: showSuccess ? "block" : "none" }}>
+        <Box sx={{ display: hasPreview ? "block" : "none" }}>
           <SelectField
             id="group"
             Icon={PeopleIcon}
@@ -442,7 +445,7 @@ export default function UploadForm() {
         </Box>
       </form>
 
-      {previewData.length > 0 && (
+      {hasPreview && (
         <>
           <Box
             aria-busy={previewLoading}
@@ -454,13 +457,13 @@ export default function UploadForm() {
           <Box component="form" onSubmit={(e) => void handleDownload(e)} sx={{ mt: 3 }}>
             <Button
               type="submit"
-              disabled={loading}
+              disabled={downloading}
               Icon={DownloadIcon}
               label="Lataa Excel"
               description={`Tallenna esikatselun mukainen Excel-tiedosto omalle
                 tietokoneellesi, muokkaa tarvittaessa ja siirry MyClubiin tuomaan tapahtumat tiedostosta.`}
             >
-              {loading ? "Käsitellään..." : "Lataa Excel"}
+              {downloading ? "Käsitellään..." : "Lataa Excel"}
             </Button>
           </Box>
         </>
