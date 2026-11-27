@@ -6,7 +6,7 @@ import InputAdornment from "@mui/material/InputAdornment"
 import TextField from "@mui/material/TextField"
 import type { ElementType } from "react"
 
-export interface SelectOption {
+interface SelectOption {
   value: string
   label?: string
 }

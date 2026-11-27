@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 
 import Layout from "../components/Layout/Layout"
 import { SEO_CONFIG } from "../config"
-import { ThemeRegistry } from "../theme"
+import ThemeRegistry from "../theme/ThemeRegistry"
 
 export const metadata: Metadata = {
   title: {

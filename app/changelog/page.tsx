@@ -16,15 +16,10 @@ async function getChangelogEntries(): Promise<ChangelogEntry[]> {
   const fileContents = fs.readFileSync(changelogPath, "utf8")
 
   return Promise.all(
-    parseChangelogBlocks(fileContents).map(async (block) => {
-      const processed = await remark().use(html).process(block.body)
-      return {
-        version: block.version,
-        date: block.date,
-        system: block.system,
-        contentHtml: processed.toString(),
-      }
-    })
+    parseChangelogBlocks(fileContents).map(async ({ body, ...entry }) => ({
+      ...entry,
+      contentHtml: String(await remark().use(html).process(body)),
+    }))
   )
 }
 
